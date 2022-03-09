@@ -25,6 +25,17 @@ public class MusicBand {
         this.genre = genre;
         this.frontMan = frontMan;
     }
+    public MusicBand(String name, Coordinates coordinates, ZonedDateTime creationDate, Long numberOfParticipants,
+                     long albumsCount, String description, MusicGenre genre, Person frontMan) {
+        this.name = name;
+        this.coordinates = coordinates;
+        this.creationDate = creationDate;
+        this.numberOfParticipants = numberOfParticipants;
+        this.albumsCount = albumsCount;
+        this.description = description;
+        this.genre = genre;
+        this.frontMan = frontMan;
+    }
 
     public long getId() {
         return id;

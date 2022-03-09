@@ -13,6 +13,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 
 class CSVParser {
     public HashSet<MusicBand> parse(String file) throws IOException, ParseException {
@@ -40,12 +41,12 @@ class CSVParser {
         Long numberOfParticipants = Long.parseLong(record.get("numberOfParticipants"));
         long albumsCount = Long.parseLong(record.get("albumsCount"));
         String description = record.get("description");
-        MusicGenre genre = MusicGenre.valueOf(record.get("genre"));
+        MusicGenre genre = MusicGenre.valueOf(record.get("genre").toUpperCase());
         String personName = record.get("personName");
         Double height = Double.parseDouble(record.get("height"));
-        EyeColor eyeColor = EyeColor.valueOf(record.get("eyeColor"));
-        HairColor hairColor = HairColor.valueOf(record.get("hairColor"));
-        Country nationality = Country.valueOf(record.get("nationality"));
+        EyeColor eyeColor = EyeColor.valueOf(record.get("eyeColor").toUpperCase());
+        HairColor hairColor = HairColor.valueOf(record.get("hairColor").toUpperCase());
+        Country nationality = Country.valueOf(record.get("nationality").toUpperCase());
         Float personX = Float.parseFloat(record.get("personX"));
         int personY = Integer.parseInt(record.get("personY"));
         Long personZ = Long.parseLong(record.get("personZ"));
@@ -57,11 +58,4 @@ class CSVParser {
         return musicBand;
     }
 }
-
-
-
-/*FileManager - readcol( try {parse}cath, for validate return null) write
-CollectionStorage fillCol( readcol if (null) else )
-Validation validateObject*/
-
 
