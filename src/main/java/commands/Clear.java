@@ -5,10 +5,11 @@ import commands.commandsUtils.ArgObject;
 public class Clear extends Command {
 
     public Clear() {
-        super(false, 0);
+        super(false, 0, NameOfCommands.CLEAR, "to clear the collection");
     }
 
-    public void execute(ArgObject argObject) {
-
+    public String execute(ArgObject argObject) {
+        argObject.getCollectionStorage().clear();
+        return "Collection is empty now!";
     }
 }

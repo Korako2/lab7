@@ -1,6 +1,9 @@
 package collection;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class MusicBand {
     private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
@@ -36,7 +39,20 @@ public class MusicBand {
         this.genre = genre;
         this.frontMan = frontMan;
     }
-
+    public String toString() {
+        return "ID: " + id + ", name: " + name + ", coordinates: x = " + coordinates.getX() +
+                ", y = " + coordinates.getY() + ", creation date: " + getStringDate()
+                + ", number of participants: " + numberOfParticipants + ", albums count: " + albumsCount +
+                ", description: " + description + ", genre: " + genre.getMusic() + ", name of front man: " +
+                frontMan.getName() + ", height: " + frontMan.getHeight() + ", eye color: " +
+                frontMan.getEyeColor().getColor() + ", hair color: " + frontMan.getHairColor().getColor()
+                + ", nationality: " + frontMan.getNationality().getCountry() + ", location: x = "
+                + frontMan.getLocation().getX() + ", y = " + frontMan.getLocation().getY() + ", z = "
+                + frontMan.getLocation().getZ();
+    }
+    public String getStringDate() {
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd").format(creationDate);
+    }
     public long getId() {
         return id;
     }

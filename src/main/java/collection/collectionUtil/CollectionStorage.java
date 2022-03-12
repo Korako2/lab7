@@ -4,16 +4,20 @@ import IOutils.fileUtils.FileManager;
 import collection.MusicBand;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 public class CollectionStorage {
-    HashSet<MusicBand> musicBands;
-    HashSet<Long> IDSet;
+    private HashSet<MusicBand> musicBands;
+    private HashSet<Long> IDSet;
+    private Date date;
 
     public boolean fillCollection(String file) {
         FileManager fileManager = new FileManager();
         musicBands = fileManager.readCollection(file);
+        date = new Date();
+        IDSet = new HashSet<>();
         for (MusicBand musicBand : musicBands) {
             IDSet.add(musicBand.getId());
         }
@@ -33,7 +37,34 @@ public class CollectionStorage {
         return id;
     }
 
+    public MusicBand getMinObject() {
+        MusicBand minMusicBand = null;
+        long albumsCount = Long.MAX_VALUE;
+        for (MusicBand i : musicBands) {
+            if (i.getAlbumsCount() < albumsCount) {
+                albumsCount = i.getAlbumsCount();
+                minMusicBand = i;
+            }
+        }
+        return minMusicBand;
+    }
+
+    public void add(MusicBand musicBand) {
+        musicBands.add(musicBand);
+    }
+
+    public void clear() {
+        musicBands.clear();
+    }
+
     public HashSet<MusicBand> getMusicBands() {
         return musicBands;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+    public boolean removeById(long id) {
+        return musicBands.removeIf(musicBand -> musicBand.getId() == id);
     }
 }

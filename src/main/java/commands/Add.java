@@ -4,10 +4,12 @@ import commands.commandsUtils.ArgObject;
 
 public class Add extends Command {
     public Add() {
-        super(true, 0);
+        super(true, 0, NameOfCommands.ADD, "output help for available commands");
     }
 
-    public void execute(ArgObject argObject) {
-        System.out.println("Выполнелось add, ТЫ КРУТ!");
+    public String execute(ArgObject argObject) {
+        argObject.getMusicBand().setId(argObject.getCollectionStorage().generateID());
+        argObject.getCollectionStorage().add(argObject.getMusicBand());
+        return "Successful execution";
     }
 }

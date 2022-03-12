@@ -1,14 +1,25 @@
 package commands;
 
+import collection.MusicBand;
 import commands.commandsUtils.ArgObject;
 
-public class FilterLessThanNumberOfParticipants extends Command{
+public class FilterLessThanNumberOfParticipants extends Command {
     public FilterLessThanNumberOfParticipants() {
-        super(false, 1);
+        super(false, 1, NameOfCommands.FILTER_LESS_THAN_NUMBER_OF_PARTICIPANTS, "output elements whose numberOfParticipants field value is less than the specified one");
     }
 
     @Override
-    public void execute(ArgObject argObject) {
-
+    public String execute(ArgObject argObject) {
+        StringBuilder result = new StringBuilder();
+        for (MusicBand i : argObject.getCollectionStorage().getMusicBands()) {
+            try {
+                if (Long.parseLong(argObject.getArgs()[1]) > i.getNumberOfParticipants()) {
+                    result.append(i.toString()).append("\n");
+                }
+            } catch (NumberFormatException e) {
+                result = new StringBuilder("Wrong format of number of participants");
+            }
+        }
+        return result.toString().substring(0, result.toString().length() - 1);
     }
 }

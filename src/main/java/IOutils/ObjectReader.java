@@ -92,7 +92,7 @@ public class ObjectReader {
     public Country readNationality() {
         while (true) {
             try {
-                Country nationality = Country.valueOf(readLine("Input country(GERMANY, INDIA, VATICAN):"));
+                Country nationality = Country.valueOf(readLine("Input country(GERMANY, INDIA, VATICAN):").toUpperCase());
                 return nationality;
             } catch (IllegalArgumentException e) {
                 System.out.println("Wrong format of input! Choose a country from the suggested list!");
