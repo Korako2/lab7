@@ -24,8 +24,10 @@ public class Application {
         File file = new File(fileName);
         Matcher matcher = pattern.matcher(file.getAbsolutePath());
         if (matcher.find()) System.exit(-1);
-
-        collectionStorage.fillCollection(fileName);
+        if (!collectionStorage.fillCollection(fileName)) {
+            System.out.println("Incorrect data in file.");
+            System.exit(-1);
+        }
         ConsoleManager inputFromConsole = new ConsoleManager(commandsManager, scanner, collectionStorage, true);
         boolean continueFlag;
         do {

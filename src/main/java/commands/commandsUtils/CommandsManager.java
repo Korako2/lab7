@@ -5,12 +5,12 @@ import commands.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 
 public class CommandsManager {
     private final Map<NameOfCommands, Command> commandMap = new HashMap<>();
-    private Queue<NameOfCommands> history = new LinkedList();
+    private final LinkedList<NameOfCommands> history = new LinkedList();
     private final byte MAX_LENGTH_OF_HISTORY = 11;
+
     {
         commandMap.put(NameOfCommands.HELP, new Help());
         commandMap.put(NameOfCommands.INFO, new Info());
@@ -33,6 +33,7 @@ public class CommandsManager {
     public Map<NameOfCommands, Command> getCommandMap() {
         return commandMap;
     }
+
     public void addToHistory(NameOfCommands command) {
         if (history.size() == MAX_LENGTH_OF_HISTORY) {
             history.remove();
@@ -40,7 +41,7 @@ public class CommandsManager {
         history.add(command);
     }
 
-    public Queue<NameOfCommands> getHistory() {
+    public LinkedList<NameOfCommands> getHistory() {
         return history;
     }
 }

@@ -1,10 +1,9 @@
 package commands;
 
-import collection.MusicBand;
 import commands.commandsUtils.ArgObject;
+import commands.commandsUtils.NameOfCommands;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class Save extends Command {
@@ -15,7 +14,7 @@ public class Save extends Command {
     @Override
     public String execute(ArgObject argObject) {
         String result = "The collection was saved";
-        try  {
+        try {
             argObject.getCollectionStorage().saveCollection();
         } catch (FileNotFoundException e) {
             result = "This file wasn't found";

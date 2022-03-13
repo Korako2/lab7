@@ -1,8 +1,9 @@
 package commands;
 
 import commands.commandsUtils.ArgObject;
+import commands.commandsUtils.NameOfCommands;
 
-public class AddIfMin extends Command{
+public class AddIfMin extends Command {
     public AddIfMin() {
         super(true, 0, NameOfCommands.ADD_IF_MIN, " add a new element to the collection if its value is less than the smallest element of this collection");
     }

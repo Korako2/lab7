@@ -7,15 +7,15 @@ import collection.Person;
 
 public class ObjectValidation {
     public boolean checkObject(MusicBand musicBand) {
-        return (musicBand.getId()>0 && musicBand.getName() != null && musicBand.getCoordinates() !=null &&
+        return (musicBand.getId() > 0 && musicBand.getName() != null && musicBand.getCoordinates() != null &&
                 musicBand.getCreationDate() != null && musicBand.getNumberOfParticipants() != null &&
-                musicBand.getAlbumsCount() > 0 && musicBand.getDescription() !=null &&
+                musicBand.getAlbumsCount() > 0 && musicBand.getDescription() != null &&
                 musicBand.getGenre() != null && musicBand.getFrontMan() != null &&
                 checkCoordinates(musicBand.getCoordinates()) && checkPerson(musicBand.getFrontMan()));
     }
 
     private boolean checkCoordinates(Coordinates coordinates) {
-        return coordinates.getX()<=146 && coordinates.getX() != null;
+        return coordinates.getX() <= 146 && coordinates.getX() != null;
     }
 
     private boolean checkPerson(Person person) {

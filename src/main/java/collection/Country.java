@@ -1,11 +1,11 @@
 package collection;
 
 public enum Country {
-    GERMANY ("Германия"),
+    GERMANY("Германия"),
     INDIA("Индия"),
     VATICAN("Ватикан");
 
-    private String country;
+    private final String country;
 
     Country(String country) {
         this.country = country;

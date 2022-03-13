@@ -2,19 +2,20 @@ package commands;
 
 import collection.MusicBand;
 import commands.commandsUtils.ArgObject;
+import commands.commandsUtils.NameOfCommands;
 
 import java.util.ArrayList;
 
-public class RemoveLower extends Command{
+public class RemoveLower extends Command {
     public RemoveLower() {
         super(true, 0, NameOfCommands.REMOVE_LOWER, "remove from the collection all elements smaller than the specified one");
     }
 
     @Override
     public String execute(ArgObject argObject) {
-        String result="All lower objects were deleted";
-        ArrayList<Long>  ID = new ArrayList<>();
-        for (MusicBand i : argObject.getCollectionStorage().getMusicBands()) {
+        String result = "All lower objects were deleted";
+        ArrayList<Long> ID = new ArrayList<>();
+        for (MusicBand i : argObject.getCollectionStorage().getCollection()) {
             if (argObject.getMusicBand().getAlbumsCount() > i.getAlbumsCount()) {
                 ID.add(i.getId());
             }

@@ -6,7 +6,7 @@ import collection.collectionUtil.CollectionStorage;
 import commands.Command;
 import commands.commandsUtils.ArgObject;
 import commands.commandsUtils.CommandsManager;
-import commands.NameOfCommands;
+import commands.commandsUtils.NameOfCommands;
 
 import java.util.*;
 
@@ -40,6 +40,9 @@ public class ConsoleManager {
                 return false;
             }
             System.out.println(command.execute(argObject));
+
+        } catch (NumberFormatException e) {
+            throw e;
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("There's no such command");
         }

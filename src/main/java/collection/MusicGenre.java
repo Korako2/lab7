@@ -4,7 +4,7 @@ public enum MusicGenre {
     JAZZ("Джаз"),
     POST_ROCK("Пост-рок"),
     PUNK_ROCK("Пост-рок");
-    private String music;
+    private final String music;
 
     MusicGenre(String music) {
         this.music = music;

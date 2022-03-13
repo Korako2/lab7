@@ -3,6 +3,7 @@ package commands;
 import collection.MusicBand;
 import collection.MusicGenre;
 import commands.commandsUtils.ArgObject;
+import commands.commandsUtils.NameOfCommands;
 
 import java.util.HashSet;
 
@@ -13,13 +14,14 @@ public class PrintUniqueGenre extends Command {
 
     @Override
     public String execute(ArgObject argObject) {
-        HashSet<MusicGenre> musicGenres = new HashSet<MusicGenre>();
+        HashSet<MusicGenre> musicGenres = new HashSet<>();
         StringBuilder result = new StringBuilder();
-        for (MusicBand i : argObject.getCollectionStorage().getMusicBands()) {
+        for (MusicBand i : argObject.getCollectionStorage().getCollection()) {
             if (musicGenres.add(i.getGenre())) {
                 result.append(i.getGenre().getMusic()).append("\n");
             }
         }
-        return result.toString().substring(0, result.toString().length() - 1);
+        if (result.isEmpty()) return "No genre...";
+        return result.substring(0, result.toString().length() - 1);
     }
 }

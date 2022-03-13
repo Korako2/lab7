@@ -4,10 +4,10 @@ public enum EyeColor {
     RED("красный"),
     WHITE("белый"),
     BROWN("коричневый");
-    private String color;
+    private final String color;
 
-    EyeColor( String color) {
-        this.color=color;
+    EyeColor(String color) {
+        this.color = color;
     }
 
     public String getColor() {

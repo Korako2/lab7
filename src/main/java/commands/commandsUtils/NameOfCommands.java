@@ -1,4 +1,4 @@
-package commands;
+package commands.commandsUtils;
 
 public enum NameOfCommands {
     HELP("help"),
@@ -17,7 +17,7 @@ public enum NameOfCommands {
     FILTER_STARTS_WITH_DESCRIPTION("filter_starts_with_description description"),
     FILTER_LESS_THAN_NUMBER_OF_PARTICIPANTS("filter_less_than_number_of_participants"),
     PRINT_UNIQUE_GENRE("print_unique_genre");
-    private String name;
+    private final String name;
 
     NameOfCommands(String name) {
         this.name = name;

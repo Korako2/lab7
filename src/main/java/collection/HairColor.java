@@ -7,10 +7,10 @@ public enum HairColor {
     ORANGE("оранжевый"),
     WHITE("белый");
 
-    private String color;
+    private final String color;
 
     HairColor(String color) {
-        this.color=color;
+        this.color = color;
     }
 
     public String getColor() {

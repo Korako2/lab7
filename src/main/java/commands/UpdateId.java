@@ -1,6 +1,7 @@
 package commands;
 
 import commands.commandsUtils.ArgObject;
+import commands.commandsUtils.NameOfCommands;
 
 public class UpdateId extends Command {
     public UpdateId() {
@@ -12,7 +13,7 @@ public class UpdateId extends Command {
         String result = "Element successfully updated";
         try {
             long id = Long.parseLong(argObject.getArgs()[1]);
-            boolean resultOfRemoval = argObject.getCollectionStorage().getMusicBands().removeIf(musicBand -> musicBand.getId() == id);
+            boolean resultOfRemoval = argObject.getCollectionStorage().getCollection().removeIf(musicBand -> musicBand.getId() == id);
             if (!resultOfRemoval) result = "This id wasn't found";
             argObject.getMusicBand().setId(id);
             argObject.getCollectionStorage().add(argObject.getMusicBand());

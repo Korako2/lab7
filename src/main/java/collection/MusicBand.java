@@ -1,20 +1,18 @@
 package collection;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class MusicBand {
     private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    private String name; //Поле не может быть null, Строка не может быть пустой
-    private Coordinates coordinates; //Поле не может быть null
-    private ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
-    private Long numberOfParticipants; //Поле может быть null, Значение поля должно быть больше 0
-    private long albumsCount; //Значение поля должно быть больше 0
-    private String description; //Поле не может быть null
-    private MusicGenre genre; //Поле может быть null
-    private Person frontMan; //Поле может быть null
+    private final String name; //Поле не может быть null, Строка не может быть пустой
+    private final Coordinates coordinates; //Поле не может быть null
+    private final ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
+    private final Long numberOfParticipants; //Поле может быть null, Значение поля должно быть больше 0
+    private final long albumsCount; //Значение поля должно быть больше 0
+    private final String description; //Поле не может быть null
+    private final MusicGenre genre; //Поле может быть null
+    private final Person frontMan; //Поле может быть null
 
     public MusicBand(long id, String name, Coordinates coordinates, ZonedDateTime creationDate, Long numberOfParticipants,
                      long albumsCount, String description, MusicGenre genre, Person frontMan) {
@@ -54,9 +52,21 @@ public class MusicBand {
     }
 
     public String getStringToSaveInFile() {
+        String height;
+        String eyeColor;
+        if (frontMan.getHeight() == null) {
+            height = "";
+        } else {
+            height = String.valueOf(frontMan.getHeight());
+        }
+        if (frontMan.getEyeColor() == null) {
+            eyeColor = "";
+        } else {
+            eyeColor = String.valueOf(frontMan.getEyeColor());
+        }
         return id + "," + name + "," + coordinates.getX() + "," + coordinates.getY() + "," + getStringDate()
                 + "," + numberOfParticipants + "," + albumsCount + "," + description + "," + genre
-                + "," + frontMan.getName() + "," + frontMan.getHeight() + "," + frontMan.getEyeColor()
+                + "," + frontMan.getName() + "," + height + "," + eyeColor
                 + "," + frontMan.getHairColor() + "," + frontMan.getNationality()
                 + "," + frontMan.getLocation().getX() + "," + frontMan.getLocation().getY() + ","
                 + frontMan.getLocation().getZ();
@@ -105,38 +115,6 @@ public class MusicBand {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCoordinates(Coordinates coordinates) {
-        this.coordinates = coordinates;
-    }
-
-    public void setCreationDate(ZonedDateTime creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public void setNumberOfParticipants(Long numberOfParticipants) {
-        this.numberOfParticipants = numberOfParticipants;
-    }
-
-    public void setAlbumsCount(long albumsCount) {
-        this.albumsCount = albumsCount;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setGenre(MusicGenre genre) {
-        this.genre = genre;
-    }
-
-    public void setFrontMan(Person frontMan) {
-        this.frontMan = frontMan;
     }
 }
 

@@ -1,6 +1,7 @@
 package commands;
 
 import commands.commandsUtils.ArgObject;
+import commands.commandsUtils.NameOfCommands;
 
 public class RemoveById extends Command {
     public RemoveById() {
