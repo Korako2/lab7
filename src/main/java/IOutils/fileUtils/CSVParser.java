@@ -31,13 +31,12 @@ class CSVParser {
     }
 
     public MusicBand createMusicBand(CSVRecord record) throws ParseException {
-        int id = Integer.parseInt(record.get("id"));
+        long id = Long.parseLong(record.get("id"));
         String bandName = record.get("bandName");
         Float x = Float.parseFloat(record.get("x"));
         int y = Integer.parseInt(record.get("y"));
-        DateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         ZonedDateTime creationDate = Instant.ofEpochMilli(formatter.parse(record.get("creationDate")).getTime()).atZone(ZoneId.systemDefault());
-        //ZonedDateTime creationDate = ZonedDateTime.parse(record.get("creationDate"));
         Long numberOfParticipants = Long.parseLong(record.get("numberOfParticipants"));
         long albumsCount = Long.parseLong(record.get("albumsCount"));
         String description = record.get("description");

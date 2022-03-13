@@ -2,25 +2,45 @@ import IOutils.consoleUtils.ConsoleManager;
 import collection.collectionUtil.CollectionStorage;
 import commands.commandsUtils.CommandsManager;
 
-import javax.sound.midi.Soundbank;
+import java.io.File;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Application {
     public static void main(String[] arg) {
         Scanner scanner = new Scanner(System.in);
         CommandsManager commandsManager = new CommandsManager();
         CollectionStorage collectionStorage = new CollectionStorage();
-        collectionStorage.fillCollection("collection.csv");
-        ConsoleManager inputFromConsole = new ConsoleManager(commandsManager, scanner, collectionStorage);
-        while (true) {
+        Map env = System.getenv();
+        String fileName = (String) env.get("FILE_NAME");
+        if (fileName == null) {
+            System.out.println("Please, save the file name in environment variable FILE_NAME");
+            System.exit(-1);
+        }
+        Pattern pattern = Pattern.compile("/*/dev/*");
+        File file = new File(fileName);
+        Matcher matcher = pattern.matcher(file.getAbsolutePath());
+        if (matcher.find()) System.exit(-1);
+
+        collectionStorage.fillCollection(fileName);
+        ConsoleManager inputFromConsole = new ConsoleManager(commandsManager, scanner, collectionStorage, true);
+        boolean continueFlag;
+        do {
             try {
-                inputFromConsole.input();
+                continueFlag = inputFromConsole.input();
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
-            } catch (Exception e){
+                continueFlag = true;
+            } catch (NoSuchElementException e) {
+                continueFlag = false;
+            } catch (Exception e) {
                 System.out.println("Some exception!");
                 System.out.println(e.getMessage());
+                continueFlag = false;
             }
-        }
+        } while (continueFlag);
     }
 }

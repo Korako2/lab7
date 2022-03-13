@@ -8,6 +8,6 @@ public class Exit extends Command {
     }
 
     public String execute(ArgObject argObject) {
-        return "Program is finished...:(";
+        return "Program is finishing...:(";
     }
 }

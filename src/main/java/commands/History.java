@@ -6,7 +6,7 @@ import java.util.Queue;
 
 public class History extends Command{
     public History() {
-        super(false, 0, NameOfCommands.HISTORY, "output the last 11 commands (without their arguments) v ");
+        super(false, 0, NameOfCommands.HISTORY, "output the last 11 commands (without their arguments)");
     }
 
     public String execute(ArgObject argObject) {

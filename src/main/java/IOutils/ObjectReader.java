@@ -1,16 +1,17 @@
 package IOutils;
 
 import collection.*;
-import collection.collectionUtil.CollectionStorage;
 
 import java.time.ZonedDateTime;
 import java.util.Scanner;
 
 public class ObjectReader {
-    Scanner scanner;
+    private Scanner scanner;
+    private boolean showMessages;
 
-    public ObjectReader(Scanner scanner) {
+    public ObjectReader(Scanner scanner, boolean showMessages) {
         this.scanner = scanner;
+        this.showMessages = showMessages;
     }
 
     public MusicBand readObject() {
@@ -24,6 +25,7 @@ public class ObjectReader {
             if (name == null || name.equals("")) {
                 System.out.println("Wrong format of input! Name can't be an empty line.");
             } else return name;
+            if (!showMessages) throw new NumberFormatException("Wrong format of music band's name.");
         }
     }
 
@@ -37,6 +39,7 @@ public class ObjectReader {
             } catch (NumberFormatException e) {
                 System.out.println("Wrong format of input! It should be a long number.");
             }
+            if (!showMessages) throw new NumberFormatException("Wrong format of participants.");
         }
     }
 
@@ -55,6 +58,7 @@ public class ObjectReader {
             } catch (NumberFormatException e) {
                 System.out.println("Wrong format of input! It must be a long number more than 0.");
             }
+            if (!showMessages) throw new NumberFormatException("Wrong format of albums count.");
         }
     }
 
@@ -64,6 +68,7 @@ public class ObjectReader {
             if (description == null) {
                 System.out.println("Wrong format of input! Description can't be a null.");
             } else return description;
+            if (!showMessages) throw new NumberFormatException("Wrong format of description.");
         }
     }
 
@@ -75,7 +80,7 @@ public class ObjectReader {
             } catch (IllegalArgumentException e) {
                 System.out.println("Wrong format of input! Choose a genre from the suggested list!");
             }
-
+            if (!showMessages) throw new NumberFormatException("Wrong format of genre.");
         }
     }
 
@@ -92,11 +97,11 @@ public class ObjectReader {
     public Country readNationality() {
         while (true) {
             try {
-                Country nationality = Country.valueOf(readLine("Input country(GERMANY, INDIA, VATICAN):").toUpperCase());
-                return nationality;
+                return Country.valueOf(readLine("Input country(GERMANY, INDIA, VATICAN):").toUpperCase());
             } catch (IllegalArgumentException e) {
                 System.out.println("Wrong format of input! Choose a country from the suggested list!");
             }
+            if (!showMessages) throw new NumberFormatException("Wrong format national city.");
         }
     }
 
@@ -106,6 +111,7 @@ public class ObjectReader {
             if (name == null) {
                 System.out.println("Wrong format of input! Name can't be a null.");
             } else return name;
+            if (!showMessages) throw new NumberFormatException("Wrong format of name.");
         }
     }
 
@@ -117,6 +123,7 @@ public class ObjectReader {
             } catch (IllegalArgumentException e) {
                 System.out.println("Wrong format of input! Choose a hair color from the suggested list!");
             }
+            if (!showMessages) throw new NumberFormatException("Wrong format of hair color.");
         }
     }
 
@@ -132,6 +139,7 @@ public class ObjectReader {
             } catch (IllegalArgumentException e) {
                 System.out.println("Wrong format of input! Choose an eye color from the suggested list!");
             }
+            if (!showMessages) throw new NumberFormatException("Wrong format of eye color.");
         }
     }
 
@@ -150,6 +158,7 @@ public class ObjectReader {
             } catch (NumberFormatException e) {
                 System.out.println("Wrong format of input! Height must be a number!");
             }
+            if (!showMessages) throw new NumberFormatException("Wrong format of height.");
         }
     }
 
@@ -168,6 +177,7 @@ public class ObjectReader {
             } catch (NumberFormatException e) {
                 System.out.println("Wrong format of input! It should be a float number.");
             }
+            if (!showMessages) throw new NumberFormatException("Wrong format of X coordinate of location.");
         }
     }
 
@@ -179,6 +189,7 @@ public class ObjectReader {
             } catch (NumberFormatException e) {
                 System.out.println("Wrong format of input! It should be a float number.");
             }
+            if (!showMessages) throw new NumberFormatException("Wrong format of Y coordinate of location.");
         }
     }
 
@@ -190,6 +201,7 @@ public class ObjectReader {
             } catch (NumberFormatException e) {
                 System.out.println("Wrong format of input! It should be a Long number.");
             }
+            if (!showMessages) throw new NumberFormatException("Wrong format of Z coordinate of location.");
         }
     }
 
@@ -203,6 +215,7 @@ public class ObjectReader {
             } catch (NumberFormatException e) {
                 System.out.println("Wrong format of input! It should be a float number.");
             }
+            if (!showMessages) throw new NumberFormatException("Wrong format of X coordinate.");
         }
     }
 
@@ -214,12 +227,14 @@ public class ObjectReader {
             } catch (NumberFormatException e) {
                 System.out.println("Wrong format of input! It must be integer.");
             }
+            if (!showMessages) throw new NumberFormatException("Wrong format of Y coordinate.");
         }
+
     }
 
 
     public String readLine(String message) {
-        System.out.println(message);
+        if (showMessages) System.out.println(message);
         return scanner.nextLine();
     }
 }

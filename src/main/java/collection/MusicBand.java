@@ -28,6 +28,7 @@ public class MusicBand {
         this.genre = genre;
         this.frontMan = frontMan;
     }
+
     public MusicBand(String name, Coordinates coordinates, ZonedDateTime creationDate, Long numberOfParticipants,
                      long albumsCount, String description, MusicGenre genre, Person frontMan) {
         this.name = name;
@@ -39,20 +40,33 @@ public class MusicBand {
         this.genre = genre;
         this.frontMan = frontMan;
     }
+
     public String toString() {
         return "ID: " + id + ", name: " + name + ", coordinates: x = " + coordinates.getX() +
                 ", y = " + coordinates.getY() + ", creation date: " + getStringDate()
                 + ", number of participants: " + numberOfParticipants + ", albums count: " + albumsCount +
-                ", description: " + description + ", genre: " + genre.getMusic() + ", name of front man: " +
+                ", description: " + description + ", genre: " + genre + ", name of front man: " +
                 frontMan.getName() + ", height: " + frontMan.getHeight() + ", eye color: " +
-                frontMan.getEyeColor().getColor() + ", hair color: " + frontMan.getHairColor().getColor()
-                + ", nationality: " + frontMan.getNationality().getCountry() + ", location: x = "
+                frontMan.getEyeColor() + ", hair color: " + frontMan.getHairColor()
+                + ", nationality: " + frontMan.getNationality() + ", location: x = "
                 + frontMan.getLocation().getX() + ", y = " + frontMan.getLocation().getY() + ", z = "
                 + frontMan.getLocation().getZ();
     }
+
+    public String getStringToSaveInFile() {
+        return id + "," + name + "," + coordinates.getX() + "," + coordinates.getY() + "," + getStringDate()
+                + "," + numberOfParticipants + "," + albumsCount + "," + description + "," + genre
+                + "," + frontMan.getName() + "," + frontMan.getHeight() + "," + frontMan.getEyeColor()
+                + "," + frontMan.getHairColor() + "," + frontMan.getNationality()
+                + "," + frontMan.getLocation().getX() + "," + frontMan.getLocation().getY() + ","
+                + frontMan.getLocation().getZ();
+    }
+
+
     public String getStringDate() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd").format(creationDate);
     }
+
     public long getId() {
         return id;
     }

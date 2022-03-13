@@ -3,6 +3,7 @@ package collection.collectionUtil;
 import IOutils.fileUtils.FileManager;
 import collection.MusicBand;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -12,9 +13,13 @@ public class CollectionStorage {
     private HashSet<MusicBand> musicBands;
     private HashSet<Long> IDSet;
     private Date date;
-
+    private String file;
+    private FileManager fileManager;
+    public CollectionStorage() {
+        fileManager = new FileManager();
+    }
     public boolean fillCollection(String file) {
-        FileManager fileManager = new FileManager();
+        this.file = file;
         musicBands = fileManager.readCollection(file);
         date = new Date();
         IDSet = new HashSet<>();
@@ -22,6 +27,10 @@ public class CollectionStorage {
             IDSet.add(musicBand.getId());
         }
         return musicBands != null;
+    }
+
+    public void saveCollection() throws IOException {
+        fileManager.writeCollection(file, musicBands);
     }
 
     public long generateID() {
@@ -66,5 +75,9 @@ public class CollectionStorage {
     }
     public boolean removeById(long id) {
         return musicBands.removeIf(musicBand -> musicBand.getId() == id);
+    }
+
+    public String getFile() {
+        return file;
     }
 }

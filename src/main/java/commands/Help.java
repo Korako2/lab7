@@ -18,6 +18,6 @@ public class Help extends Command{
             Map.Entry<NameOfCommands, Command> entry = entries.next();
             help.append(entry.getValue().getName().getName()).append(": ").append(entry.getValue().getDescription()).append("\n");
         }
-        return help.toString();
+        return help.substring(0, help.length() - 1);
     }
 }

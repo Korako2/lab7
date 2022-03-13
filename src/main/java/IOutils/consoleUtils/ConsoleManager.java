@@ -15,23 +15,27 @@ public class ConsoleManager {
     private final CollectionStorage collectionStorage;
     private final ObjectReader objectReader;
     private final Scanner input;
+    private final boolean showMessages;
 
-    public ConsoleManager(CommandsManager commandsManager, Scanner input, CollectionStorage collectionStorage) {
+    public ConsoleManager(CommandsManager commandsManager, Scanner input, CollectionStorage collectionStorage, boolean showMessages) {
         this.commandsManager = commandsManager;
         this.input = input;
-        objectReader = new ObjectReader(input);
+        objectReader = new ObjectReader(input, showMessages);
         this.collectionStorage = collectionStorage;
+        this.showMessages = showMessages;
     }
 
     public boolean input() {
-        System.out.println("Enter command(if you don't know commands, enter command \"help\"):");
+        printInviteMessage();
+        if (!input.hasNext()) return false;
         String[] s = input.nextLine().split(" ");
         try {
             Command command = commandsManager.getCommandMap().get(NameOfCommands.valueOf(s[0].toUpperCase(Locale.ROOT)));
             commandsManager.addToHistory(command.getName());
             if (!checkArgsCount(s, command)) return true;
             ArgObject argObject = new ArgObject(collectionStorage, s, readObjectIfNecessary(command), commandsManager);
-            if (command.getName() == NameOfCommands.EXIT && askQuestion()) {
+            if (command.getName() == NameOfCommands.EXIT) {
+                if (!askQuestion()) return true;
                 System.out.println(command.execute(argObject));
                 return false;
             }
@@ -45,10 +49,10 @@ public class ConsoleManager {
     private boolean askQuestion() {
         while (true) {
             System.out.println("yes/no?");
-            if (input.nextLine().equals("yes")) return true;
-            else {
-                if (input.nextLine().equals("no")) return false;
-            }
+            if (!input.hasNext()) return true;
+            String answer = input.nextLine();
+            if (answer.equals("yes")) return true;
+            if (answer.equals("no")) return false;
         }
     }
 
@@ -61,5 +65,9 @@ public class ConsoleManager {
     private MusicBand readObjectIfNecessary(Command command) {
         if (!command.isNeedObject()) return null;
         return objectReader.readObject();
+    }
+
+    private void printInviteMessage() {
+        if (showMessages) System.out.println("Enter command (if you don't know commands, enter command \"help\"):");
     }
 }
