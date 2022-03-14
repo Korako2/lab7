@@ -6,6 +6,9 @@ import commands.commandsUtils.NameOfCommands;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/**
+ * Класс для сохранения коллекции в файл.
+ */
 public class Save extends Command {
     public Save() {
         super(false, 0, NameOfCommands.SAVE, "to save the collection to a file");

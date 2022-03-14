@@ -5,6 +5,9 @@ import commands.commandsUtils.NameOfCommands;
 
 import java.util.Map;
 
+/**
+ * Класс для вывода справки по доступным командам.
+ */
 public class Help extends Command {
     public Help() {
         super(false, 0, NameOfCommands.HELP, "display help on available commands");

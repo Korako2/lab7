@@ -5,6 +5,9 @@ import collection.*;
 import java.time.ZonedDateTime;
 import java.util.Scanner;
 
+/**
+ * Класс для создания считывания полей объекта с консоли или скрипта.
+ */
 public class ObjectReader {
     private final Scanner scanner;
     private final boolean showMessages;
@@ -14,6 +17,11 @@ public class ObjectReader {
         this.showMessages = showMessages;
     }
 
+    /**
+     * Метод для создания объекта на основе считанных полей.
+     *
+     * @return элемент коллекции типа {@link MusicBand}.
+     */
     public MusicBand readObject() {
         return new MusicBand(readNameOfMusicBand(), readCoordinates(), ZonedDateTime.now(),
                 readNumberOfParticipants(), readAlbumsCount(), readDescription(), readGenre(), readPerson());
@@ -225,11 +233,22 @@ public class ObjectReader {
 
     }
 
+    /**
+     * Метод для вывода приглашения на ввод (в случае работы с консолью) и считывания ответа пользователя.
+     *
+     * @param message сообщение для пользователя.
+     * @return ответ пользователя.
+     */
     public String readLine(String message) {
         if (showMessages) System.out.println(message);
         return scanner.nextLine();
     }
 
+    /**
+     * Метод для вывода сообщения пользователю (в случае работы с консолью).
+     *
+     * @param message сообщение для пользователя.
+     */
     public void printLine(String message) {
         if (showMessages) System.out.println(message);
     }

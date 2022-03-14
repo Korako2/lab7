@@ -4,6 +4,9 @@ import collection.MusicBand;
 import commands.commandsUtils.ArgObject;
 import commands.commandsUtils.NameOfCommands;
 
+/**
+ * Класс для вывода элементов, значения поля numberOfParticipants которых меньше заданного.
+ */
 public class FilterLessThanNumberOfParticipants extends Command {
     public FilterLessThanNumberOfParticipants() {
         super(false, 1, NameOfCommands.FILTER_LESS_THAN_NUMBER_OF_PARTICIPANTS, "output elements whose numberOfParticipants field value is less than the specified one");

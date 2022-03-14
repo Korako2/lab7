@@ -3,6 +3,9 @@ package commands;
 import commands.commandsUtils.ArgObject;
 import commands.commandsUtils.NameOfCommands;
 
+/**
+ * Абстрактный класс команд.
+ */
 public abstract class Command {
     private final boolean needObject;
     private final int countOfArgs;
@@ -16,6 +19,11 @@ public abstract class Command {
         this.description = description;
     }
 
+    /**
+     * Метод для исполнения команды.
+     * @param argObject объект для хранения аргументов команды {@link ArgObject}.
+     * @return результат выполнения команды.
+     */
     public abstract String execute(ArgObject argObject);
 
     public NameOfCommands getName() {

@@ -3,6 +3,9 @@ package commands;
 import commands.commandsUtils.ArgObject;
 import commands.commandsUtils.NameOfCommands;
 
+/**
+ * Класс для обновления значения элемента коллекции, ID которого равен заданному.
+ */
 public class UpdateId extends Command {
     public UpdateId() {
         super(true, 1, NameOfCommands.UPDATE, "update the value for the collection element whose id is equal to the given one");

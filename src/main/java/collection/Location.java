@@ -1,9 +1,9 @@
 package collection;
 
 public class Location {
-    private final Float x; //Поле не может быть null
+    private final Float x; //Поле не может быть null.
     private final int y;
-    private final Long z; //Поле не может быть null
+    private final Long z; //Поле не может быть null.
 
     public Location(Float x, int y, Long z) {
         this.x = x;

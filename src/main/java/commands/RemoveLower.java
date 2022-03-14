@@ -6,6 +6,9 @@ import commands.commandsUtils.NameOfCommands;
 
 import java.util.ArrayList;
 
+/**
+ * Класс для удаления из коллекции всех элементов, значения поля albumsCount которых меньше заданного.
+ */
 public class RemoveLower extends Command {
     public RemoveLower() {
         super(true, 0, NameOfCommands.REMOVE_LOWER, "remove from the collection all elements smaller than the specified one");

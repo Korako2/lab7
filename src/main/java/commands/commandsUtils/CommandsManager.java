@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+/**
+ * Класс для хранания объектов комманд и управлением историей комманд.
+ */
 public class CommandsManager {
     private final Map<NameOfCommands, Command> commandMap = new HashMap<>();
     private final LinkedList<NameOfCommands> history = new LinkedList();
@@ -34,6 +37,11 @@ public class CommandsManager {
         return commandMap;
     }
 
+    /**
+     * Метод для добавления команды в историю.
+     *
+     * @param command значение enum {@link NameOfCommands}.
+     */
     public void addToHistory(NameOfCommands command) {
         if (history.size() == MAX_LENGTH_OF_HISTORY) {
             history.remove();

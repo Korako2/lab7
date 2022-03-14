@@ -1,5 +1,8 @@
 package collection;
 
+/**
+ * Класс для объекта frontMan группы.
+ */
 public class Person {
     private final String name; //Поле не может быть null, Строка не может быть пустой
     private final Double height; //Поле может быть null, Значение поля должно быть больше 0

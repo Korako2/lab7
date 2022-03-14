@@ -3,6 +3,9 @@ package commands;
 import commands.commandsUtils.ArgObject;
 import commands.commandsUtils.NameOfCommands;
 
+/**
+ * Класс для добавления элемента в коллекцию, если его поле albumsCount меньше минимального внутри коллекции.
+ */
 public class AddIfMin extends Command {
     public AddIfMin() {
         super(true, 0, NameOfCommands.ADD_IF_MIN, " add a new element to the collection if its value is less than the smallest element of this collection");

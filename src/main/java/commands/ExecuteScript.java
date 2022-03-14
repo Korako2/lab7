@@ -1,6 +1,6 @@
 package commands;
 
-import IOutils.consoleUtils.ConsoleManager;
+import IOutils.UserInputManager;
 import commands.commandsUtils.ArgObject;
 import commands.commandsUtils.NameOfCommands;
 
@@ -11,6 +11,9 @@ import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+/**
+ * Класс для считывание и исполнения скрипта из указанного файла.
+ */
 public class ExecuteScript extends Command {
     HashSet<String> fileNames;
 
@@ -21,10 +24,10 @@ public class ExecuteScript extends Command {
     }
 
     public String execute(ArgObject argObject) {
-        ConsoleManager inputFromFile;
+        UserInputManager inputFromFile;
         try {
             FileReader fileReader = new FileReader(argObject.getArgs()[1]);
-            inputFromFile = new ConsoleManager(argObject.getCommandsManager(), new Scanner(fileReader),
+            inputFromFile = new UserInputManager(argObject.getCommandsManager(), new Scanner(fileReader),
                     argObject.getCollectionStorage(), false);
         } catch (FileNotFoundException e) {
             return "Wrong file";

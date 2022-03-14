@@ -1,4 +1,4 @@
-import IOutils.consoleUtils.ConsoleManager;
+import IOutils.UserInputManager;
 import collection.collectionUtil.CollectionStorage;
 import commands.commandsUtils.CommandsManager;
 
@@ -28,7 +28,7 @@ public class Application {
             System.out.println("Incorrect data in file.");
             System.exit(-1);
         }
-        ConsoleManager inputFromConsole = new ConsoleManager(commandsManager, scanner, collectionStorage, true);
+        UserInputManager inputFromConsole = new UserInputManager(commandsManager, scanner, collectionStorage, true);
         boolean continueFlag;
         do {
             try {

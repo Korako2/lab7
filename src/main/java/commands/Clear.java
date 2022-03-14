@@ -3,6 +3,9 @@ package commands;
 import commands.commandsUtils.ArgObject;
 import commands.commandsUtils.NameOfCommands;
 
+/**
+ * Класс для очистки коллекции.
+ */
 public class Clear extends Command {
 
     public Clear() {

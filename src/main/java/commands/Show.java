@@ -4,6 +4,9 @@ import collection.MusicBand;
 import commands.commandsUtils.ArgObject;
 import commands.commandsUtils.NameOfCommands;
 
+/**
+ * Класс для вывода всех элементов коллекции в строковом представлении.
+ */
 public class Show extends Command {
 
     public Show() {

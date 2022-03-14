@@ -5,6 +5,9 @@ import commands.commandsUtils.NameOfCommands;
 
 import java.util.LinkedList;
 
+/**
+ * Класс вывода последних 11 команд.
+ */
 public class History extends Command {
     public History() {
         super(false, 0, NameOfCommands.HISTORY, "output the last 11 commands (without their arguments)");

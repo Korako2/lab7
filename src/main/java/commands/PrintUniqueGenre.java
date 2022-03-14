@@ -7,6 +7,9 @@ import commands.commandsUtils.NameOfCommands;
 
 import java.util.HashSet;
 
+/**
+ * Класс для вывода уникальных значений поля genre всех элементов в коллекции.
+ */
 public class PrintUniqueGenre extends Command {
     public PrintUniqueGenre() {
         super(false, 0, NameOfCommands.PRINT_UNIQUE_GENRE, "print the unique values of the genre field of all items in the collection");

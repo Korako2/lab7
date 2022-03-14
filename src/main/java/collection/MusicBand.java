@@ -3,6 +3,9 @@ package collection;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Класс для элементов коллекции.
+ */
 public class MusicBand {
     private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private final String name; //Поле не может быть null, Строка не может быть пустой
@@ -51,6 +54,11 @@ public class MusicBand {
                 + frontMan.getLocation().getZ();
     }
 
+    /**
+     * Метод для получения строкового представления элемента коллекции для записи в коллекцию.
+     *
+     * @return String представление элемента.
+     */
     public String getStringToSaveInFile() {
         String height;
         String eyeColor;
@@ -72,7 +80,11 @@ public class MusicBand {
                 + frontMan.getLocation().getZ();
     }
 
-
+    /**
+     * Метод для получения строкового представления даты.
+     *
+     * @return String представление даты.
+     */
     public String getStringDate() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd").format(creationDate);
     }

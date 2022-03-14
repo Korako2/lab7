@@ -3,6 +3,9 @@ package commands.commandsUtils;
 import collection.MusicBand;
 import collection.collectionUtil.CollectionStorage;
 
+/**
+ * Класс для хранения аргументов комманд.
+ */
 public class ArgObject {
     private final CollectionStorage collectionStorage;
     private final String[] args;

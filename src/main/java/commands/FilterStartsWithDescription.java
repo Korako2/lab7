@@ -4,6 +4,9 @@ import collection.MusicBand;
 import commands.commandsUtils.ArgObject;
 import commands.commandsUtils.NameOfCommands;
 
+/**
+ * Класс для вывода элементов коллекции, значение поля description которых начинается с заданной подстроки.
+ */
 public class FilterStartsWithDescription extends Command {
     public FilterStartsWithDescription() {
 
