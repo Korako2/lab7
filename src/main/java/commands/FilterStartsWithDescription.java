@@ -21,7 +21,7 @@ public class FilterStartsWithDescription extends Command {
                 result.append(i).append("\n");
             }
         }
-        if (result.isEmpty()) return "No such elements";
+        if (result.length() == 0) return "No such elements";
         return result.substring(0, result.toString().length() - 1);
     }
 }

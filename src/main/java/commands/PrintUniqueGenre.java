@@ -24,7 +24,7 @@ public class PrintUniqueGenre extends Command {
                 result.append(i.getGenre().getMusic()).append("\n");
             }
         }
-        if (result.isEmpty()) return "No genre...";
+        if (result.length() == 0) return "No genre...";
         return result.substring(0, result.toString().length() - 1);
     }
 }

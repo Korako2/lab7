@@ -1,0 +1,38 @@
+
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"
+
+dependencies {
+    implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.9.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'application'
+apply plugin: 'java'
+
+mainClassName = 'Application'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+tasks.register('uberJar', Jar) {
+    archiveClassifier = 'uber'
+    manifest {
+        attributes 'Main-Class': 'Application'
+    }
+    from sourceSets.main.output
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
+
+test {
+    systemProperty "file.encoding", "utf-8"
+}

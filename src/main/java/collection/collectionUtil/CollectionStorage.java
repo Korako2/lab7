@@ -4,6 +4,7 @@ import IOutils.fileUtils.FileManager;
 import collection.MusicBand;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -37,7 +38,11 @@ public class CollectionStorage implements StorageInterface<MusicBand> {
      */
     public boolean fillCollection(String file) {
         this.file = file;
-        musicBands = fileManager.readCollection(file);
+        try {
+            musicBands = fileManager.readCollection(file);
+        } catch (IOException | ParseException e) {
+            return false;
+        }
         if (musicBands == null) return false;
         date = new Date();
         IDSet = new HashSet<>();

@@ -18,7 +18,7 @@ public class Show extends Command {
         for (MusicBand i : argObject.getCollectionStorage().getCollection()) {
             result.append(i.toString()).append("\n");
         }
-        if (result.isEmpty()) return "Collection is empty";
+        if (result.length() == 0) return "Collection is empty";
         return result.substring(0, result.toString().length() - 1);
     }
 }

@@ -20,18 +20,13 @@ public class FileManager {
      * @param file имя файла, содержажего коллекцию.
      * @return считанная коллекция с объектами {@link MusicBand}
      */
-    public HashSet<MusicBand> readCollection(String file) {
-        HashSet<MusicBand> musicBands = null;
-        try {
-            musicBands = csvParser.parse(file);
-            for (MusicBand OneMusicBand : musicBands) {
-                ObjectValidation objectValidation = new ObjectValidation();
-                if (!objectValidation.checkObject(OneMusicBand)) {
-                    return null;
-                }
+    public HashSet<MusicBand> readCollection(String file) throws IOException, ParseException {
+        HashSet<MusicBand> musicBands = csvParser.parse(file);
+        for (MusicBand OneMusicBand : musicBands) {
+            ObjectValidation objectValidation = new ObjectValidation();
+            if (!objectValidation.checkObject(OneMusicBand)) {
+                return null;
             }
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
         }
         return musicBands;
     }

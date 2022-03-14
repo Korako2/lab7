@@ -3,6 +3,8 @@ import collection.collectionUtil.CollectionStorage;
 import commands.commandsUtils.CommandsManager;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -25,7 +27,7 @@ public class Application {
         Matcher matcher = pattern.matcher(file.getAbsolutePath());
         if (matcher.find()) System.exit(-1);
         if (!collectionStorage.fillCollection(fileName)) {
-            System.out.println("Incorrect data in file.");
+            System.out.println("Incorrect file name or data in file.");
             System.exit(-1);
         }
         UserInputManager inputFromConsole = new UserInputManager(commandsManager, scanner, collectionStorage, true);

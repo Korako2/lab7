@@ -24,7 +24,7 @@ public class FilterLessThanNumberOfParticipants extends Command {
                 result = new StringBuilder("Wrong format of number of participants");
             }
         }
-        if (result.isEmpty()) return "Collection is empty";
+        if (result.length() == 0) return "Collection is empty";
         return result.substring(0, result.toString().length() - 1);
     }
 }
