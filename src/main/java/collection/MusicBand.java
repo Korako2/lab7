@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Класс для элементов коллекции.
  */
-public class MusicBand {
+public class MusicBand implements Comparable<MusicBand> {
     private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private final String name; //Поле не может быть null, Строка не может быть пустой
     private final Coordinates coordinates; //Поле не может быть null
@@ -127,6 +127,11 @@ public class MusicBand {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Override
+    public int compareTo(MusicBand o) {
+        return Long.compare(this.getAlbumsCount(), o.getAlbumsCount());
     }
 }
 

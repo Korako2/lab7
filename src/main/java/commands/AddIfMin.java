@@ -13,7 +13,7 @@ public class AddIfMin extends Command {
 
     public String execute(ArgObject argObject) {
         String result = "This band wasn't added because it has too much albums";
-        if (argObject.getMusicBand().getAlbumsCount() < argObject.getCollectionStorage().getMinObject().getAlbumsCount()) {
+        if (argObject.getMusicBand().compareTo(argObject.getCollectionStorage().getMinObject()) < 0) {
             argObject.getCollectionStorage().add(argObject.getMusicBand());
             result = "Music band was added.";
         }

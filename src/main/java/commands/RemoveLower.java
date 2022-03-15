@@ -19,7 +19,7 @@ public class RemoveLower extends Command {
         String result = "All lower objects were deleted";
         ArrayList<Long> ID = new ArrayList<>();
         for (MusicBand i : argObject.getCollectionStorage().getCollection()) {
-            if (argObject.getMusicBand().getAlbumsCount() > i.getAlbumsCount()) {
+            if (argObject.getMusicBand().compareTo(i) > 0) {
                 ID.add(i.getId());
             }
         }
