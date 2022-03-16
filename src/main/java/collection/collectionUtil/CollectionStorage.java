@@ -36,18 +36,22 @@ public class CollectionStorage implements StorageInterface<MusicBand> {
      * @param file имя файла с коллекцией.
      * @return true если заполнение коллекции из файла произошло удачно; иначе false.
      */
-    public boolean fillCollection(String file) {
+    public boolean fillCollection(String file) throws IOException, ParseException, NumberFormatException {
         this.file = file;
         try {
             musicBands = fileManager.readCollection(file);
-        } catch (IOException | ParseException e) {
-            return false;
+        } catch (IOException e) {
+            throw new IOException("Incorrect file name.");
+        } catch (ParseException e) {
+            throw new ParseException("Incorrect format of data in file.", e.getErrorOffset());
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Incorrect data in file.");
         }
         if (musicBands == null) return false;
         date = new Date();
         IDSet = new HashSet<>();
         for (MusicBand musicBand : musicBands) {
-            IDSet.add(musicBand.getId());
+            if (!IDSet.add(musicBand.getId())) return false;
         }
         return true;
     }

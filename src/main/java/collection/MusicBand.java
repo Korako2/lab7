@@ -2,6 +2,7 @@ package collection;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * Класс для элементов коллекции.
@@ -130,8 +131,26 @@ public class MusicBand implements Comparable<MusicBand> {
     }
 
     @Override
+    public boolean equals(Object musicBand) {
+        if (musicBand == this) {
+            return true;
+        }
+        if (musicBand == null || getClass() != musicBand.getClass()) {
+            return false;
+        }
+        MusicBand musicBand1 = (MusicBand) musicBand;
+
+        return toString().equals(musicBand1.toString());
+    }
+
+    @Override
     public int compareTo(MusicBand o) {
         return Long.compare(this.getAlbumsCount(), o.getAlbumsCount());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
 
