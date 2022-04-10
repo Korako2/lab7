@@ -1,44 +1,29 @@
 package commands;
 
 import commands.commandsUtils.ArgObject;
-import commands.commandsUtils.NameOfCommands;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Абстрактный класс команд.
  */
+@RequiredArgsConstructor
 public abstract class Command {
+    @Getter
     private final boolean needObject;
+    @Getter
     private final int countOfArgs;
-    private final NameOfCommands name;
+    @Getter
+    private final String name;
+    @Getter
     private final String description;
-
-    public Command(boolean needObject, int countOfArgs, NameOfCommands name, String description) {
-        this.needObject = needObject;
-        this.countOfArgs = countOfArgs;
-        this.name = name;
-        this.description = description;
-    }
 
     /**
      * Метод для исполнения команды.
+     *
      * @param argObject объект для хранения аргументов команды {@link ArgObject}.
      * @return результат выполнения команды.
      */
     public abstract String execute(ArgObject argObject);
 
-    public NameOfCommands getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public boolean isNeedObject() {
-        return needObject;
-    }
-
-    public int getCountOfArgs() {
-        return countOfArgs;
-    }
 }

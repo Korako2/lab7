@@ -2,6 +2,7 @@ package IOutils.fileUtils;
 
 import collection.MusicBand;
 import collection.collectionUtil.ObjectValidation;
+import org.apache.commons.csv.CSVRecord;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.HashSet;
  */
 public class FileManager {
     CSVParser csvParser = new CSVParser();
-
+    FileCollectionInitializer fileCollectionInitializer = new FileCollectionInitializer();
     /**
      * Метод для чтения коллекции из файла.
      *
@@ -21,14 +22,8 @@ public class FileManager {
      * @return считанная коллекция с объектами {@link MusicBand}
      */
     public HashSet<MusicBand> readCollection(String file) throws IOException, ParseException {
-        HashSet<MusicBand> musicBands = csvParser.parse(file);
-        for (MusicBand OneMusicBand : musicBands) {
-            ObjectValidation objectValidation = new ObjectValidation();
-            if (!objectValidation.checkObject(OneMusicBand)) {
-                return null;
-            }
-        }
-        return musicBands;
+        Iterable<CSVRecord> records = csvParser.parse(file);
+        return fileCollectionInitializer.initializeCollection(records);
     }
 
     /**

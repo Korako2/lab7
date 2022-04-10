@@ -1,38 +1,22 @@
 package commands.commandsUtils;
 
 import collection.MusicBand;
-import collection.collectionUtil.CollectionStorage;
+import collection.collectionUtil.CollectionManager;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Класс для хранения аргументов комманд.
  */
+@RequiredArgsConstructor
 public class ArgObject {
-    private final CollectionStorage collectionStorage;
+    @Getter
+    private final CollectionManager collectionManager;
+    @Getter
     private final String[] args;
+    @Getter
     private final MusicBand musicBand;
+    @Getter
     private final CommandsManager commandsManager;
-
-    public ArgObject(CollectionStorage collectionStorage, String[] args, MusicBand musicBand, CommandsManager commandsManager) {
-        this.collectionStorage = collectionStorage;
-        this.args = args;
-        this.musicBand = musicBand;
-        this.commandsManager = commandsManager;
-    }
-
-    public CollectionStorage getCollectionStorage() {
-        return collectionStorage;
-    }
-
-    public MusicBand getMusicBand() {
-        return musicBand;
-    }
-
-    public String[] getArgs() {
-        return args;
-    }
-
-    public CommandsManager getCommandsManager() {
-        return commandsManager;
-    }
 
 }

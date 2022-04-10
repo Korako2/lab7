@@ -1,5 +1,10 @@
 package collection;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -7,52 +12,31 @@ import java.util.Objects;
 /**
  * Класс для элементов коллекции.
  */
+@AllArgsConstructor
 public class MusicBand implements Comparable<MusicBand> {
+    @Getter
     private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    @Getter
     private final String name; //Поле не может быть null, Строка не может быть пустой
+    @Getter
     private final Coordinates coordinates; //Поле не может быть null
+    @Getter
     private final ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
+    @Getter
     private final Long numberOfParticipants; //Поле может быть null, Значение поля должно быть больше 0
+    @Getter
     private final long albumsCount; //Значение поля должно быть больше 0
+    @Getter
     private final String description; //Поле не может быть null
+    @Getter
     private final MusicGenre genre; //Поле может быть null
+    @Getter
     private final Person frontMan; //Поле может быть null
 
-    public MusicBand(long id, String name, Coordinates coordinates, ZonedDateTime creationDate, Long numberOfParticipants,
-                     long albumsCount, String description, MusicGenre genre, Person frontMan) {
-        this.id = id;
-        this.name = name;
-        this.coordinates = coordinates;
-        this.creationDate = creationDate;
-        this.numberOfParticipants = numberOfParticipants;
-        this.albumsCount = albumsCount;
-        this.description = description;
-        this.genre = genre;
-        this.frontMan = frontMan;
-    }
-
-    public MusicBand(String name, Coordinates coordinates, ZonedDateTime creationDate, Long numberOfParticipants,
-                     long albumsCount, String description, MusicGenre genre, Person frontMan) {
-        this.name = name;
-        this.coordinates = coordinates;
-        this.creationDate = creationDate;
-        this.numberOfParticipants = numberOfParticipants;
-        this.albumsCount = albumsCount;
-        this.description = description;
-        this.genre = genre;
-        this.frontMan = frontMan;
-    }
-
     public String toString() {
-        return "ID: " + id + ", name: " + name + ", coordinates: x = " + coordinates.getX() +
-                ", y = " + coordinates.getY() + ", creation date: " + getStringDate()
-                + ", number of participants: " + numberOfParticipants + ", albums count: " + albumsCount +
-                ", description: " + description + ", genre: " + genre + ", name of front man: " +
-                frontMan.getName() + ", height: " + frontMan.getHeight() + ", eye color: " +
-                frontMan.getEyeColor() + ", hair color: " + frontMan.getHairColor()
-                + ", nationality: " + frontMan.getNationality() + ", location: x = "
-                + frontMan.getLocation().getX() + ", y = " + frontMan.getLocation().getY() + ", z = "
-                + frontMan.getLocation().getZ();
+        return String.format("ID: %s, name: %s, coordinates: %s, creation date: %s,number of participants: %s " +
+                        "albums count: %s, description: %s, genre: %s, %s", id, name, coordinates, getStringDate(), numberOfParticipants,
+                albumsCount, description, genre, frontMan);
     }
 
     /**
@@ -61,24 +45,15 @@ public class MusicBand implements Comparable<MusicBand> {
      * @return String представление элемента.
      */
     public String getStringToSaveInFile() {
-        String height;
-        String eyeColor;
-        if (frontMan.getHeight() == null) {
-            height = "";
-        } else {
-            height = String.valueOf(frontMan.getHeight());
-        }
-        if (frontMan.getEyeColor() == null) {
-            eyeColor = "";
-        } else {
-            eyeColor = String.valueOf(frontMan.getEyeColor());
-        }
-        return id + "," + name + "," + coordinates.getX() + "," + coordinates.getY() + "," + getStringDate()
+
+        /*return id + "," + name + "," + coordinates.getX() + "," + coordinates.getY() + "," + getStringDate()
                 + "," + numberOfParticipants + "," + albumsCount + "," + description + "," + genre
                 + "," + frontMan.getName() + "," + height + "," + eyeColor
                 + "," + frontMan.getHairColor() + "," + frontMan.getNationality()
                 + "," + frontMan.getLocation().getX() + "," + frontMan.getLocation().getY() + ","
-                + frontMan.getLocation().getZ();
+                + frontMan.getLocation().getZ();*/
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", id,name,coordinates.getStringToSaveInFile(),getStringDate(), numberOfParticipants,
+                albumsCount,description,genre,frontMan.getStringToSaveInFile());
     }
 
     /**
@@ -88,46 +63,6 @@ public class MusicBand implements Comparable<MusicBand> {
      */
     public String getStringDate() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd").format(creationDate);
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
-
-    public ZonedDateTime getCreationDate() {
-        return creationDate;
-    }
-
-    public Long getNumberOfParticipants() {
-        return numberOfParticipants;
-    }
-
-    public long getAlbumsCount() {
-        return albumsCount;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public MusicGenre getGenre() {
-        return genre;
-    }
-
-    public Person getFrontMan() {
-        return frontMan;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     @Override
@@ -151,6 +86,10 @@ public class MusicBand implements Comparable<MusicBand> {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
 

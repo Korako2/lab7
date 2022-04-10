@@ -1,7 +1,6 @@
 package commands;
 
 import commands.commandsUtils.ArgObject;
-import commands.commandsUtils.NameOfCommands;
 
 /**
  * Класс для очистки коллекции.
@@ -9,11 +8,11 @@ import commands.commandsUtils.NameOfCommands;
 public class Clear extends Command {
 
     public Clear() {
-        super(false, 0, NameOfCommands.CLEAR, "to clear the collection");
+        super(false, 0, "CLEAR", "to clear the collection");
     }
 
     public String execute(ArgObject argObject) {
-        argObject.getCollectionStorage().clear();
+        argObject.getCollectionManager().clear();
         return "Collection is empty now!";
     }
 }

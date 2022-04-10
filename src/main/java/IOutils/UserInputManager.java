@@ -1,11 +1,11 @@
 package IOutils;
 
+import IOutils.readers.ObjectReader;
 import collection.MusicBand;
-import collection.collectionUtil.CollectionStorage;
+import collection.collectionUtil.CollectionManager;
 import commands.Command;
 import commands.commandsUtils.ArgObject;
 import commands.commandsUtils.CommandsManager;
-import commands.commandsUtils.NameOfCommands;
 
 import java.util.*;
 
@@ -14,16 +14,16 @@ import java.util.*;
  */
 public class UserInputManager {
     private final CommandsManager commandsManager;
-    private final CollectionStorage collectionStorage;
+    private final CollectionManager collectionManager;
     private final ObjectReader objectReader;
     private final Scanner input;
     private final boolean showMessages;
 
-    public UserInputManager(CommandsManager commandsManager, Scanner input, CollectionStorage collectionStorage, boolean showMessages) {
+    public UserInputManager(CommandsManager commandsManager, Scanner input, CollectionManager collectionManager, boolean showMessages) {
         this.commandsManager = commandsManager;
         this.input = input;
         objectReader = new ObjectReader(input, showMessages);
-        this.collectionStorage = collectionStorage;
+        this.collectionManager = collectionManager;
         this.showMessages = showMessages;
     }
 
@@ -37,11 +37,14 @@ public class UserInputManager {
         if (!input.hasNext()) return false;
         String[] s = input.nextLine().split(" ");
         try {
-            Command command = commandsManager.getCommandMap().get(NameOfCommands.valueOf(s[0].toUpperCase(Locale.ROOT)));
+            Command command = commandsManager.getCommand(s[0].toUpperCase(Locale.ROOT));
+            if (command == null) {
+                throw new IllegalArgumentException("There's no such command");
+            }
             commandsManager.addToHistory(command.getName());
             if (!checkArgsCount(s, command)) return true;
-            ArgObject argObject = new ArgObject(collectionStorage, s, readObjectIfNecessary(command), commandsManager);
-            if (command.getName() == NameOfCommands.EXIT) {
+            ArgObject argObject = new ArgObject(collectionManager, s, readObjectIfNecessary(command), commandsManager);
+            if (command.getName().equals("EXIT")) {
                 if (!askQuestion()) return true;
                 System.out.println(command.execute(argObject));
                 return false;
@@ -50,8 +53,6 @@ public class UserInputManager {
 
         } catch (NumberFormatException e) {
             throw e;
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("There's no such command");
         }
         return true;
     }

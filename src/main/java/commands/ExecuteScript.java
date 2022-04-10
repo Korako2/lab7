@@ -2,7 +2,6 @@ package commands;
 
 import IOutils.UserInputManager;
 import commands.commandsUtils.ArgObject;
-import commands.commandsUtils.NameOfCommands;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +17,7 @@ public class ExecuteScript extends Command {
     HashSet<String> fileNames;
 
     public ExecuteScript() {
-        super(false, 1, NameOfCommands.EXECUTE_SCRIPT, "read and execute the script from the specified file. The script contains commands in the same form in which they are entered by the user in\n" +
+        super(false, 1, "EXECUTE_SCRIPT", "read and execute the script from the specified file. The script contains commands in the same form in which they are entered by the user in\n" +
                 "interactive mode.");
         fileNames = new HashSet<>();
     }
@@ -28,7 +27,7 @@ public class ExecuteScript extends Command {
         try {
             FileReader fileReader = new FileReader(argObject.getArgs()[1]);
             inputFromFile = new UserInputManager(argObject.getCommandsManager(), new Scanner(fileReader),
-                    argObject.getCollectionStorage(), false);
+                    argObject.getCollectionManager(), false);
         } catch (FileNotFoundException e) {
             return "Wrong file";
         }

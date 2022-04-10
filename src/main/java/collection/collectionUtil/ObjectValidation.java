@@ -17,7 +17,7 @@ public class ObjectValidation {
      */
     public boolean checkObject(MusicBand musicBand) {
         return (musicBand.getId() > 0 && musicBand.getName() != null && musicBand.getCoordinates() != null &&
-                musicBand.getCreationDate() != null && musicBand.getNumberOfParticipants() != null &&
+                musicBand.getCreationDate() != null &&
                 musicBand.getAlbumsCount() > 0 && musicBand.getDescription() != null &&
                 musicBand.getGenre() != null && musicBand.getFrontMan() != null &&
                 checkCoordinates(musicBand.getCoordinates()) && checkPerson(musicBand.getFrontMan()));
@@ -40,7 +40,7 @@ public class ObjectValidation {
      * @return true если поля объекта валидны, иначе false.
      */
     private boolean checkPerson(Person person) {
-        return (person.getName() != null && person.getHeight() != null && person.getEyeColor() != null &&
+        return (person.getName() != null &&
                 person.getHairColor() != null && person.getNationality() != null && checkLocation(person.getLocation()));
     }
 

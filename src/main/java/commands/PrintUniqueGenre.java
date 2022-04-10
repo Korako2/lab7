@@ -1,30 +1,24 @@
 package commands;
 
-import collection.MusicBand;
 import collection.MusicGenre;
 import commands.commandsUtils.ArgObject;
-import commands.commandsUtils.NameOfCommands;
 
-import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Класс для вывода уникальных значений поля genre всех элементов в коллекции.
  */
 public class PrintUniqueGenre extends Command {
     public PrintUniqueGenre() {
-        super(false, 0, NameOfCommands.PRINT_UNIQUE_GENRE, "print the unique values of the genre field of all items in the collection");
+        super(false, 0, "PRINT_UNIQUE_GENRE", "print the unique values of the genre field of all items in the collection");
     }
 
     @Override
     public String execute(ArgObject argObject) {
-        HashSet<MusicGenre> musicGenres = new HashSet<>();
+        Set<MusicGenre> filterResult = argObject.getCollectionManager().PrintUniqueGenre();
         StringBuilder result = new StringBuilder();
-        for (MusicBand i : argObject.getCollectionStorage().getCollection()) {
-            if (musicGenres.add(i.getGenre())) {
-                result.append(i.getGenre().getMusic()).append("\n");
-            }
-        }
-        if (result.length() == 0) return "No genre...";
+        for (MusicGenre musicGenre : filterResult) result.append(musicGenre.getMusic()).append("\n");
+        if (result.length() == 0) return "No genre...\n";
         return result.substring(0, result.toString().length() - 1);
     }
 }

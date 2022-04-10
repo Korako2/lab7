@@ -1,19 +1,21 @@
 package collection;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class Coordinates {
+    @Getter
     private final Float x; //Максимальное значение поля: 146, Поле не может быть null.
+    @Getter
     private final int y;
 
-    public Coordinates(Float x, int y) {
-        this.x = x;
-        this.y = y;
+    public String toString() {
+        return String.format("coordinates: x = %s, y = %s", x, y);
     }
 
-    public Float getX() {
-        return x;
+    public String getStringToSaveInFile() {
+        return String.format("%s,%s", x, y);
     }
 
-    public int getY() {
-        return y;
-    }
 }

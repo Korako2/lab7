@@ -17,15 +17,13 @@ public interface StorageInterface<T> {
 
     void saveCollection() throws IOException;
 
-    long generateID();
-
     T getMinObject();
 
     void add(T element);
 
     void clear();
 
-    HashSet<T> getCollection();
+    //HashSet<T> getCollection();
 
     Date getDate();
 

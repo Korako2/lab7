@@ -2,18 +2,19 @@ package collection.collectionUtil;
 
 import IOutils.fileUtils.FileManager;
 import collection.MusicBand;
+import collection.MusicGenre;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Класс для хранения коллекции.
  */
 
-public class CollectionStorage implements StorageInterface<MusicBand> {
+public class CollectionManager implements StorageInterface<MusicBand> {
     /**
      * Коллекция.
      */
@@ -21,13 +22,16 @@ public class CollectionStorage implements StorageInterface<MusicBand> {
     /**
      * Коллекция для хранения ID элементов основной коллекции.
      */
-    private HashSet<Long> IDSet;
+    @Getter
     private Date date;
     private String file;
     private final FileManager fileManager;
+    private final IdStorage idStorage;
 
-    public CollectionStorage() {
+    public CollectionManager() {
+
         fileManager = new FileManager();
+        idStorage = new IdStorage();
     }
 
     /**
@@ -36,6 +40,7 @@ public class CollectionStorage implements StorageInterface<MusicBand> {
      * @param file имя файла с коллекцией.
      * @return true если заполнение коллекции из файла произошло удачно; иначе false.
      */
+
     public boolean fillCollection(String file) throws IOException, ParseException, NumberFormatException {
         this.file = file;
         try {
@@ -47,11 +52,11 @@ public class CollectionStorage implements StorageInterface<MusicBand> {
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Incorrect data in file.");
         }
+
         if (musicBands == null) return false;
         date = new Date();
-        IDSet = new HashSet<>();
         for (MusicBand musicBand : musicBands) {
-            if (!IDSet.add(musicBand.getId())) return false;
+            if (!idStorage.addID(musicBand)) return false;
         }
         return true;
     }
@@ -63,24 +68,6 @@ public class CollectionStorage implements StorageInterface<MusicBand> {
      */
     public void saveCollection() throws IOException {
         fileManager.writeCollection(file, musicBands);
-    }
-
-    /**
-     * Метод для генерации ID для нового элемента коллекции, добавленного из консоли или скрипа.
-     *
-     * @return сгенерированное ID.
-     */
-    public long generateID() {
-        long id;
-        if (Collections.max(IDSet) == Long.MAX_VALUE) {
-            id = 1;
-        } else {
-            id = Collections.max(IDSet) + 1;
-        }
-        while (!IDSet.add(id)) {
-            id += 1;
-        }
-        return id;
     }
 
     /**
@@ -108,12 +95,40 @@ public class CollectionStorage implements StorageInterface<MusicBand> {
         musicBands.clear();
     }
 
-    public HashSet<MusicBand> getCollection() {
-        return musicBands;
+    public String show() {
+        if (musicBands.isEmpty()) {
+            return "Collection is empty";
+        }
+        StringBuilder result = new StringBuilder();
+        for (MusicBand i : musicBands) {
+            result.append(i.toString()).append("\n");
+        }
+        return result.substring(0, result.toString().length() - 1);
     }
 
-    public Date getDate() {
-        return date;
+    public List<MusicBand> FilterLessThanNumberOfParticipants(Long numberOfParticipants) {
+        return musicBands.stream().filter(p -> p.getNumberOfParticipants() < numberOfParticipants).collect(Collectors.toList());
+    }
+
+    public Set<MusicGenre> PrintUniqueGenre() {
+        return musicBands.stream().map(MusicBand::getGenre).collect(Collectors.toSet());
+    }
+
+    public Set<Long> getIdByLower(MusicBand musicBand) {
+        return musicBands.stream().filter(p -> musicBand.compareTo(p) > 0).map(MusicBand::getId).collect(Collectors.toSet());
+    }
+
+    public Set<MusicBand> getMusicBandsOfDescription(String description) {
+        return musicBands.stream().filter(p -> p.getDescription().indexOf(description) == 0).collect(Collectors.toSet());
+    }
+
+    public String getInfo() {
+        return "Тип коллекции: " + musicBands.getClass().getName() + ", дата создания: "
+                + getDate() + ", количество объектов: " + musicBands.size();
+    }
+
+    public long generateId() {
+        return idStorage.generateID();
     }
 
     /**
