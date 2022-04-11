@@ -1,6 +1,6 @@
 package IOutils.readers;
 
-import IOutils.InputAndOutput;
+import client.InputAndOutput;
 import collection.*;
 import collection.collectionUtil.MusicBandBuilder;
 

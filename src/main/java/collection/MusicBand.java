@@ -46,14 +46,8 @@ public class MusicBand implements Comparable<MusicBand> {
      */
     public String getStringToSaveInFile() {
 
-        /*return id + "," + name + "," + coordinates.getX() + "," + coordinates.getY() + "," + getStringDate()
-                + "," + numberOfParticipants + "," + albumsCount + "," + description + "," + genre
-                + "," + frontMan.getName() + "," + height + "," + eyeColor
-                + "," + frontMan.getHairColor() + "," + frontMan.getNationality()
-                + "," + frontMan.getLocation().getX() + "," + frontMan.getLocation().getY() + ","
-                + frontMan.getLocation().getZ();*/
-        return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", id,name,coordinates.getStringToSaveInFile(),getStringDate(), numberOfParticipants,
-                albumsCount,description,genre,frontMan.getStringToSaveInFile());
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s", id, name, coordinates.getStringToSaveInFile(), getStringDate(), numberOfParticipants,
+                albumsCount, description, genre, frontMan.getStringToSaveInFile());
     }
 
     /**

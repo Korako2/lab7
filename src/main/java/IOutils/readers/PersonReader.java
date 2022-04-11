@@ -1,10 +1,7 @@
 package IOutils.readers;
 
-import IOutils.InputAndOutput;
-import IOutils.readers.LocationReader;
+import client.InputAndOutput;
 import collection.*;
-
-import java.util.Scanner;
 
 public class PersonReader {
     InputAndOutput inputAndOutput;

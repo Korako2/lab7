@@ -1,10 +1,8 @@
 package IOutils.readers;
 
-import IOutils.InputAndOutput;
+import client.InputAndOutput;
 import collection.Coordinates;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Scanner;
 
 @RequiredArgsConstructor
 public class CoordinatesReader {

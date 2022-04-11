@@ -1,10 +1,8 @@
 package IOutils.readers;
 
-import IOutils.InputAndOutput;
+import client.InputAndOutput;
 import lombok.RequiredArgsConstructor;
 import collection.Location;
-
-import java.util.Scanner;
 
 @RequiredArgsConstructor
 public class LocationReader {

@@ -1,4 +1,4 @@
-package IOutils;
+package client;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
