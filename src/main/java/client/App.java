@@ -1,8 +1,12 @@
 package client;
 
 import client.IOutils.UserInputManager;
+import client.commands.ClientCommandsManager;
+import client.commands.ExecuteScript;
+import client.commands.Help;
+import client.commands.History;
 import server.collectionUtil.CollectionManager;
-import sharedClasses.commands.commandsUtils.CommandsManager;
+import sharedClasses.commands.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,11 +23,25 @@ public class App {
         out = new PrintStream(System.out);
         AddressValidation addressValidation = new AddressValidation(arg, out);
         if (!addressValidation.checkAddress()) return;
-        CommandsManager commandsManager = new CommandsManager();
-        CollectionManager collectionManager = new CollectionManager();
+        ClientCommandsManager clientCommandsManager = new ClientCommandsManager();
         Scanner scanner = new Scanner(System.in);
-        UserInputManager inputFromConsole = new UserInputManager(commandsManager, scanner, collectionManager, true, out);
-        Client client = new Client(addressValidation.getHost(), addressValidation.getPort(), out, inputFromConsole);
+        UserInputManager inputFromConsole = new UserInputManager(clientCommandsManager, scanner, true, out);
+        Client client = new Client(addressValidation.getHost(), addressValidation.getPort(), out, inputFromConsole, clientCommandsManager);
+        clientCommandsManager.addCommand(new Help());
+        clientCommandsManager.addCommand(new Info());
+        clientCommandsManager.addCommand(new Show());
+        clientCommandsManager.addCommand(new Add());
+        clientCommandsManager.addCommand(new UpdateId());
+        clientCommandsManager.addCommand(new RemoveById());
+        clientCommandsManager.addCommand(new Clear());
+        clientCommandsManager.addCommand(new ExecuteScript(client));
+        clientCommandsManager.addCommand(new Exit());
+        clientCommandsManager.addCommand(new AddIfMin());
+        clientCommandsManager.addCommand(new RemoveLower());
+        clientCommandsManager.addCommand(new History());
+        clientCommandsManager.addCommand(new FilterStartsWithDescription());
+        clientCommandsManager.addCommand(new FilterLessThanNumberOfParticipants());
+        clientCommandsManager.addCommand(new PrintUniqueGenre());
         try {
             client.run();
         } catch (IOException e) {
@@ -34,7 +52,7 @@ public class App {
 
     public static void run() {
         Scanner scanner = new Scanner(System.in);
-        CommandsManager commandsManager = new CommandsManager();
+        ClientCommandsManager ClientCommandsManager = new ClientCommandsManager();
         CollectionManager collectionManager = new CollectionManager();
         Map env = System.getenv();
         String fileName = (String) env.get("FILE_NAME");
@@ -65,7 +83,7 @@ public class App {
             System.exit(-1);
         }
 
-        UserInputManager inputFromConsole = new UserInputManager(commandsManager, scanner, collectionManager, true, out);
+        UserInputManager inputFromConsole = new UserInputManager(ClientCommandsManager, scanner, true, out);
         boolean continueFlag;
         /*do {
             try {

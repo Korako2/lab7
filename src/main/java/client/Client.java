@@ -1,9 +1,12 @@
 package client;
 
 import client.IOutils.UserInputManager;
+import client.commands.ClientCommandsManager;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import sharedClasses.Request;
 import sharedClasses.Response;
+import sharedClasses.commands.commandsUtils.ArgObject;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -14,12 +17,13 @@ public class Client {
     private final String host;
     private final int port;
     private final PrintStream out;
-
     private final UserInputManager userInputManager;
+    private final ClientCommandsManager clientCommandsManager;
     private SocketChannel socketChannel;
+    @Getter
     private ObjectOutputStream writer;
+    @Getter
     private ObjectInputStream reader;
-
     private int maxCountOfConnection = 10;
     private int countOfConnections = 0;
 
@@ -86,7 +90,7 @@ public class Client {
         if (socketChannel != null) socketChannel.close();
     }
 
-    private boolean requestToServer() throws IOException, ClassNotFoundException {
+    private boolean requestToServer() throws IOException, ClassNotFoundException,IllegalArgumentException {
         try {
             Request request = null;
             Response response = null;
@@ -94,16 +98,21 @@ public class Client {
                 try {
                     request = userInputManager.input();
                     if (request == null) return false;
-                    if (request.isEmpty()) continue;
-                    writer.writeObject(request);
-                    response = (Response) reader.readObject();
-                    out.println(response.getResponseHead() + " " +response.getResponseBody());
-                } catch (IllegalArgumentException e) {
+                    if (request.getCommand().isServer()) {
+                        writer.writeObject(request);
+                        response = (Response) reader.readObject();
+                        out.println(response.getResponseBody());
+                    } else {
+                        ArgObject argObject = new ArgObject(clientCommandsManager, request.getArgsOfCommand(), null);
+                        out.println(request.getCommand().execute(argObject));
+                    }
+                    } catch (IllegalArgumentException e) {
                     out.println(e.getMessage());
                 }
             } while (!request.getNameOfCommand().toUpperCase().equals("EXIT"));
             return false;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new IOException("Соединение с сервером разорвано.");
         } catch (ClassNotFoundException e) {
             throw new ClassNotFoundException("Произошла ошибка при чтении данных.");

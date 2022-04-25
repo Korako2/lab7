@@ -1,7 +1,7 @@
 package sharedClasses.commands.commandsUtils;
 
+import client.commands.ClientCommandsManager;
 import sharedClasses.data.MusicBand;
-import server.collectionUtil.CollectionManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -11,12 +11,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ArgObject {
     @Getter
-    private final CollectionManager collectionManager;
+    private final Manager manager;
     @Getter
     private final String[] args;
     @Getter
     private final MusicBand musicBand;
-    @Getter
-    private final CommandsManager commandsManager;
-
 }

@@ -1,5 +1,6 @@
 package sharedClasses.commands;
 
+import server.collectionUtil.CollectionManager;
 import sharedClasses.data.MusicBand;
 import sharedClasses.commands.commandsUtils.ArgObject;
 
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public class FilterLessThanNumberOfParticipants extends Command {
     public FilterLessThanNumberOfParticipants() {
-        super(false, 1, "FILTER_LESS_THAN_NUMBER_OF_PARTICIPANTS", "output elements whose numberOfParticipants field value is less than the specified one");
+        super(false, 1, "FILTER_LESS_THAN_NUMBER_OF_PARTICIPANTS", "output elements whose numberOfParticipants field value is less than the specified one", true);
     }
 
     @Override
@@ -19,7 +20,7 @@ public class FilterLessThanNumberOfParticipants extends Command {
         StringBuilder result = new StringBuilder();
         try {
             Long number = Long.parseLong(argObject.getArgs()[1]);
-            List<MusicBand> filterResult = argObject.getCollectionManager().FilterLessThanNumberOfParticipants(number);
+            List<MusicBand> filterResult = ((CollectionManager)argObject.getManager()).FilterLessThanNumberOfParticipants(number);
             for (MusicBand musicBand : filterResult) result.append(musicBand.toString()).append("\n");
         } catch (NumberFormatException e) {
             result = new StringBuilder("Wrong format of number of participants\n");

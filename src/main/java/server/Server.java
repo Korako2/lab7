@@ -2,12 +2,11 @@ package server;
 
 import lombok.RequiredArgsConstructor;
 import server.collectionUtil.CollectionManager;
+import server.commands.ServerCommandsManager;
 import sharedClasses.Request;
 import sharedClasses.Response;
-import sharedClasses.commands.Command;
-import sharedClasses.commands.Save;
+import server.commands.Save;
 import sharedClasses.commands.commandsUtils.ArgObject;
-import sharedClasses.commands.commandsUtils.CommandsManager;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,10 +17,8 @@ import java.net.Socket;
 @RequiredArgsConstructor
 public class Server {
     private final int port;
-
     private final CollectionManager collectionManager;
-
-    private final CommandsManager commandsManager;
+    private final ServerCommandsManager serverCommandsManager;
     private ServerSocket serverSocket;
 
     public void run() throws IOException {
@@ -37,15 +34,7 @@ public class Server {
                 System.out.println(e.getMessage());
             }
         }
-        try {
-            Save save = (Save) commandsManager.getCommand("SAVE");
-            ArgObject argObject = new ArgObject(collectionManager,null, null, commandsManager);
-            System.out.println(save.execute(argObject));
-            exit();
-            run();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+        saveIfExit();
     }
 
     private void openServerSocket() throws IOException {
@@ -55,7 +44,17 @@ public class Server {
             throw new IOException("Не удалось открыть ServerSocket");
         }
     }
-
+    private void saveIfExit() {
+        try {
+            Save save = new Save();
+            ArgObject argObject = new ArgObject(collectionManager,null, null); //todo
+            System.out.println(save.execute(argObject));
+            exit();
+            run();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
     private void exit() throws IOException {
         try {
             if (serverSocket != null) {
@@ -82,7 +81,8 @@ public class Server {
             ObjectOutputStream clientWriter = new ObjectOutputStream(clientSocket.getOutputStream());
             do {
                 request = (Request) clientReader.readObject();
-                ArgObject argObject = new ArgObject(collectionManager, request.getArgsOfCommand(), request.getMusicBand(), commandsManager);
+                System.out.println(request.toString());
+                ArgObject argObject = new ArgObject(collectionManager, request.getArgsOfCommand(), request.getMusicBand());
                 response = new Response("OK", request.getCommand().execute(argObject)); //todo
                 clientWriter.writeObject(response);
                 if (request.getCommand().getName().toUpperCase().equals("EXIT")) {

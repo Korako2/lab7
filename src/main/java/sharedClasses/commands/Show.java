@@ -1,5 +1,6 @@
 package sharedClasses.commands;
 
+import server.collectionUtil.CollectionManager;
 import sharedClasses.commands.commandsUtils.ArgObject;
 
 /**
@@ -8,10 +9,10 @@ import sharedClasses.commands.commandsUtils.ArgObject;
 public class Show extends Command {
 
     public Show() {
-        super(false, 0, "SHOW", "print to standard output all the elements of the collection in the string representation");
+        super(false, 0, "SHOW", "print to standard output all the elements of the collection in the string representation", true);
     }
 
     public String execute(ArgObject argObject) {
-        return argObject.getCollectionManager().show();
+        return ((CollectionManager)argObject.getManager()).show();
     }
 }

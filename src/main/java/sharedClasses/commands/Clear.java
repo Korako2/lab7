@@ -1,5 +1,6 @@
 package sharedClasses.commands;
 
+import server.collectionUtil.CollectionManager;
 import sharedClasses.commands.commandsUtils.ArgObject;
 
 /**
@@ -8,11 +9,11 @@ import sharedClasses.commands.commandsUtils.ArgObject;
 public class Clear extends Command {
 
     public Clear() {
-        super(false, 0, "CLEAR", "to clear the collection");
+        super(false, 0, "CLEAR", "to clear the collection", true);
     }
 
     public String execute(ArgObject argObject) {
-        argObject.getCollectionManager().clear();
+        ((CollectionManager)argObject.getManager()).clear();
         return "Collection is empty now!";
     }
 }

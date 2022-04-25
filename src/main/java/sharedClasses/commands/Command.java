@@ -19,7 +19,8 @@ public abstract class Command implements Serializable {
     private final String name;
     @Getter
     private final String description;
-
+    @Getter
+    private final boolean isServer;
     /**
      * Метод для исполнения команды.
      *

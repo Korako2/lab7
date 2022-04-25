@@ -1,19 +1,18 @@
 package server;
 
 import server.collectionUtil.CollectionManager;
-import sharedClasses.commands.commandsUtils.CommandsManager;
+import server.commands.ServerCommandsManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class App {
     public static void main(String[] args) {
-        CommandsManager commandsManager = new CommandsManager();
+        ServerCommandsManager serverCommandsManager = new ServerCommandsManager();
         CollectionManager collectionManager = new CollectionManager();
         Map env = System.getenv();
         String fileName = (String) env.get("FILE_NAME");
@@ -42,7 +41,7 @@ public class App {
             System.out.println(e.getMessage());
             System.exit(-1);
         }
-        Server server = new Server(4444, collectionManager, commandsManager);
+        Server server = new Server(4444, collectionManager, serverCommandsManager);
         try {
             server.run();
         }catch (IOException e) {

@@ -1,5 +1,6 @@
 package sharedClasses.commands;
 
+import server.collectionUtil.CollectionManager;
 import sharedClasses.commands.commandsUtils.ArgObject;
 
 /**
@@ -7,11 +8,11 @@ import sharedClasses.commands.commandsUtils.ArgObject;
  */
 public class Info extends Command {
     public Info() {
-        super(false, 0, "INFO", "write to the standard output information about the collection of (type, date of initialization, the number of elements, etc.)");
+        super(false, 0, "INFO", "write to the standard output information about the collection of (type, date of initialization, the number of elements, etc.)", true);
     }
 
     @Override
     public String execute(ArgObject argObject) {
-        return argObject.getCollectionManager().getInfo();
+        return ((CollectionManager)argObject.getManager()).getInfo();
     }
 }

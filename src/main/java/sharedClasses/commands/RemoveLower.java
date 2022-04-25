@@ -1,5 +1,6 @@
 package sharedClasses.commands;
 
+import server.collectionUtil.CollectionManager;
 import sharedClasses.commands.commandsUtils.ArgObject;
 
 import java.util.Set;
@@ -9,15 +10,15 @@ import java.util.Set;
  */
 public class RemoveLower extends Command {
     public RemoveLower() {
-        super(true, 0, "REMOVE_LOWER", "remove from the collection all elements smaller than the specified one");
+        super(true, 0, "REMOVE_LOWER", "remove from the collection all elements smaller than the specified one", true);
     }
 
     @Override
     public String execute(ArgObject argObject) {
         String result = "All lower objects were deleted";
-        Set<Long> id = argObject.getCollectionManager().getIdByLower(argObject.getMusicBand());
+        Set<Long> id = ((CollectionManager)argObject.getManager()).getIdByLower(argObject.getMusicBand());
         for (Long i : id) {
-            argObject.getCollectionManager().removeById(i);
+            ((CollectionManager)argObject.getManager()).removeById(i);
         }
         return result;
     }

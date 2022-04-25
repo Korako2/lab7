@@ -1,5 +1,6 @@
 package sharedClasses.commands;
 
+import server.collectionUtil.CollectionManager;
 import sharedClasses.commands.commandsUtils.ArgObject;
 
 /**
@@ -7,12 +8,12 @@ import sharedClasses.commands.commandsUtils.ArgObject;
  */
 public class Add extends Command {
     public Add() {
-        super(true, 0, "ADD", "output help for available commands");
+        super(true, 0, "ADD", "output help for available commands", true);
     }
 
     public String execute(ArgObject argObject) {
-        argObject.getMusicBand().setId(argObject.getCollectionManager().generateId());
-        argObject.getCollectionManager().add(argObject.getMusicBand());
+        argObject.getMusicBand().setId(((CollectionManager)argObject.getManager()).generateId());
+        ((CollectionManager)argObject.getManager()).add(argObject.getMusicBand());
         return "Music band was added.";
     }
 }

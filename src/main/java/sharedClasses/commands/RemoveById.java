@@ -1,5 +1,6 @@
 package sharedClasses.commands;
 
+import server.collectionUtil.CollectionManager;
 import sharedClasses.commands.commandsUtils.ArgObject;
 
 /**
@@ -7,7 +8,7 @@ import sharedClasses.commands.commandsUtils.ArgObject;
  */
 public class RemoveById extends Command {
     public RemoveById() {
-        super(false, 1, "REMOVE_BY_ID", "to remove an element from the collection by its id");
+        super(false, 1, "REMOVE_BY_ID", "to remove an element from the collection by its id", true);
     }
 
     @Override
@@ -15,7 +16,7 @@ public class RemoveById extends Command {
         String result = "Element successfully removed";
         try {
             long id = Long.parseLong(argObject.getArgs()[1]);
-            boolean resultOfRemoval = argObject.getCollectionManager().removeById(id);
+            boolean resultOfRemoval = ((CollectionManager)argObject.getManager()).removeById(id);
             if (!resultOfRemoval) result = "This id wasn't found";
         } catch (NumberFormatException e) {
             result = "Wrong format of id";

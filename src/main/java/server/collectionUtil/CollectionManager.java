@@ -1,6 +1,7 @@
 package server.collectionUtil;
 
 import client.IOutils.fileUtils.FileManager;
+import sharedClasses.commands.commandsUtils.Manager;
 import sharedClasses.data.MusicBand;
 import sharedClasses.data.MusicGenre;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  * Класс для хранения коллекции.
  */
 
-public class CollectionManager implements StorageInterface<MusicBand> {
+public class CollectionManager implements StorageInterface<MusicBand>, Manager {
     /**
      * Коллекция.
      */

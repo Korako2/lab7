@@ -1,5 +1,6 @@
 package sharedClasses.commands;
 
+import server.collectionUtil.CollectionManager;
 import sharedClasses.commands.commandsUtils.ArgObject;
 
 /**
@@ -7,13 +8,13 @@ import sharedClasses.commands.commandsUtils.ArgObject;
  */
 public class AddIfMin extends Command {
     public AddIfMin() {
-        super(true, 0, "ADD_IF_MIN", " add a new element to the collection if its value is less than the smallest element of this collection");
+        super(true, 0, "ADD_IF_MIN", " add a new element to the collection if its value is less than the smallest element of this collection", true);
     }
 
     public String execute(ArgObject argObject) {
         String result = "This band wasn't added because it has too much albums";
-        if (argObject.getMusicBand().compareTo(argObject.getCollectionManager().getMinObject()) < 0) {
-            argObject.getCollectionManager().add(argObject.getMusicBand());
+        if (argObject.getMusicBand().compareTo(((CollectionManager)argObject.getManager()).getMinObject()) < 0) {
+            ((CollectionManager)argObject.getManager()).add(argObject.getMusicBand());
             result = "Music band was added.";
         }
         return result;
