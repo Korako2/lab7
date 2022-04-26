@@ -4,8 +4,8 @@ import client.IOutils.InputAndOutput;
 import sharedClasses.data.*;
 
 public class PersonReader {
-    InputAndOutput inputAndOutput;
-    private LocationReader locationReader;
+    private final InputAndOutput inputAndOutput;
+    private final LocationReader locationReader;
 
     public PersonReader(InputAndOutput inputAndOutput) {
         this.inputAndOutput = inputAndOutput;

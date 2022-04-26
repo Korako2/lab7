@@ -19,7 +19,7 @@ public class App {
         try {
             port = Integer.parseInt(args[0]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            LOGGER.log(Level.SEVERE, "Укажите порт при запуске jar-файла.");
+            LOGGER.log(Level.SEVERE, "Specify the port when launching the jar file.");
             System.exit(-1);
         }
         CollectionManager collectionManager = new CollectionManager();
@@ -45,7 +45,7 @@ public class App {
             LOGGER.log(Level.SEVERE, e.getMessage());
             System.exit(-1);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Some exception!" + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Some exception: " + e.getMessage());
             System.exit(-1);
         }
         Server server = new Server(port, collectionManager);

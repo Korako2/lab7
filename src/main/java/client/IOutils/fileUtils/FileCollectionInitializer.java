@@ -13,8 +13,11 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 
+/**
+ * A class for initializing the collection.
+ */
 public class FileCollectionInitializer {
-    private HashSet<MusicBand> musicBands = new HashSet<>();
+    private final HashSet<MusicBand> musicBands = new HashSet<>();
 
     public HashSet<MusicBand> initializeCollection(Iterable<CSVRecord> records) throws ParseException {
         for (CSVRecord record : records) {
@@ -26,19 +29,19 @@ public class FileCollectionInitializer {
             if (!objectValidation.checkObject(OneMusicBand)) {
                 return null;
             }
-        } //todo ?? Ok?
+        } //todo
         return musicBands;
     }
 
     /**
-     * Метод для создания объекта на основе значения полей из файла.
+     * A method for creating an object based on the field values from a file.
      *
-     * @param record значения полей объекта, полученных от CSV парсера.
-     * @return объект {@link MusicBand}.
-     * @throws ParseException в случае, когда в файле формат полей некорректен.
+     * @param record the values of the object fields received from the CSV parser.
+     * @return object {@link MusicBand}.
+     * @throws ParseException in the case when the format of the fields in the file is incorrect.
      */
     public MusicBand createMusicBand(CSVRecord record) throws ParseException {
-        long id = Long.parseLong(record.get("id")); //todo Разделить этот класс, слишком сложный.
+        long id = Long.parseLong(record.get("id"));
         String bandName = record.get("bandName");
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         ZonedDateTime creationDate = Instant.ofEpochMilli(formatter.parse(record.get("creationDate")).getTime()).atZone(ZoneId.systemDefault());

@@ -6,9 +6,13 @@ import lombok.Getter;
 import java.util.Collections;
 import java.util.HashSet;
 
+/**
+ * A class for storing object ID.
+ */
 public class IdStorage {
     @Getter
     private final HashSet<Long> iDSet;
+
     public IdStorage() {
         iDSet = new HashSet<>();
     }
@@ -16,10 +20,11 @@ public class IdStorage {
     public boolean addID(MusicBand musicBand) {
         return iDSet.add(musicBand.getId());
     }
+
     /**
-     * Метод для генерации ID для нового элемента коллекции, добавленного из консоли или скрипа.
+     * A method for generating an ID for a new collection item added from the console or script.
      *
-     * @return сгенерированное ID.
+     * @return generated ID.
      */
 
     public long generateID() {

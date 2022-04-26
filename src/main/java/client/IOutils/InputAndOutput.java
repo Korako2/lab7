@@ -12,10 +12,10 @@ public class InputAndOutput {
     private final boolean showMessages;
 
     /**
-     * Метод для вывода приглашения на ввод (в случае работы с консолью) и считывания ответа пользователя.
+     * A method for displaying an input prompt (in the case of working with the console) and reading the user's response.
      *
-     * @param message сообщение для пользователя.
-     * @return ответ пользователя.
+     * @param message a message for the user.
+     * @return the user's response.
      */
     public String readLine(String message) {
         if (showMessages) System.out.println(message);
@@ -23,9 +23,9 @@ public class InputAndOutput {
     }
 
     /**
-     * Метод для вывода сообщения пользователю (в случае работы с консолью).
+     * A method for displaying a message to the user (in the case of working with the console).
      *
-     * @param message сообщение для пользователя.
+     * @param message a message for the user.
      */
     public void printLine(String message) {
         if (showMessages) System.out.println(message);

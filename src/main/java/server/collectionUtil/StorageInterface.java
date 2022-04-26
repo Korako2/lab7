@@ -4,12 +4,11 @@ package server.collectionUtil;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashSet;
 
 /**
- * Интерфейс для классов, которые хранят коллекцию.
+ * interface for classes that store a collection.
  *
- * @param <T> тип элементов коллекции.
+ * @param <T> type of collection items.
  */
 public interface StorageInterface<T> {
 
@@ -22,8 +21,6 @@ public interface StorageInterface<T> {
     void add(T element);
 
     void clear();
-
-    //HashSet<T> getCollection();
 
     Date getDate();
 

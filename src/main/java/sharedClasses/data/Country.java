@@ -6,7 +6,7 @@ public enum Country implements Serializable {
     GERMANY("Германия"),
     INDIA("Индия"),
     VATICAN("Ватикан");
-
+    private static final long serialVersionUID = 1L;
     private final String country;
 
     Country(String country) {

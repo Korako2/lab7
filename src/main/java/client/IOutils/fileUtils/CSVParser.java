@@ -5,23 +5,19 @@ import org.apache.commons.csv.CSVRecord;
 import sharedClasses.data.MusicBand;
 
 import java.io.*;
-import java.text.ParseException;
-import java.util.HashSet;
 
 /**
- * Класс для парсинга коллекции из файла.
+ * A class for parsing a collection from a file.
  */
 class CSVParser {
     /**
-     * Метод, осуществляющий парсинг коллекции из файла.
+     * A method that parses a collection from a file.
      *
-     * @param file имя файла, содержащего коллекцию.
-     * @return HashSet<MusicBand> коллекция с объектами {@link MusicBand}.
-     * @throws IOException    в случае ошибки чтения из файла.
-     * @throws ParseException в случае неверного формата данных в файле.
-     */
-    public Iterable<CSVRecord> parse(String file) throws IOException, ParseException {
-        HashSet<MusicBand> musicBands = new HashSet<>();
+     * @param file the name of the file containing the collection.
+     * @return HashSet<MusicBand> collection with objects {@link MusicBand}.
+     * @throws IOException in case of an error reading from the file.
+     **/
+    public Iterable<CSVRecord> parse(String file) throws IOException {
         FileInputStream fileInputStream = new FileInputStream(file);
         BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
         Reader reader = new BufferedReader(new InputStreamReader(bufferedInputStream));

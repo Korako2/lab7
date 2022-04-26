@@ -1,11 +1,9 @@
 package sharedClasses.commands;
 
-import server.collectionUtil.CollectionManager;
 import server.commands.ArgObjectForServer;
-import sharedClasses.commands.commandsUtils.ArgObject;
 
 /**
- * Класс для вывода информации о коллекции.
+ * A class for displaying information about the collection.
  */
 public class Info extends Command<ArgObjectForServer> {
     public Info() {
@@ -14,6 +12,6 @@ public class Info extends Command<ArgObjectForServer> {
 
     @Override
     public String execute(ArgObjectForServer argObject) {
-        return (argObject.getManager()).getInfo();
+        return argObject.getCollectionManager().getInfo();
     }
 }

@@ -1,10 +1,12 @@
-package client.commands;
+package client.commands.commandsUtils;
 
 import lombok.Getter;
 import sharedClasses.commands.commandsUtils.ArgObject;
-import sharedClasses.commands.commandsUtils.Manager;
 import sharedClasses.data.MusicBand;
 
+/**
+ * A class for storing arguments of client commands.
+ */
 public class ArgObjectForClient extends ArgObject {
     @Getter
     private final ClientCommandsManager clientCommandsManager;
@@ -14,8 +16,7 @@ public class ArgObjectForClient extends ArgObject {
         this.clientCommandsManager = clientCommandsManager;
     }
 
-    @Override
-    public ClientCommandsManager getManager() {
+    public ClientCommandsManager getClientCommandManager() {
         return clientCommandsManager;
     }
 }

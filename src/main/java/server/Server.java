@@ -46,61 +46,64 @@ public class Server {
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
-            throw new IOException("Не удалось открыть ServerSocket");
+            throw new IOException("Failed to open ServerSocket.");
         }
     }
+
     private void saveIfExit() throws IOException {
         try {
             collectionManager.saveCollection();
             exit();
         } catch (FileNotFoundException e) {
-            LOGGER.log(Level.SEVERE,"This file wasn't found");
+            LOGGER.log(Level.SEVERE, "This file wasn't found");
         } catch (SecurityException e) {
-            LOGGER.log(Level.SEVERE,"Write access to the file is denied");
+            LOGGER.log(Level.SEVERE, "Write access to the file is denied");
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE,"Some I/O errors occur");
+            LOGGER.log(Level.SEVERE, "Some I/O errors occur");
         }
         LOGGER.log(Level.INFO, "The collection was saved");
         run();
     }
+
     private void exit() throws IOException {
         try {
             if (serverSocket != null) {
                 serverSocket.close();
             }
-            LOGGER.log(Level.INFO,"Соединение с клиентом разорвано.");
+            LOGGER.log(Level.INFO, "The connection with the client is broken.");
 
         } catch (IOException e) {
-            LOGGER.log(Level.INFO,"Ошибка при завершении соединения с клиентом.");
+            LOGGER.log(Level.INFO, "Error when completing the connection with the client.");
         }
     }
 
     private Socket connectToClient() throws IOException {
         Socket clientSocket = serverSocket.accept();
-        LOGGER.log(Level.INFO,"Соединение с клиентом успешно установлено.");
+        LOGGER.log(Level.INFO, "The connection with the client has been successfully established");
         return clientSocket;
     }
 
     private boolean processClientRequest(Socket clientSocket) throws IOException, ClassNotFoundException {
-        Request request = null;
-        Response response = null;
+        Request request;
+        Response response;
         try {
             ObjectInputStream clientReader = new ObjectInputStream(clientSocket.getInputStream());
             ObjectOutputStream clientWriter = new ObjectOutputStream(clientSocket.getOutputStream());
             do {
                 request = (Request) clientReader.readObject();
                 ArgObjectForServer argObject = new ArgObjectForServer(collectionManager, request.getArgsOfCommand(), request.getMusicBand());
-                response = new Response("OK", request.getCommand().execute(argObject)); //todo
+                //CommandResult c = request.getCommand().execute(argObject);
+                response = new Response("OK", request.getCommand().execute(argObject)); //todo разные коды возврата
                 clientWriter.writeObject(response);
-                if (request.getCommand().getName().toUpperCase().equals("EXIT")) {
+                if (request.getCommand().getName().equals("EXIT")) {
                     return false;
                 }
                 clientWriter.flush();
             } while (true);
         } catch (IOException e) {
-            throw new IOException("Разрыв соединения с клиентом.");
+            throw new IOException("Disconnection from the client.");
         } catch (ClassNotFoundException e) {
-            throw new ClassNotFoundException("Произошла ошибка при чтении полученных данных!");
+            throw new ClassNotFoundException("An error occurred while reading the received data!");
         }
     }
 }

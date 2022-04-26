@@ -8,16 +8,19 @@ import sharedClasses.data.Person;
 
 import java.time.ZonedDateTime;
 
+/**
+ * Class for creating a MusicBand object
+ */
 public class MusicBandBuilder {
-    private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    private String name; //Поле не может быть null, Строка не может быть пустой
-    private Coordinates coordinates; //Поле не может быть null
-    private ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
-    private Long numberOfParticipants; //Поле может быть null, Значение поля должно быть больше 0
-    private long albumsCount; //Значение поля должно быть больше 0
-    private String description; //Поле не может быть null
-    private MusicGenre genre; //Поле может быть null
-    private Person frontMan; //Поле может быть null
+    private long id;
+    private String name;
+    private Coordinates coordinates;
+    private ZonedDateTime creationDate;
+    private Long numberOfParticipants;
+    private long albumsCount;
+    private String description;
+    private MusicGenre genre;
+    private Person frontMan;
 
     public MusicBandBuilder setId(long id) {
         this.id = id;
@@ -66,7 +69,7 @@ public class MusicBandBuilder {
 
     public MusicBand build() {
         MusicBand musicBand = new MusicBand(id, name, coordinates, creationDate, numberOfParticipants,
-        albumsCount, description, genre, frontMan);
+                albumsCount, description, genre, frontMan);
         return musicBand;
     }
 }

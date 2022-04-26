@@ -2,13 +2,12 @@ package server.commands;
 
 import server.collectionUtil.CollectionManager;
 import sharedClasses.commands.Command;
-import sharedClasses.commands.commandsUtils.ArgObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * Класс для сохранения коллекции в файл.
+ * A class for saving a collection to a file.
  */
 public class Save extends Command<ArgObjectForServer> {
     public Save() {
@@ -19,7 +18,7 @@ public class Save extends Command<ArgObjectForServer> {
     public String execute(ArgObjectForServer argObject) {
         String result = "The collection was saved";
         try {
-            ((CollectionManager)argObject.getManager()).saveCollection();
+            argObject.getCollectionManager().saveCollection();
         } catch (FileNotFoundException e) {
             result = "This file wasn't found";
         } catch (SecurityException e) {

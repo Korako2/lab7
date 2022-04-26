@@ -1,14 +1,12 @@
 package sharedClasses.commands;
 
-import server.collectionUtil.CollectionManager;
 import server.commands.ArgObjectForServer;
 import sharedClasses.data.MusicBand;
-import sharedClasses.commands.commandsUtils.ArgObject;
 
 import java.util.List;
 
 /**
- * Класс для вывода элементов, значения поля numberOfParticipants которых меньше заданного.
+ * A class for displaying elements whose numberOfParticipants field value is less than the specified one.
  */
 public class FilterLessThanNumberOfParticipants extends Command<ArgObjectForServer> {
     public FilterLessThanNumberOfParticipants() {
@@ -21,7 +19,7 @@ public class FilterLessThanNumberOfParticipants extends Command<ArgObjectForServ
         StringBuilder result = new StringBuilder();
         try {
             Long number = Long.parseLong(argObject.getArgs()[1]);
-            List<MusicBand> filterResult = (argObject.getManager()).FilterLessThanNumberOfParticipants(number);
+            List<MusicBand> filterResult = argObject.getCollectionManager().FilterLessThanNumberOfParticipants(number);
             for (MusicBand musicBand : filterResult) result.append(musicBand.toString()).append("\n");
         } catch (NumberFormatException e) {
             result = new StringBuilder("Wrong format of number of participants\n");

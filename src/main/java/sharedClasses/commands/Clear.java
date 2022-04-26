@@ -1,11 +1,9 @@
 package sharedClasses.commands;
 
-import server.collectionUtil.CollectionManager;
 import server.commands.ArgObjectForServer;
-import sharedClasses.commands.commandsUtils.ArgObject;
 
 /**
- * Класс для очистки коллекции.
+ * A class for cleaning the collection.
  */
 public class Clear extends Command<ArgObjectForServer> {
 
@@ -14,7 +12,7 @@ public class Clear extends Command<ArgObjectForServer> {
     }
 
     public String execute(ArgObjectForServer argObject) {
-        (argObject.getManager()).clear();
+        argObject.getCollectionManager().clear();
         return "Collection is empty now!";
     }
 }

@@ -3,6 +3,9 @@ package client.connectionUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * A class for storing the host and port.
+ */
 @RequiredArgsConstructor
 public class PortAndHost {
     @Getter

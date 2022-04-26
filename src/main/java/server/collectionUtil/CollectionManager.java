@@ -1,7 +1,6 @@
 package server.collectionUtil;
 
 import client.IOutils.fileUtils.FileManager;
-import sharedClasses.commands.commandsUtils.Manager;
 import sharedClasses.data.MusicBand;
 import sharedClasses.data.MusicGenre;
 import lombok.Getter;
@@ -12,16 +11,16 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Класс для хранения коллекции.
+ * A class for storing a collection.
  */
 
-public class CollectionManager implements StorageInterface<MusicBand>, Manager {
+public class CollectionManager implements StorageInterface<MusicBand> {
     /**
-     * Коллекция.
+     * Collection with elements.
      */
     private HashSet<MusicBand> musicBands;
     /**
-     * Коллекция для хранения ID элементов основной коллекции.
+     * Collection for storing the ID of the elements of the main collection.
      */
     @Getter
     private Date date;
@@ -36,10 +35,10 @@ public class CollectionManager implements StorageInterface<MusicBand>, Manager {
     }
 
     /**
-     * Метод для заполнения коллекции из файла.
+     * A method to populate a collection from a file.
      *
-     * @param file имя файла с коллекцией.
-     * @return true если заполнение коллекции из файла произошло удачно; иначе false.
+     * @param file the name of the file with the collection.
+     * @return true if filling in the collection from the file was successful; otherwise false.
      */
 
     public boolean fillCollection(String file) throws IOException, ParseException, NumberFormatException {
@@ -63,18 +62,18 @@ public class CollectionManager implements StorageInterface<MusicBand>, Manager {
     }
 
     /**
-     * Метод для сохранения коллекции в файл.
+     * Method for saving the collection to a file.
      *
-     * @throws IOException если происходит ошибка при записи в файл.
+     * @throws IOException if an error occurs when writing to a file.
      */
     public void saveCollection() throws IOException {
         fileManager.writeCollection(file, musicBands);
     }
 
     /**
-     * Метод для поиска элемента коллекции с минимальным полем albumsCount.
+     * A method for searching for a collection item with the minimum field albums Count.
      *
-     * @return минимальный объект {@link MusicBand} из коллекции.
+     * @return minimum object {@link MusicBand} from collection.
      */
     public MusicBand getMinObject() {
         MusicBand minMusicBand = null;
@@ -124,8 +123,8 @@ public class CollectionManager implements StorageInterface<MusicBand>, Manager {
     }
 
     public String getInfo() {
-        return "Тип коллекции: " + musicBands.getClass().getName() + ", дата создания: "
-                + getDate() + ", количество объектов: " + musicBands.size();
+        return "Collection type : " + musicBands.getClass().getName() + ", date of creation: "
+                + getDate() + ", number of objects: " + musicBands.size();
     }
 
     public long generateId() {
@@ -133,10 +132,10 @@ public class CollectionManager implements StorageInterface<MusicBand>, Manager {
     }
 
     /**
-     * Метод для удаления элемента коллекции по ID.
+     * Method for deleting a collection item by ID.
      *
-     * @param id объекта, который нужно удалить.
-     * @return true если объект успешно удален; иначе false.
+     * @param id of the object to delete.
+     * @return true if the object was successfully deleted; otherwise false.
      */
     public boolean removeById(long id) {
         return musicBands.removeIf(musicBand -> musicBand.getId() == id);

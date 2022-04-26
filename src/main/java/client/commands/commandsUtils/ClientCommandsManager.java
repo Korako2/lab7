@@ -1,25 +1,23 @@
-package client.commands;
+package client.commands.commandsUtils;
 
 import lombok.Getter;
 import sharedClasses.commands.Command;
-import sharedClasses.commands.commandsUtils.ArgObject;
-import sharedClasses.commands.commandsUtils.Manager;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * Класс для хранания объектов комманд и управлением историей комманд.
+ * A class for storing command objects and managing the history of commands.
  */
-public class ClientCommandsManager implements Manager {
+public class ClientCommandsManager {
     private final Map<String, Command> commandMap = new HashMap<>();
     @Getter
     private final LinkedList<String> history = new LinkedList();
     private final byte MAX_LENGTH_OF_HISTORY = 11;
 
     /**
-     * Метод для добавления команды в историю.
+     * A method for adding a command to the history.
      */
     public void addToHistory(String command) {
         if (history.size() == MAX_LENGTH_OF_HISTORY) {
@@ -31,7 +29,8 @@ public class ClientCommandsManager implements Manager {
     public void addCommand(Command command) {
         commandMap.put(command.getName(), command);
     }
-    public sharedClasses.commands.Command getCommand(String command) {
+
+    public Command getCommand(String command) {
         return commandMap.get(command);
     }
 

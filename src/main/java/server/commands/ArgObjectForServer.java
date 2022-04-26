@@ -5,6 +5,9 @@ import server.collectionUtil.CollectionManager;
 import sharedClasses.commands.commandsUtils.ArgObject;
 import sharedClasses.data.MusicBand;
 
+/**
+ * A class for storing fragments of server commands.
+ */
 public class ArgObjectForServer extends ArgObject {
     @Getter
     private final CollectionManager collectionManager;
@@ -12,10 +15,5 @@ public class ArgObjectForServer extends ArgObject {
     public ArgObjectForServer(CollectionManager collectionManager, String[] args, MusicBand musicBand) {
         super(args, musicBand);
         this.collectionManager = collectionManager;
-    }
-
-    @Override
-    public CollectionManager getManager() {
-        return collectionManager;
     }
 }

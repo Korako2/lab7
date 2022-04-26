@@ -6,14 +6,14 @@ import sharedClasses.data.MusicBand;
 import sharedClasses.data.Person;
 
 /**
- * Класс для валидации новых элементов коллекции.
+ * A class for validating new collection items.
  */
 public class ObjectValidation {
     /**
-     * Метод для проверки полей объекта {@link MusicBand}.
+     * Method for checking object fields {@link MusicBand}.
      *
-     * @param musicBand объект коллекции {@link MusicBand}.
-     * @return true если поля объекта валидны, иначе false.
+     * @param musicBand collection object {@link MusicBand}.
+     * @return true if the object fields are valid, otherwise false.
      */
     public boolean checkObject(MusicBand musicBand) {
         return (musicBand.getId() > 0 && musicBand.getName() != null && musicBand.getCoordinates() != null &&
@@ -24,20 +24,20 @@ public class ObjectValidation {
     }
 
     /**
-     * Метод для проверки полей объекта {@link Coordinates}.
+     * Method for checking object fields {@link Coordinates}.
      *
-     * @param coordinates новый объект {@link Coordinates}.
-     * @return true если поля объекта валидны, иначе false.
+     * @param coordinates new object {@link Coordinates}.
+     * @return true if the object fields are valid, otherwise false.
      */
     private boolean checkCoordinates(Coordinates coordinates) {
         return coordinates.getX() <= 146 && coordinates.getX() != null;
     }
 
     /**
-     * Метод для проверки полей объекта {@link Person}.
+     * Method for checking object fields {@link Person}.
      *
-     * @param person новый объект {@link Person}.
-     * @return true если поля объекта валидны, иначе false.
+     * @param person new object {@link Person}.
+     * @return true if the object fields are valid, otherwise false.
      */
     private boolean checkPerson(Person person) {
         return (person.getName() != null &&
@@ -45,10 +45,10 @@ public class ObjectValidation {
     }
 
     /**
-     * Метод для проверки полей объекта {@link Location}.
+     * Method for checking object fields {@link Location}.
      *
-     * @param location новый объект {@link Location}.
-     * @return true если поля объекта валидны, иначе false.
+     * @param location new object {@link Location}.
+     * @return true if the object fields are valid, otherwise false.
      */
     private boolean checkLocation(Location location) {
         return location.getX() != null && location.getZ() != null;

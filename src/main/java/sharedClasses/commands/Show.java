@@ -1,11 +1,9 @@
 package sharedClasses.commands;
 
-import server.collectionUtil.CollectionManager;
 import server.commands.ArgObjectForServer;
-import sharedClasses.commands.commandsUtils.ArgObject;
 
 /**
- * Класс для вывода всех элементов коллекции в строковом представлении.
+ * A class for displaying all elements of a collection in a string representation.
  */
 public class Show extends Command<ArgObjectForServer> {
 
@@ -14,6 +12,6 @@ public class Show extends Command<ArgObjectForServer> {
     }
 
     public String execute(ArgObjectForServer argObject) {
-        return (argObject.getManager()).show();
+        return argObject.getCollectionManager().show();
     }
 }

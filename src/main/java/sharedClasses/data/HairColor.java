@@ -9,6 +9,7 @@ public enum HairColor implements Serializable {
     ORANGE("оранжевый"),
     WHITE("белый");
 
+    private static final long serialVersionUID = 1L;
     private final String color;
 
     HairColor(String color) {

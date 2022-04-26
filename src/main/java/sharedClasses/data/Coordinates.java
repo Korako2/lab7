@@ -7,8 +7,9 @@ import java.io.Serializable;
 
 @RequiredArgsConstructor
 public class Coordinates implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Getter
-    private final Float x; //Максимальное значение поля: 146, Поле не может быть null.
+    private final Float x;
     @Getter
     private final int y;
 

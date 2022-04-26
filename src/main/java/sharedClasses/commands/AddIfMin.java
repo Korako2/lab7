@@ -1,11 +1,9 @@
 package sharedClasses.commands;
 
-import server.collectionUtil.CollectionManager;
 import server.commands.ArgObjectForServer;
-import sharedClasses.commands.commandsUtils.ArgObject;
 
 /**
- * Класс для добавления элемента в коллекцию, если его поле albumsCount меньше минимального внутри коллекции.
+ * A class for adding an item to a collection if its albumsCount field is less than the minimum inside the collection.
  */
 public class AddIfMin extends Command<ArgObjectForServer> {
     public AddIfMin() {
@@ -14,8 +12,8 @@ public class AddIfMin extends Command<ArgObjectForServer> {
 
     public String execute(ArgObjectForServer argObject) {
         String result = "This band wasn't added because it has too much albums";
-        if (argObject.getMusicBand().compareTo((argObject.getManager()).getMinObject()) < 0) {
-            ((CollectionManager)argObject.getManager()).add(argObject.getMusicBand());
+        if (argObject.getMusicBand().compareTo(argObject.getCollectionManager().getMinObject()) < 0) {
+            argObject.getCollectionManager().add(argObject.getMusicBand());
             result = "Music band was added.";
         }
         return result;

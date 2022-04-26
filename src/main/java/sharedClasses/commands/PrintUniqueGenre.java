@@ -1,14 +1,12 @@
 package sharedClasses.commands;
 
-import server.collectionUtil.CollectionManager;
 import server.commands.ArgObjectForServer;
 import sharedClasses.data.MusicGenre;
-import sharedClasses.commands.commandsUtils.ArgObject;
 
 import java.util.Set;
 
 /**
- * Класс для вывода уникальных значений поля genre всех элементов в коллекции.
+ * A class for displaying the unique values of the genre field of all elements in the collection.
  */
 public class PrintUniqueGenre extends Command<ArgObjectForServer> {
     public PrintUniqueGenre() {
@@ -17,7 +15,7 @@ public class PrintUniqueGenre extends Command<ArgObjectForServer> {
 
     @Override
     public String execute(ArgObjectForServer argObject) {
-        Set<MusicGenre> filterResult = (argObject.getManager()).PrintUniqueGenre();
+        Set<MusicGenre> filterResult = argObject.getCollectionManager().PrintUniqueGenre();
         StringBuilder result = new StringBuilder();
         for (MusicGenre musicGenre : filterResult) result.append(musicGenre.getMusic()).append("\n");
         if (result.length() == 0) return "No genre...\n";

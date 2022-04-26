@@ -6,22 +6,23 @@ import lombok.RequiredArgsConstructor;
 import java.io.Serializable;
 
 /**
- * Класс для объекта frontMan группы.
+ * A class for the group's frontMan object.
  */
 @RequiredArgsConstructor
 public class Person implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Getter
-    private final String name; //Поле не может быть null, Строка не может быть пустой
+    private final String name;
     @Getter
-    private final Double height; //Поле может быть null, Значение поля должно быть больше 0
+    private final Double height;
     @Getter
-    private final EyeColor eyeColor; //Поле может быть null
+    private final EyeColor eyeColor;
     @Getter
-    private final HairColor hairColor; //Поле не может быть null
+    private final HairColor hairColor;
     @Getter
-    private final Country nationality; //Поле не может быть null
+    private final Country nationality;
     @Getter
-    private final Location location; //Поле может быть null
+    private final Location location;
 
     public String toString() {
         return String.format("name of front man: %s, height: %s,  eye color: %s, hair color: %s, nationality: %s, %s",

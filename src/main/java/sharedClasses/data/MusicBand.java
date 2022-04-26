@@ -13,24 +13,25 @@ import java.util.Objects;
  */
 @AllArgsConstructor
 public class MusicBand implements Comparable<MusicBand>, Serializable {
+    private static final long serialVersionUID = 1L;
     @Getter
-    private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    private long id;
     @Getter
-    private final String name; //Поле не может быть null, Строка не может быть пустой
+    private final String name;
     @Getter
-    private final Coordinates coordinates; //Поле не может быть null
+    private final Coordinates coordinates;
     @Getter
-    private final ZonedDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
+    private final ZonedDateTime creationDate;
     @Getter
-    private final Long numberOfParticipants; //Поле может быть null, Значение поля должно быть больше 0
+    private final Long numberOfParticipants;
     @Getter
-    private final long albumsCount; //Значение поля должно быть больше 0
+    private final long albumsCount;
     @Getter
-    private final String description; //Поле не может быть null
+    private final String description;
     @Getter
-    private final MusicGenre genre; //Поле может быть null
+    private final MusicGenre genre;
     @Getter
-    private final Person frontMan; //Поле может быть null
+    private final Person frontMan;
 
     public String toString() {
         return String.format("ID: %s, name: %s, coordinates: %s, creation date: %s,number of participants: %s " +
@@ -39,9 +40,9 @@ public class MusicBand implements Comparable<MusicBand>, Serializable {
     }
 
     /**
-     * Метод для получения строкового представления элемента коллекции для записи в коллекцию.
+     * A method for getting a string representation of a collection item to write to the collection.
      *
-     * @return String представление элемента.
+     * @return String representation of the element.
      */
     public String getStringToSaveInFile() {
 
@@ -50,9 +51,9 @@ public class MusicBand implements Comparable<MusicBand>, Serializable {
     }
 
     /**
-     * Метод для получения строкового представления даты.
+     * A method for getting a string representation of a date.
      *
-     * @return String представление даты.
+     * @return String representation of the date.
      */
     public String getStringDate() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd").format(creationDate);

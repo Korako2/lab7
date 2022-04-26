@@ -7,10 +7,11 @@ import lombok.RequiredArgsConstructor;
 import java.io.Serializable;
 
 /**
- * Абстрактный класс команд.
+ * An abstract class of commands.
  */
 @RequiredArgsConstructor
 public abstract class Command<T> implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Getter
     private final boolean needObject;
     @Getter
@@ -21,11 +22,12 @@ public abstract class Command<T> implements Serializable {
     private final String description;
     @Getter
     private final boolean isServer;
+
     /**
-     * Метод для исполнения команды.
+     * The method for executing the command.
      *
-     * @param argObject объект для хранения аргументов команды {@link ArgObject}.
-     * @return результат выполнения команды.
+     * @param argObject an object for storing command arguments {@link ArgObject}.
+     * @return the result of the command execution.
      */
     public abstract String execute(T argObject);
 

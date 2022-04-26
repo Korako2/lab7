@@ -1,7 +1,7 @@
 package client.IOutils;
 
 import client.IOutils.readers.ObjectReader;
-import client.commands.ClientCommandsManager;
+import client.commands.commandsUtils.ClientCommandsManager;
 import sharedClasses.data.MusicBand;
 import sharedClasses.commands.Command;
 import sharedClasses.messageUtils.Request;
@@ -10,7 +10,7 @@ import java.io.PrintStream;
 import java.util.*;
 
 /**
- * Класс для распознавания ввода пользователя (из консоли или файла).
+ * A class for recognizing user input (from the console or file).
  */
 public class UserInputManager {
     private final ClientCommandsManager clientcommandsManager;
@@ -18,7 +18,8 @@ public class UserInputManager {
     private final Scanner input;
     private final boolean showMessages;
     private final PrintStream out;
-    public UserInputManager(ClientCommandsManager clientCommandsManager, Scanner input,  boolean showMessages, PrintStream printStream) {
+
+    public UserInputManager(ClientCommandsManager clientCommandsManager, Scanner input, boolean showMessages, PrintStream printStream) {
         this.clientcommandsManager = clientCommandsManager;
         this.input = input;
         objectReader = new ObjectReader(input, showMessages);
@@ -27,9 +28,9 @@ public class UserInputManager {
     }
 
     /**
-     * Метод для считывания пользовательского ввода.
+     * A method for reading user input.
      *
-     * @return true, если выполнение программы может быть продолжено; false, если следует прекратить выполнение программы.
+     * @return true if the program execution can be continued; false if the program execution should be stopped.
      */
     public Request input() {
         printInviteMessage();
@@ -48,10 +49,11 @@ public class UserInputManager {
         }
         return new Request(command, s, readObjectIfNecessary(command));
     }
+
     /**
-     * Метод для потверждения действия пользователя.
+     * A method for confirming the user's action.
      *
-     * @return true, если пользователь потверждает действие; false, если пользователь отклоняет действие.
+     * @return true if the user confirms the action; false if the user rejects the action.
      */
     private boolean askQuestion() {
         while (true) {
@@ -64,11 +66,11 @@ public class UserInputManager {
     }
 
     /**
-     * Метод для проверки количества параметров комманд.
+     * Method for checking the number of command parameters.
      *
-     * @param s       массив пользовательского ввода.
-     * @param command команда, введенная пользователем.
-     * @return true, если количество аргументов верное, иначе false.
+     * @param s       array of user input.
+     * @param command the command entered by the user.
+     * @return true if the number of arguments is correct, otherwise false.
      */
     private boolean checkArgsCount(String[] s, Command command) {
         if (command.getCountOfArgs() == s.length - 1) return true;
@@ -76,10 +78,10 @@ public class UserInputManager {
     }
 
     /**
-     * Метод для чтения элемента коллекции, если это необходимо для выполнения команды.
+     * A method for reading a collection item, if necessary to execute a command.
      *
-     * @param command текущая исполняемая команда.
-     * @return прочитанный объект {@link MusicBand} или null, если объект не требуется.
+     * @param command the current executable command.
+     * @return read object {@link MusicBand} or null if the object is not required.
      */
     private MusicBand readObjectIfNecessary(Command command) {
         if (!command.isNeedObject()) return null;
@@ -87,7 +89,7 @@ public class UserInputManager {
     }
 
     /**
-     * Метод для вывода приглашения к вводу для пользователя (в случае чтения данных с консоли).
+     * A method for displaying an input prompt for the user (in the case of reading data from the console).
      */
     private void printInviteMessage() {
         if (showMessages) System.out.println("Enter command (if you don't know commands, enter command \"help\"):");

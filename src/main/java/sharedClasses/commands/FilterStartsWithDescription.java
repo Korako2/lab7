@@ -1,14 +1,12 @@
 package sharedClasses.commands;
 
-import server.collectionUtil.CollectionManager;
 import server.commands.ArgObjectForServer;
 import sharedClasses.data.MusicBand;
-import sharedClasses.commands.commandsUtils.ArgObject;
 
 import java.util.Set;
 
 /**
- * Класс для вывода элементов коллекции, значение поля description которых начинается с заданной подстроки.
+ * A class for displaying collection items whose description field value starts with a specified substring.
  */
 public class FilterStartsWithDescription extends Command<ArgObjectForServer> {
     public FilterStartsWithDescription() {
@@ -18,7 +16,7 @@ public class FilterStartsWithDescription extends Command<ArgObjectForServer> {
 
     @Override
     public String execute(ArgObjectForServer argObject) {
-        Set<MusicBand> filterResult = (argObject.getManager()).getMusicBandsOfDescription(argObject.getArgs()[1]);
+        Set<MusicBand> filterResult = argObject.getCollectionManager().getMusicBandsOfDescription(argObject.getArgs()[1]);
         StringBuilder result = new StringBuilder();
         for (MusicBand musicBand : filterResult) result.append(musicBand).append("\n");
         if (result.length() == 0) return "No such elements\n";

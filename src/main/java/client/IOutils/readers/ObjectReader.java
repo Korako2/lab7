@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 import java.util.Scanner;
 
 /**
- * Класс для создания считывания полей объекта с консоли или скрипта.
+ * A class for creating object fields reading from the console or script.
  */
 public class ObjectReader {
     private final Scanner scanner;
@@ -27,9 +27,9 @@ public class ObjectReader {
     }
 
     /**
-     * Метод для создания объекта на основе считанных полей.
+     * A method for creating an object based on the read fields.
      *
-     * @return элемент коллекции типа {@link MusicBand}.
+     * @return a collection element of the type {@link MusicBand}.
      */
     public MusicBand readObject() {
         MusicBandBuilder musicBandBuilder = new MusicBandBuilder();
