@@ -2,7 +2,8 @@ package server;
 
 import lombok.RequiredArgsConstructor;
 import server.collectionUtil.CollectionManager;
-import server.commands.ArgObjectForServer;
+import server.commandsUtils.ArgObjectForServer;
+import sharedClasses.commands.commandsUtils.CommandResult;
 import sharedClasses.messageUtils.Request;
 import sharedClasses.messageUtils.Response;
 
@@ -53,24 +54,25 @@ public class Server {
     private void saveIfExit() throws IOException {
         try {
             collectionManager.saveCollection();
-            exit();
+            LOGGER.log(Level.INFO, "The collection was saved");
         } catch (FileNotFoundException e) {
             LOGGER.log(Level.SEVERE, "This file wasn't found");
         } catch (SecurityException e) {
             LOGGER.log(Level.SEVERE, "Write access to the file is denied");
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Some I/O errors occur");
+            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Some I/O errors occur: " + e.getMessage());
         }
-        LOGGER.log(Level.INFO, "The collection was saved");
+        exit();
         run();
     }
 
-    private void exit() throws IOException {
+    private void exit() {
         try {
             if (serverSocket != null) {
                 serverSocket.close();
             }
-            LOGGER.log(Level.INFO, "The connection with the client is broken.");
+            LOGGER.log(Level.INFO, "The connection with the client closed.");
 
         } catch (IOException e) {
             LOGGER.log(Level.INFO, "Error when completing the connection with the client.");
@@ -92,8 +94,8 @@ public class Server {
             do {
                 request = (Request) clientReader.readObject();
                 ArgObjectForServer argObject = new ArgObjectForServer(collectionManager, request.getArgsOfCommand(), request.getMusicBand());
-                //CommandResult c = request.getCommand().execute(argObject);
-                response = new Response("OK", request.getCommand().execute(argObject)); //todo разные коды возврата
+                CommandResult commandResult = request.getCommand().execute(argObject);
+                response = new Response(commandResult.getResponseCode(), commandResult.getResult());
                 clientWriter.writeObject(response);
                 if (request.getCommand().getName().equals("EXIT")) {
                     return false;

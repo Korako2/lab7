@@ -25,8 +25,8 @@ public class Request implements Serializable {
     }
 
     public String toString() {
-        return "Request[" + command.getName() + ", " + musicBand.toString() + "]";
-    } //todo
+        return "Request: " + command.getName() + ", " + musicBand.toString();
+    }
 
     public String getNameOfCommand() {
         return command.getName();

@@ -29,7 +29,7 @@ public class FileCollectionInitializer {
             if (!objectValidation.checkObject(OneMusicBand)) {
                 return null;
             }
-        } //todo
+        }
         return musicBands;
     }
 
@@ -49,9 +49,11 @@ public class FileCollectionInitializer {
         long albumsCount = Long.parseLong(record.get("albumsCount"));
         String description = record.get("description");
         MusicGenre genre = MusicGenre.valueOf(record.get("genre").toUpperCase());
+
         Coordinates coordinates = createCoordinates(record);
         Person person = createPerson(record);
         MusicBandBuilder musicBandBuilder = new MusicBandBuilder();
+
         return musicBandBuilder.setId(id)
                 .setName(bandName)
                 .setAlbumsCount(albumsCount)

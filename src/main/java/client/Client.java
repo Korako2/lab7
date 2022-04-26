@@ -85,7 +85,7 @@ public class Client {
                         out.println(response.getResponseBody());
                     } else {
                         ArgObjectForClient argObject = new ArgObjectForClient(clientCommandsManager, request.getArgsOfCommand(), null);
-                        out.println(request.getCommand().execute(argObject));
+                        out.println(request.getCommand().execute(argObject).getResult());
                     }
                 } catch (IllegalArgumentException e) {
                     out.println(e.getMessage());

@@ -1,7 +1,9 @@
 package sharedClasses.commands;
 
-import server.commands.ArgObjectForServer;
+import server.commandsUtils.ArgObjectForServer;
+import sharedClasses.commands.commandsUtils.CommandResult;
 import sharedClasses.data.MusicGenre;
+import sharedClasses.messageUtils.ResponseCode;
 
 import java.util.Set;
 
@@ -14,11 +16,11 @@ public class PrintUniqueGenre extends Command<ArgObjectForServer> {
     }
 
     @Override
-    public String execute(ArgObjectForServer argObject) {
+    public CommandResult execute(ArgObjectForServer argObject) {
         Set<MusicGenre> filterResult = argObject.getCollectionManager().PrintUniqueGenre();
         StringBuilder result = new StringBuilder();
         for (MusicGenre musicGenre : filterResult) result.append(musicGenre.getMusic()).append("\n");
-        if (result.length() == 0) return "No genre...\n";
-        return result.substring(0, result.toString().length() - 1);
+        if (result.length() == 0) return new CommandResult("No genre...\n", ResponseCode.OK);
+        return new CommandResult(result.substring(0, result.toString().length() - 1), ResponseCode.OK);
     }
 }

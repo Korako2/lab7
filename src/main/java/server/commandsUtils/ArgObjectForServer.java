@@ -1,4 +1,4 @@
-package server.commands;
+package server.commandsUtils;
 
 import lombok.Getter;
 import server.collectionUtil.CollectionManager;

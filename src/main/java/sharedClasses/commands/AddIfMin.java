@@ -1,6 +1,8 @@
 package sharedClasses.commands;
 
-import server.commands.ArgObjectForServer;
+import server.commandsUtils.ArgObjectForServer;
+import sharedClasses.commands.commandsUtils.CommandResult;
+import sharedClasses.messageUtils.ResponseCode;
 
 /**
  * A class for adding an item to a collection if its albumsCount field is less than the minimum inside the collection.
@@ -10,12 +12,12 @@ public class AddIfMin extends Command<ArgObjectForServer> {
         super(true, 0, "ADD_IF_MIN", " add a new element to the collection if its value is less than the smallest element of this collection", true);
     }
 
-    public String execute(ArgObjectForServer argObject) {
+    public CommandResult execute(ArgObjectForServer argObject) {
         String result = "This band wasn't added because it has too much albums";
         if (argObject.getMusicBand().compareTo(argObject.getCollectionManager().getMinObject()) < 0) {
             argObject.getCollectionManager().add(argObject.getMusicBand());
             result = "Music band was added.";
         }
-        return result;
+        return new CommandResult(result, ResponseCode.OK);
     }
 }

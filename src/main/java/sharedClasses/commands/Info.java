@@ -1,6 +1,8 @@
 package sharedClasses.commands;
 
-import server.commands.ArgObjectForServer;
+import server.commandsUtils.ArgObjectForServer;
+import sharedClasses.commands.commandsUtils.CommandResult;
+import sharedClasses.messageUtils.ResponseCode;
 
 /**
  * A class for displaying information about the collection.
@@ -11,7 +13,7 @@ public class Info extends Command<ArgObjectForServer> {
     }
 
     @Override
-    public String execute(ArgObjectForServer argObject) {
-        return argObject.getCollectionManager().getInfo();
+    public CommandResult execute(ArgObjectForServer argObject) {
+        return new CommandResult(argObject.getCollectionManager().getInfo(), ResponseCode.OK);
     }
 }

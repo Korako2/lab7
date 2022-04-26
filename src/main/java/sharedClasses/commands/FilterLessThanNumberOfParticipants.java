@@ -1,7 +1,9 @@
 package sharedClasses.commands;
 
-import server.commands.ArgObjectForServer;
+import server.commandsUtils.ArgObjectForServer;
+import sharedClasses.commands.commandsUtils.CommandResult;
 import sharedClasses.data.MusicBand;
+import sharedClasses.messageUtils.ResponseCode;
 
 import java.util.List;
 
@@ -14,18 +16,16 @@ public class FilterLessThanNumberOfParticipants extends Command<ArgObjectForServ
     }
 
     @Override
-    public String execute(ArgObjectForServer argObject) {
-
+    public CommandResult execute(ArgObjectForServer argObject) {
         StringBuilder result = new StringBuilder();
         try {
             Long number = Long.parseLong(argObject.getArgs()[1]);
             List<MusicBand> filterResult = argObject.getCollectionManager().FilterLessThanNumberOfParticipants(number);
             for (MusicBand musicBand : filterResult) result.append(musicBand.toString()).append("\n");
         } catch (NumberFormatException e) {
-            result = new StringBuilder("Wrong format of number of participants\n");
+            return new CommandResult("Wrong format of number of participants\n", ResponseCode.ERROR);
         }
-
-        if (result.length() == 0) return "Collection is empty\n";
-        return result.substring(0, result.toString().length() - 1);
+        if (result.length() == 0) return new CommandResult("Collection is empty\n", ResponseCode.OK);
+        return new CommandResult(result.substring(0, result.toString().length() - 1), ResponseCode.OK);
     }
 }

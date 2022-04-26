@@ -1,6 +1,8 @@
 package sharedClasses.commands;
 
-import server.commands.ArgObjectForServer;
+import server.commandsUtils.ArgObjectForServer;
+import sharedClasses.commands.commandsUtils.CommandResult;
+import sharedClasses.messageUtils.ResponseCode;
 
 /**
  * A class for updating the value of a collection element whose ID is equal to the specified one.
@@ -11,7 +13,7 @@ public class UpdateId extends Command<ArgObjectForServer> {
     }
 
     @Override
-    public String execute(ArgObjectForServer argObject) {
+    public CommandResult execute(ArgObjectForServer argObject) {
         String result = "Element successfully updated";
         try {
             long id = Long.parseLong(argObject.getArgs()[1]);
@@ -20,8 +22,8 @@ public class UpdateId extends Command<ArgObjectForServer> {
             argObject.getMusicBand().setId(id);
             argObject.getCollectionManager().add(argObject.getMusicBand());
         } catch (NumberFormatException e) {
-            result = "Wrong format of id";
+            return new CommandResult("Wrong format of id", ResponseCode.ERROR);
         }
-        return result;
+        return new CommandResult(result, ResponseCode.OK);
     }
 }

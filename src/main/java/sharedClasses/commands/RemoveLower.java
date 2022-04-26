@@ -1,6 +1,8 @@
 package sharedClasses.commands;
 
-import server.commands.ArgObjectForServer;
+import server.commandsUtils.ArgObjectForServer;
+import sharedClasses.commands.commandsUtils.CommandResult;
+import sharedClasses.messageUtils.ResponseCode;
 
 import java.util.Set;
 
@@ -13,12 +15,12 @@ public class RemoveLower extends Command<ArgObjectForServer> {
     }
 
     @Override
-    public String execute(ArgObjectForServer argObject) {
+    public CommandResult execute(ArgObjectForServer argObject) {
         String result = "All lower objects were deleted";
         Set<Long> id = argObject.getCollectionManager().getIdByLower(argObject.getMusicBand());
         for (Long i : id) {
             argObject.getCollectionManager().removeById(i);
         }
-        return result;
+        return new CommandResult(result, ResponseCode.OK);
     }
 }

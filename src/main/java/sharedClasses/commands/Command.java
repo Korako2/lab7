@@ -3,6 +3,7 @@ package sharedClasses.commands;
 import sharedClasses.commands.commandsUtils.ArgObject;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import sharedClasses.commands.commandsUtils.CommandResult;
 
 import java.io.Serializable;
 
@@ -29,6 +30,6 @@ public abstract class Command<T> implements Serializable {
      * @param argObject an object for storing command arguments {@link ArgObject}.
      * @return the result of the command execution.
      */
-    public abstract String execute(T argObject);
+    public abstract CommandResult execute(T argObject);
 
 }

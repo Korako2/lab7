@@ -21,7 +21,7 @@ public class AddressValidation {
      * A method for checking the host and port.
      * @return true if the host and port are entered correctly; otherwise false.
      */
-    public boolean checkAddress() { //todo проверка port?
+    public boolean checkAddress() {
         if (hostAndPort.length != 2) {
             out.println("Invalid input format. Specify host and port separated by a space after the jar-file name.");
             return false;
@@ -29,8 +29,12 @@ public class AddressValidation {
         try {
             port = Integer.parseInt(hostAndPort[1]);
             host = hostAndPort[0];
+            if (port <=0 || port >65535) {
+                out.println("Wrong number for port");
+                return false;
+            }
         } catch (NumberFormatException e) {
-            out.println("port -  an integer number than or equal to zero.");
+            out.println("Port -  an integer number than or equal to zero.");
             return false;
         }
         return true;

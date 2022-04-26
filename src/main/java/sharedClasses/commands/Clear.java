@@ -1,6 +1,8 @@
 package sharedClasses.commands;
 
-import server.commands.ArgObjectForServer;
+import server.commandsUtils.ArgObjectForServer;
+import sharedClasses.commands.commandsUtils.CommandResult;
+import sharedClasses.messageUtils.ResponseCode;
 
 /**
  * A class for cleaning the collection.
@@ -11,8 +13,8 @@ public class Clear extends Command<ArgObjectForServer> {
         super(false, 0, "CLEAR", "to clear the collection", true);
     }
 
-    public String execute(ArgObjectForServer argObject) {
+    public CommandResult execute(ArgObjectForServer argObject) {
         argObject.getCollectionManager().clear();
-        return "Collection is empty now!";
+        return new CommandResult("Collection is empty now!", ResponseCode.OK);
     }
 }

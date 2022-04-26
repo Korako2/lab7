@@ -35,16 +35,12 @@ public class FileManager {
      * @throws IOException in case of errors in writing to the file.
      */
     public void writeCollection(String fileName, HashSet<MusicBand> musicBands) throws IOException {
-        FileOutputStream fileOutputStream = null;
+        FileOutputStream fileOutputStream;
         try {
             fileOutputStream = new FileOutputStream(fileName);
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("File is a directory or cannot be opened for any other reason.");
-        } catch (SecurityException e) {
-            throw new SecurityException("???");
-        } finally {
-            fileOutputStream.close();
-        } //todo
+            throw new FileNotFoundException("File is accessible.");
+        }
         byte[] buffer = ("id,bandName,x,y,creationDate,numberOfParticipants,albumsCount,description,genre,personName," +
                 "height,eyeColor,hairColor,nationality,personX,personY,personZ\n").getBytes();
         fileOutputStream.write(buffer, 0, buffer.length);
@@ -52,6 +48,6 @@ public class FileManager {
             buffer = (i.getStringToSaveInFile() + "\n").getBytes();
             fileOutputStream.write(buffer, 0, buffer.length);
         }
-
+        fileOutputStream.close();
     }
 }

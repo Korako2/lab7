@@ -1,7 +1,9 @@
 package sharedClasses.commands;
 
-import server.commands.ArgObjectForServer;
+import server.commandsUtils.ArgObjectForServer;
+import sharedClasses.commands.commandsUtils.CommandResult;
 import sharedClasses.data.MusicBand;
+import sharedClasses.messageUtils.ResponseCode;
 
 import java.util.Set;
 
@@ -13,13 +15,12 @@ public class FilterStartsWithDescription extends Command<ArgObjectForServer> {
 
         super(false, 1, "FILTER_STARTS_WITH_DESCRIPTION", "output elements whose description field value starts with the specified substring", true);
     }
-
     @Override
-    public String execute(ArgObjectForServer argObject) {
+    public CommandResult execute(ArgObjectForServer argObject) {
         Set<MusicBand> filterResult = argObject.getCollectionManager().getMusicBandsOfDescription(argObject.getArgs()[1]);
         StringBuilder result = new StringBuilder();
         for (MusicBand musicBand : filterResult) result.append(musicBand).append("\n");
-        if (result.length() == 0) return "No such elements\n";
-        return result.substring(0, result.toString().length() - 1);
+        if (result.length() == 0) return new CommandResult("No such elements\n", ResponseCode.OK);
+        return new CommandResult(result.substring(0, result.toString().length() - 1), ResponseCode.OK);
     }
 }

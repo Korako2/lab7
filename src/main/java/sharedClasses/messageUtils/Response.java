@@ -12,10 +12,10 @@ import java.io.Serializable;
 public class Response implements Serializable {
     private static final long serialVersionUID = 1L;
     @Getter
-    private final String responseHead;
+    private final ResponseCode responseCode;
     @Getter
     private final String responseBody;
     public String toString() {
-        return "Response[" + responseHead + ", " + responseBody + "]";
+        return "Response: " + responseCode + ", " + responseBody;
     }
 }

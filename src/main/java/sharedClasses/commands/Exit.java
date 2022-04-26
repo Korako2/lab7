@@ -1,6 +1,8 @@
 package sharedClasses.commands;
 
-import server.commands.ArgObjectForServer;
+import server.commandsUtils.ArgObjectForServer;
+import sharedClasses.commands.commandsUtils.CommandResult;
+import sharedClasses.messageUtils.ResponseCode;
 
 /**
  * A class for terminating a program.
@@ -10,7 +12,7 @@ public class Exit extends Command<ArgObjectForServer> {
         super(false, 0, "EXIT", "terminate the program (without saving to a file)", true);
     }
 
-    public String execute(ArgObjectForServer argObject) {
-        return "Program is finishing...:(";
+    public CommandResult execute(ArgObjectForServer argObject) {
+        return new CommandResult("Program is finishing.", ResponseCode.OK);
     }
 }
