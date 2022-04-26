@@ -5,6 +5,7 @@ import client.commands.ClientCommandsManager;
 import client.commands.ExecuteScript;
 import client.commands.Help;
 import client.commands.History;
+import client.connectionUtils.AddressValidation;
 import server.collectionUtil.CollectionManager;
 import sharedClasses.commands.*;
 
@@ -48,59 +49,6 @@ public class App {
             e.getMessage();
         }
 
-    }
-
-    public static void run() {
-        Scanner scanner = new Scanner(System.in);
-        ClientCommandsManager ClientCommandsManager = new ClientCommandsManager();
-        CollectionManager collectionManager = new CollectionManager();
-        Map env = System.getenv();
-        String fileName = (String) env.get("FILE_NAME");
-        if (fileName == null) {
-            System.out.println("Please, save the file name in environment variable FILE_NAME");
-            System.exit(-1);
-        }
-        Pattern pattern = Pattern.compile("/*/dev/*");
-        File file = new File(fileName);
-        Matcher matcher = pattern.matcher(file.getAbsolutePath());
-        if (matcher.find()) {
-            System.out.println("Incorrect file name or data in file.");
-            System.exit(-1);
-        }
-
-        try {
-            if (!collectionManager.fillCollection(fileName)) {
-                System.out.println("Incorrect file name or data in file.");
-                System.exit(-1);
-            }
-        } catch (IOException | ParseException | NumberFormatException e) {
-            System.out.println(e.getMessage());
-            System.exit(-1);
-        } catch (Exception e) {
-            System.out.println("Some exception!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-            System.exit(-1);
-        }
-
-        UserInputManager inputFromConsole = new UserInputManager(ClientCommandsManager, scanner, true, out);
-        boolean continueFlag;
-        /*do {
-            try {
-                continueFlag = inputFromConsole.input();
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-                continueFlag = true;
-            } catch (NoSuchElementException e) {
-                e.printStackTrace();
-                continueFlag = false;
-            } catch (Exception e) {
-                System.out.println("Some exception!");
-                e.printStackTrace();
-                System.out.println(e.getMessage());
-                continueFlag = false;
-            }
-        } while (continueFlag);*/
     }
 }
 

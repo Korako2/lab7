@@ -10,13 +10,13 @@ import java.io.IOException;
 /**
  * Класс для сохранения коллекции в файл.
  */
-public class Save extends Command {
+public class Save extends Command<ArgObjectForServer> {
     public Save() {
         super(false, 0, "SAVE", "to save the collection to a file", true);
     }
 
     @Override
-    public String execute(ArgObject argObject) {
+    public String execute(ArgObjectForServer argObject) {
         String result = "The collection was saved";
         try {
             ((CollectionManager)argObject.getManager()).saveCollection();

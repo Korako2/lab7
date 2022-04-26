@@ -2,15 +2,14 @@ package client.commands;
 
 import client.Client;
 import client.IOutils.UserInputManager;
-import sharedClasses.Request;
-import sharedClasses.Response;
+import sharedClasses.messageUtils.Request;
 import sharedClasses.commands.Command;
-import sharedClasses.commands.commandsUtils.ArgObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintStream;
+import java.sql.ResultSet;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -18,7 +17,7 @@ import java.util.Scanner;
 /**
  * Класс для считывание и исполнения скрипта из указанного файла.
  */
-public class ExecuteScript extends Command {
+public class ExecuteScript extends Command<ArgObjectForClient> {
     private Client client;
     private HashSet<String> fileNames;
 
@@ -29,39 +28,38 @@ public class ExecuteScript extends Command {
         fileNames = new HashSet<>();
     }
 
-    public String execute(ArgObject argObject) {
+    public String execute(ArgObjectForClient argObject) {
         UserInputManager inputFromFile;
         try {
             FileReader fileReader = new FileReader(argObject.getArgs()[1]);
-            inputFromFile = new UserInputManager((ClientCommandsManager)argObject.getManager(), new Scanner(fileReader),
+            inputFromFile = new UserInputManager(argObject.getManager(), new Scanner(fileReader),
                     false, new PrintStream(System.out));
         } catch (FileNotFoundException e) {
             return "Wrong file";
         }
         File script = new File(argObject.getArgs()[1]);
-        if (!fileNames.add(script.getAbsolutePath()))
+        if (!fileNames.add(script.getAbsolutePath())) {
             return "There is a loop in scripts! Execute_script wasn't executed, it was skipped.";
+        }
         String result = "Script in file " + argObject.getArgs()[1] + " was executed";
-        Request continueFlag;
+        boolean resultOfRequest = false;
         do {
             try {
-                continueFlag = inputFromFile.input();
-                client.getWriter().writeObject(continueFlag);
-                client.getReader().readObject();
+                resultOfRequest = client.requestToServer(inputFromFile);
             } catch (NoSuchElementException e) {
                 result  = e.getMessage() + " (wrong input of command/object in script).";
-                continueFlag = null;
+                resultOfRequest = false;
             } catch (NumberFormatException e) {
                 result = e.getMessage() + " (wrong input of object in script).";
-                continueFlag = null;
+                resultOfRequest = false;
             } catch (IllegalArgumentException e) {
                 result = e.getMessage() + " (in script detected some unknown command)";
-                continueFlag = null;
+                resultOfRequest = false;
             } catch (Exception e) {
                 result = "Some exception during script execution: " + e.getMessage();
-                continueFlag = null;
+                resultOfRequest = false;
             }
-        } while (continueFlag != null);
+        } while (resultOfRequest);
         fileNames.remove(script.getAbsolutePath());
         return result;
     }

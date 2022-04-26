@@ -9,11 +9,11 @@ import lombok.RequiredArgsConstructor;
  * Класс для хранения аргументов комманд.
  */
 @RequiredArgsConstructor
-public class ArgObject {
-    @Getter
-    private final Manager manager;
+public abstract class ArgObject {
     @Getter
     private final String[] args;
     @Getter
     private final MusicBand musicBand;
+
+    public abstract Manager getManager();
 }

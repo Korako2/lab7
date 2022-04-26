@@ -1,4 +1,4 @@
-package sharedClasses;
+package sharedClasses.messageUtils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

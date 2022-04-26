@@ -1,12 +1,12 @@
 package client;
 
 import client.IOutils.UserInputManager;
+import client.commands.ArgObjectForClient;
 import client.commands.ClientCommandsManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import sharedClasses.Request;
-import sharedClasses.Response;
-import sharedClasses.commands.commandsUtils.ArgObject;
+import sharedClasses.messageUtils.Request;
+import sharedClasses.messageUtils.Response;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -29,11 +29,12 @@ public class Client {
 
     public void run() throws IOException {
 
-        boolean status = true;
-        while (status) {
+        boolean statusOfRequest = true;
+        boolean statusOfConnection = false;
+        while (statusOfRequest && countOfConnections <= maxCountOfConnection) {
             try {
-                connectToServer();
-                status = requestToServer();
+                statusOfConnection = connectToServer();
+                if (statusOfConnection) statusOfRequest = requestToServer(userInputManager);
             } catch (IOException e) {
                 out.println(e.getMessage());
             } catch (IllegalArgumentException e) {
@@ -45,10 +46,12 @@ public class Client {
             }
         }
         disconnect();
-        out.println("Клиент успешно завершил свою работу.");
+        out.println("Клиент завершил свою работу.");
     }
 
-    private void connectToServer() throws IOException, InterruptedException {
+    private boolean connectToServer() throws IOException, InterruptedException {
+        disconnect();
+        countOfConnections++;
         try {
             out.println("Попытка установить соединение...");
             socketChannel = SocketChannel.open(new InetSocketAddress(host, port));
@@ -58,31 +61,16 @@ public class Client {
             writer = new ObjectOutputStream(socketChannel.socket().getOutputStream());
             reader = new ObjectInputStream(socketChannel.socket().getInputStream());
             out.println("Разрешение на обмен данными получено.");
+            countOfConnections = 0;
+            return true;
         } catch (IOException e) {
             out.println("Случилась ошибка при соединении с сервером.");
-            if (countOfConnections <= maxCountOfConnection) reconnectToServer();
-            throw new IOException("Не удалось установить соединение с сервером.");
+            Thread.sleep(5000);
+            return false;
+            //throw new IOException("Не удалось установить соединение с сервером.");
         } catch (IllegalArgumentException e) {
             out.println("Хост или порт введены некорректно.");
-        }
-    }
-
-    private void reconnectToServer() throws IOException, InterruptedException {
-        disconnect();
-        while (countOfConnections <= maxCountOfConnection) {
-            try {
-                countOfConnections++;
-                out.println(countOfConnections);
-                connectToServer();
-                out.println("Соединение с сервером установлено.");
-            } catch (IOException e) {
-                out.println(e.getMessage());
-                Thread.sleep(1000);
-                countOfConnections++;
-                out.println("Попытка повторно подключиться к серверу.");
-            } catch (InterruptedException e) {
-                out.println(e.getMessage());
-            }
+            return false;
         }
     }
 
@@ -90,7 +78,7 @@ public class Client {
         if (socketChannel != null) socketChannel.close();
     }
 
-    private boolean requestToServer() throws IOException, ClassNotFoundException,IllegalArgumentException {
+    public boolean requestToServer(UserInputManager userInputManager) throws IOException, ClassNotFoundException,IllegalArgumentException {
         try {
             Request request = null;
             Response response = null;
@@ -103,13 +91,13 @@ public class Client {
                         response = (Response) reader.readObject();
                         out.println(response.getResponseBody());
                     } else {
-                        ArgObject argObject = new ArgObject(clientCommandsManager, request.getArgsOfCommand(), null);
+                        ArgObjectForClient argObject = new ArgObjectForClient(clientCommandsManager, request.getArgsOfCommand(), null);
                         out.println(request.getCommand().execute(argObject));
                     }
                     } catch (IllegalArgumentException e) {
                     out.println(e.getMessage());
                 }
-            } while (!request.getNameOfCommand().toUpperCase().equals("EXIT"));
+            } while (request == null || !request.getNameOfCommand().equals("EXIT"));
             return false;
         }
         catch (IOException e) {

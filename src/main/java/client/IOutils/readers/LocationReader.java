@@ -1,6 +1,6 @@
 package client.IOutils.readers;
 
-import client.InputAndOutput;
+import client.IOutils.InputAndOutput;
 import lombok.RequiredArgsConstructor;
 import sharedClasses.data.Location;
 

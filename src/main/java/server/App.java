@@ -1,51 +1,58 @@
 package server;
 
 import server.collectionUtil.CollectionManager;
-import server.commands.ServerCommandsManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class App {
+    static Logger LOGGER = Logger.getLogger(App.class.getName());
+
     public static void main(String[] args) {
-        ServerCommandsManager serverCommandsManager = new ServerCommandsManager();
+        int port = 0;
+        try {
+            port = Integer.parseInt(args[0]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            LOGGER.log(Level.SEVERE, "Укажите порт при запуске jar-файла.");
+            System.exit(-1);
+        }
         CollectionManager collectionManager = new CollectionManager();
         Map env = System.getenv();
         String fileName = (String) env.get("FILE_NAME");
         if (fileName == null) {
-            //System.out.println("Please, save the file name in environment variable FILE_NAME");
+            LOGGER.log(Level.SEVERE, "No file name in environment variable FILE_NAME");
             System.exit(-1);
         }
         Pattern pattern = Pattern.compile("/*/dev/*");
         File file = new File(fileName);
         Matcher matcher = pattern.matcher(file.getAbsolutePath());
         if (matcher.find()) {
-            //System.out.println("Incorrect file name or data in file.");
+            LOGGER.log(Level.SEVERE, "Incorrect file name or data in file.");
             System.exit(-1);
         }
         try {
             if (!collectionManager.fillCollection(fileName)) {
-         //       System.out.println("Incorrect file name or data in file.");
+                LOGGER.log(Level.SEVERE, "Incorrect file name or data in file.");
                 System.exit(-1);
             }
         } catch (IOException | ParseException | NumberFormatException e) {
-            System.out.println(e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage());
             System.exit(-1);
         } catch (Exception e) {
-            System.out.println("Some exception!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            LOGGER.log(Level.SEVERE, "Some exception!" + e.getMessage());
             System.exit(-1);
         }
-        Server server = new Server(4444, collectionManager, serverCommandsManager);
+        Server server = new Server(port, collectionManager);
         try {
             server.run();
-        }catch (IOException e) {
-            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
         }
     }
 }

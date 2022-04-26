@@ -1,6 +1,7 @@
 package sharedClasses.commands;
 
 import server.collectionUtil.CollectionManager;
+import server.commands.ArgObjectForServer;
 import sharedClasses.commands.commandsUtils.ArgObject;
 
 import java.util.Set;
@@ -8,17 +9,17 @@ import java.util.Set;
 /**
  * Класс для удаления из коллекции всех элементов, значения поля albumsCount которых меньше заданного.
  */
-public class RemoveLower extends Command {
+public class RemoveLower extends Command<ArgObjectForServer> {
     public RemoveLower() {
         super(true, 0, "REMOVE_LOWER", "remove from the collection all elements smaller than the specified one", true);
     }
 
     @Override
-    public String execute(ArgObject argObject) {
+    public String execute(ArgObjectForServer argObject) {
         String result = "All lower objects were deleted";
-        Set<Long> id = ((CollectionManager)argObject.getManager()).getIdByLower(argObject.getMusicBand());
+        Set<Long> id = (argObject.getManager()).getIdByLower(argObject.getMusicBand());
         for (Long i : id) {
-            ((CollectionManager)argObject.getManager()).removeById(i);
+            (argObject.getManager()).removeById(i);
         }
         return result;
     }

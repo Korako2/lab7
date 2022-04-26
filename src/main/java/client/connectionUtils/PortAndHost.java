@@ -1,4 +1,4 @@
-package client;
+package client.connectionUtils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

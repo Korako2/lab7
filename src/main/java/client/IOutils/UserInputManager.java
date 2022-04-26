@@ -4,7 +4,7 @@ import client.IOutils.readers.ObjectReader;
 import client.commands.ClientCommandsManager;
 import sharedClasses.data.MusicBand;
 import sharedClasses.commands.Command;
-import sharedClasses.Request;
+import sharedClasses.messageUtils.Request;
 
 import java.io.PrintStream;
 import java.util.*;
