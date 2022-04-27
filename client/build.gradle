@@ -1,0 +1,40 @@
+
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"
+
+dependencies {
+    implementation project(':sharedClasses')
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://repo.clojars.org'
+        name 'Clojars'
+    }
+}
+
+apply plugin: 'application'
+apply plugin: 'java'
+
+mainClassName = 'App'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+tasks.register('uberJar', Jar) {
+    archiveClassifier = 'uber'
+    manifest {
+        attributes 'Main-Class': 'clientApp.App'
+    }
+    from sourceSets.main.output
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
