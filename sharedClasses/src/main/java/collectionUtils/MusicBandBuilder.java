@@ -68,8 +68,7 @@ public class MusicBandBuilder {
     }
 
     public MusicBand build() {
-        MusicBand musicBand = new MusicBand(id, name, coordinates, creationDate, numberOfParticipants,
+        return new MusicBand(id, name, coordinates, creationDate, numberOfParticipants,
                 albumsCount, description, genre, frontMan);
-        return musicBand;
     }
 }

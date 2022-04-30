@@ -20,10 +20,10 @@ public class LocationReader {
             try {
                 return Float.parseFloat(inputAndOutput.readLine("Input x coordinate of location:").replace(",", "."));
             } catch (NumberFormatException e) {
-                inputAndOutput.printLine("Wrong format of input! It should be a float number.");
+                if (!inputAndOutput.isConsoleReading())
+                    throw new NumberFormatException("Wrong format of X coordinate of location.");
+                else inputAndOutput.printLine("Wrong format of input! It should be a float number.");
             }
-            if (!inputAndOutput.isShowMessages())
-                throw new NumberFormatException("Wrong format of X coordinate of location.");
         }
     }
 
@@ -32,10 +32,10 @@ public class LocationReader {
             try {
                 return Integer.parseInt(inputAndOutput.readLine("Input y coordinate of location:"));
             } catch (NumberFormatException e) {
-                inputAndOutput.printLine("Wrong format of input! It should be a float number.");
+                if (!inputAndOutput.isConsoleReading())
+                    throw new NumberFormatException("Wrong format of Y coordinate of location.");
+                else inputAndOutput.printLine("Wrong format of input! It should be a float number.");
             }
-            if (!inputAndOutput.isShowMessages())
-                throw new NumberFormatException("Wrong format of Y coordinate of location.");
         }
     }
 
@@ -44,10 +44,10 @@ public class LocationReader {
             try {
                 return Long.parseLong(inputAndOutput.readLine("Input z coordinate of location:"));
             } catch (NumberFormatException e) {
-                inputAndOutput.printLine("Wrong format of input! It should be a Long number.");
+                if (!inputAndOutput.isConsoleReading())
+                    throw new NumberFormatException("Wrong format of Z coordinate of location.");
+                else inputAndOutput.printLine("Wrong format of input! It should be a Long number.");
             }
-            if (!inputAndOutput.isShowMessages())
-                throw new NumberFormatException("Wrong format of Z coordinate of location.");
         }
     }
 }

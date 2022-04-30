@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class InputAndOutput {
     private final Scanner scanner;
     @Getter
-    private final boolean showMessages;
+    private final boolean consoleReading;
 
     /**
      * A method for displaying an input prompt (in the case of working with the console) and reading the user's response.
@@ -18,7 +18,7 @@ public class InputAndOutput {
      * @return the user's response.
      */
     public String readLine(String message) {
-        if (showMessages) System.out.println(message);
+        if (consoleReading) System.out.println(message);
         return scanner.nextLine();
     }
 
@@ -28,6 +28,6 @@ public class InputAndOutput {
      * @param message a message for the user.
      */
     public void printLine(String message) {
-        if (showMessages) System.out.println(message);
+        if (consoleReading) System.out.println(message);
     }
 }

@@ -33,7 +33,7 @@ public class ExecuteScript extends Command<ArgObjectForClient> {
         try {
             FileReader fileReader = new FileReader(argObject.getArgs()[1]);
             inputFromFile = new UserInputManager(argObject.getClientCommandManager(), new Scanner(fileReader),
-                    false, new PrintStream(System.out));
+                    false);
         } catch (FileNotFoundException e) {
             return new CommandResult("Wrong file", ResponseCode.ERROR);
         }
@@ -48,8 +48,6 @@ public class ExecuteScript extends Command<ArgObjectForClient> {
                 resultOfRequest = client.requestToServer(inputFromFile);
             } catch (NoSuchElementException e) {
                 return new CommandResult(e.getMessage() + " (wrong input of command/object in script).", ResponseCode.ERROR);
-            } catch (NumberFormatException e) {
-                return new CommandResult(e.getMessage() + " (wrong input of object in script).", ResponseCode.ERROR);
             } catch (IllegalArgumentException e) {
                 return new CommandResult(e.getMessage() + " (in script detected some unknown command)", ResponseCode.ERROR);
             } catch (Exception e) {

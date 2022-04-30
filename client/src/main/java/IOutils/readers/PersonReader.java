@@ -27,9 +27,9 @@ public class PersonReader {
             try {
                 return Country.valueOf(inputAndOutput.readLine("Input country(GERMANY, INDIA, VATICAN):").toUpperCase());
             } catch (IllegalArgumentException e) {
-                inputAndOutput.printLine("Wrong format of input! Choose a country from the suggested list!");
+                if (!inputAndOutput.isConsoleReading()) throw new NumberFormatException("Wrong format national city.");
+                else inputAndOutput.printLine("Wrong format of input! Choose a country from the suggested list!");
             }
-            if (!inputAndOutput.isShowMessages()) throw new NumberFormatException("Wrong format national city.");
         }
     }
 
@@ -37,9 +37,9 @@ public class PersonReader {
         while (true) {
             String name = inputAndOutput.readLine("Input name of person: ");
             if (name.equals("")) {
-                inputAndOutput.printLine("Wrong format of input! Name can't be a null.");
+                if (!inputAndOutput.isConsoleReading()) throw new NumberFormatException("Wrong format of name.");
+                else inputAndOutput.printLine("Wrong format of input! Name can't be a null.");
             } else return name;
-            if (!inputAndOutput.isShowMessages()) throw new NumberFormatException("Wrong format of name.");
         }
     }
 
@@ -48,9 +48,9 @@ public class PersonReader {
             try {
                 return HairColor.valueOf(inputAndOutput.readLine("Input hair color(RED, BLACK, BLUE, ORANGE, WHITE):").toUpperCase());
             } catch (IllegalArgumentException e) {
-                inputAndOutput.printLine("Wrong format of input! Choose a hair color from the suggested list!");
+                if (!inputAndOutput.isConsoleReading()) throw new NumberFormatException("Wrong format of hair color.");
+                else inputAndOutput.printLine("Wrong format of input! Choose a hair color from the suggested list!");
             }
-            if (!inputAndOutput.isShowMessages()) throw new NumberFormatException("Wrong format of hair color.");
         }
     }
 
@@ -63,9 +63,9 @@ public class PersonReader {
                     return EyeColor.valueOf(line);
                 }
             } catch (IllegalArgumentException e) {
-                inputAndOutput.printLine("Wrong format of input! Choose an eye color from the suggested list!");
+                if (!inputAndOutput.isConsoleReading()) throw new NumberFormatException("Wrong format of eye color.");
+                else inputAndOutput.printLine("Wrong format of input! Choose an eye color from the suggested list!");
             }
-            if (!inputAndOutput.isShowMessages()) throw new NumberFormatException("Wrong format of eye color.");
         }
     }
 
@@ -79,12 +79,13 @@ public class PersonReader {
                     if (height > 0) return height;
                     else {
                         inputAndOutput.printLine("Height must be more than 0.");
+
                     }
                 }
             } catch (NumberFormatException e) {
                 inputAndOutput.printLine("Wrong format of input! Height must be a number!");
             }
-            if (!inputAndOutput.isShowMessages()) throw new NumberFormatException("Wrong format of height.");
+            if (!inputAndOutput.isConsoleReading()) throw new NumberFormatException("Wrong format of height.");
         }
     }
 }

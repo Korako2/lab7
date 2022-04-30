@@ -10,7 +10,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 public class App {
-    private static PrintStream out;
+    public static PrintStream out;
     public static void main(String[] arg) {
         out = new PrintStream(System.out);
         AddressValidation addressValidation = new AddressValidation(arg, out);
@@ -20,8 +20,8 @@ public class App {
         }
         ClientCommandsManager clientCommandsManager = new ClientCommandsManager();
         Scanner scanner = new Scanner(System.in);
-        UserInputManager inputFromConsole = new UserInputManager(clientCommandsManager, scanner, true, out);
-        Client client = new Client(addressValidation.getHost(), addressValidation.getPort(), out, inputFromConsole, clientCommandsManager);
+        UserInputManager inputFromConsole = new UserInputManager(clientCommandsManager, scanner, true);
+        Client client = new Client(addressValidation.getHost(), addressValidation.getPort(), inputFromConsole, clientCommandsManager);
 
         clientCommandsManager.addCommand(new Help());
         clientCommandsManager.addCommand(new Info());

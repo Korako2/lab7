@@ -12,11 +12,12 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 
+import static clientApp.App.out;
+
 @RequiredArgsConstructor
 public class Client {
     private final String host;
     private final int port;
-    private final PrintStream out;
     private final UserInputManager userInputManager;
     private final ClientCommandsManager clientCommandsManager;
     private SocketChannel socketChannel;
@@ -35,7 +36,7 @@ public class Client {
             try {
                 statusOfConnection = connectToServer();
                 if (statusOfConnection) statusOfRequest = requestToServer(userInputManager);
-            } catch (IOException | IllegalArgumentException | ClassNotFoundException e) {
+            } catch (IOException | IllegalArgumentException e) {
                 out.println(e.getMessage());
             }
         }
@@ -71,14 +72,17 @@ public class Client {
         if (socketChannel != null) socketChannel.close();
     }
 
-    public boolean requestToServer(UserInputManager userInputManager) throws IOException, ClassNotFoundException, IllegalArgumentException {
-        try {
-            Request request = null;
-            Response response;
-            do {
-                try {
-                    request = userInputManager.input();
-                    if (request == null) return false;
+    public boolean requestToServer(UserInputManager userInputManager) {
+        Request request = null;
+        Response response;
+        do {
+            try {
+                request = userInputManager.input();
+                if (request == null) return false;
+                if (request.isEmpty()) {
+                    request = null;
+
+                } else {
                     if (request.getCommand().isServer()) {
                         writer.writeObject(request);
                         response = (Response) reader.readObject();
@@ -87,16 +91,19 @@ public class Client {
                         ArgObjectForClient argObject = new ArgObjectForClient(clientCommandsManager, request.getArgsOfCommand(), null);
                         out.println(request.getCommand().execute(argObject).getResult());
                     }
-                } catch (IllegalArgumentException e) {
-                    out.println(e.getMessage());
                 }
-            } while (request == null || !request.getNameOfCommand().equals("EXIT"));
-            return false;
-        } catch (IOException e) {
-            throw new IOException("The connection to the server is broken.");
-        } catch (ClassNotFoundException e) {
-            throw new ClassNotFoundException("An error occurred while reading the data.");
-        }
+            } catch (IllegalArgumentException e) {
+                out.println(e.getMessage());
+            } catch (IOException e) {
+                out.println("The connection to the server is broken.");
+                return false;
+            } catch (ClassNotFoundException e) {
+                out.println("An error occurred while reading the data.");
+                return false;
+            }
+        } while (request == null || !request.getNameOfCommand().equals("EXIT"));
+        return false;
+
     }
 
 }

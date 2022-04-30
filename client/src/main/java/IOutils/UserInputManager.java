@@ -6,8 +6,9 @@ import data.MusicBand;
 import commands.Command;
 import messageUtils.Request;
 
-import java.io.PrintStream;
 import java.util.*;
+
+import static clientApp.App.out;
 
 /**
  * A class for recognizing user input (from the console or file).
@@ -17,14 +18,17 @@ public class UserInputManager {
     private final ObjectReader objectReader;
     private final Scanner input;
     private final boolean showMessages;
-    private final PrintStream out;
+    private final Map<String, String[]> commandWithQuestion = new HashMap<>();
+    private final Proceed proceed;
 
-    public UserInputManager(ClientCommandsManager clientCommandsManager, Scanner input, boolean showMessages, PrintStream printStream) {
+    public UserInputManager(ClientCommandsManager clientCommandsManager, Scanner input, boolean showMessages) {
         this.clientcommandsManager = clientCommandsManager;
         this.input = input;
         objectReader = new ObjectReader(input, showMessages);
         this.showMessages = showMessages;
-        this.out = printStream;
+        proceed = new Proceed(input);
+        commandWithQuestion.put("exit", new String[]{"Do you really want to get out?", "yes"});
+        commandWithQuestion.put("clear", new String[]{"Do you really want to clean up the collection?", "no"});
     }
 
     /**
@@ -36,33 +40,28 @@ public class UserInputManager {
         printInviteMessage();
         if (!input.hasNext()) return null;
         String[] s = input.nextLine().split(" ");
-        Command command = clientcommandsManager.getCommand(s[0].toUpperCase(Locale.ROOT));
-        try {
-            if (command == null) {
-                throw new IllegalArgumentException("There's no such command");
-            }
-            clientcommandsManager.addToHistory(command.getName());
-            if (!checkArgsCount(s, command))
-                throw new IllegalArgumentException("Wrong amount of arguments. Please, try again! (You can use command \"help\" for more information.)");
-        } catch (NumberFormatException e) {
-            throw e;
+        if (!checkCommand(s[0].toLowerCase(Locale.ROOT))) {
+            return new Request(null);
         }
-        return new Request(command, s, readObjectIfNecessary(command));
+        Command command = clientcommandsManager.getCommand(s[0].toUpperCase(Locale.ROOT));
+        if (command == null) {
+            throw new IllegalArgumentException("There's no such command");
+        }
+        clientcommandsManager.addToHistory(command.getName());
+        if (!checkArgsCount(s, command))
+            throw new IllegalArgumentException("Wrong amount of arguments. Please, try again! (You can use command \"help\" for more information.)");
+        try {
+            return new Request(command, s, readObjectIfNecessary(command));
+        } catch (NoSuchElementException e) {
+            return null;
+        }
     }
 
-    /**
-     * A method for confirming the user's action.
-     *
-     * @return true if the user confirms the action; false if the user rejects the action.
-     */
-    private boolean askQuestion() {
-        while (true) {
-            out.println("yes/no?");
-            if (!input.hasNext()) return true;
-            String answer = input.nextLine();
-            if (answer.equals("yes")) return true;
-            if (answer.equals("no")) return false;
+    private boolean checkCommand(String command) {
+        if (commandWithQuestion.get(command) != null) {
+            return proceed.requestResponse(commandWithQuestion.get(command)[0], commandWithQuestion.get(command)[1]);
         }
+        return true;
     }
 
     /**
@@ -73,8 +72,7 @@ public class UserInputManager {
      * @return true if the number of arguments is correct, otherwise false.
      */
     private boolean checkArgsCount(String[] s, Command command) {
-        if (command.getCountOfArgs() == s.length - 1) return true;
-        return false;
+        return command.getCountOfArgs() == s.length - 1;
     }
 
     /**
@@ -92,6 +90,6 @@ public class UserInputManager {
      * A method for displaying an input prompt for the user (in the case of reading data from the console).
      */
     private void printInviteMessage() {
-        if (showMessages) System.out.println("Enter command (if you don't know commands, enter command \"help\"):");
+        if (showMessages) out.println("Enter command (if you don't know commands, enter command \"help\"):");
     }
 }

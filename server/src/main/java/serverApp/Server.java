@@ -14,7 +14,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
-import static serverApp.App.LOGGER;
+
+import static serverApp.App.logger;
 
 
 @RequiredArgsConstructor
@@ -28,39 +29,31 @@ public class Server {
         boolean status = true;
         openServerSocket();
         while (status) {
-            try {
-                Socket clientSocket = connectToClient();
-                status = processClientRequest(clientSocket);
-            } catch (ClassNotFoundException e) {
-                LOGGER.log(Level.SEVERE, e.getMessage());
-                status = false;
-            } catch (IOException e) {
-                LOGGER.log(Level.WARNING, e.getMessage());
-                status = false;
-            }
+            Socket clientSocket = connectToClient();
+            status = processClientRequest(clientSocket);
         }
         saveIfExit();
     }
 
-    private void openServerSocket() throws IOException {
+    private void openServerSocket() {
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
-            throw new IOException("Failed to open ServerSocket.");
+            logger.log(Level.WARNING, "Failed to open ServerSocket.");
         }
     }
 
     private void saveIfExit() throws IOException {
         try {
             collectionManager.saveCollection();
-            LOGGER.log(Level.INFO, "The collection was saved");
+            logger.log(Level.INFO, "The collection was saved");
         } catch (FileNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "This file wasn't found");
+            logger.log(Level.SEVERE, "This file wasn't found");
         } catch (SecurityException e) {
-            LOGGER.log(Level.SEVERE, "Write access to the file is denied");
+            logger.log(Level.SEVERE, "Write access to the file is denied");
         } catch (IOException e) {
             e.printStackTrace();
-            LOGGER.log(Level.SEVERE, "Some I/O errors occur: " + e.getMessage());
+            logger.log(Level.SEVERE, "Some I/O errors occur: " + e.getMessage());
         }
         exit();
         run();
@@ -71,20 +64,20 @@ public class Server {
             if (serverSocket != null) {
                 serverSocket.close();
             }
-            LOGGER.log(Level.INFO, "The connection with the client closed.");
+            logger.log(Level.INFO, "The connection with the client closed.");
 
         } catch (IOException e) {
-            LOGGER.log(Level.INFO, "Error when completing the connection with the client.");
+            logger.log(Level.INFO, "Error when completing the connection with the client.");
         }
     }
 
     private Socket connectToClient() throws IOException {
         Socket clientSocket = serverSocket.accept();
-        LOGGER.log(Level.INFO, "The connection with the client has been successfully established");
+        logger.log(Level.INFO, "The connection with the client has been successfully established");
         return clientSocket;
     }
 
-    private boolean processClientRequest(Socket clientSocket) throws IOException, ClassNotFoundException {
+    private boolean processClientRequest(Socket clientSocket) {
         Request request;
         Response response;
         try {
@@ -102,9 +95,11 @@ public class Server {
                 clientWriter.flush();
             } while (true);
         } catch (IOException e) {
-            throw new IOException("Disconnection from the client.");
+            logger.log(Level.WARNING, "Disconnection from the client.");
+            return false;
         } catch (ClassNotFoundException e) {
-            throw new ClassNotFoundException("An error occurred while reading the received data!");
+            logger.log(Level.SEVERE, "An error occurred while reading the received data!");
+            return false;
         }
     }
 }

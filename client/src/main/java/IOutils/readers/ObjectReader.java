@@ -13,15 +13,15 @@ import java.util.Scanner;
  */
 public class ObjectReader {
     private final Scanner scanner;
-    private final boolean showMessages;
+    private final boolean consoleReading;
     private CoordinatesReader coordinatesReader;
     private PersonReader personReader;
     private InputAndOutput inputAndOutput;
 
-    public ObjectReader(Scanner scanner, boolean showMessages) {
+    public ObjectReader(Scanner scanner, boolean consoleReading) {
         this.scanner = scanner;
-        this.showMessages = showMessages;
-        this.inputAndOutput = new InputAndOutput(scanner, showMessages);
+        this.consoleReading = consoleReading;
+        this.inputAndOutput = new InputAndOutput(scanner, consoleReading);
         this.coordinatesReader = new CoordinatesReader(inputAndOutput);
         this.personReader = new PersonReader(inputAndOutput);
     }
@@ -50,7 +50,7 @@ public class ObjectReader {
             if (name == null || name.equals("")) {
                 inputAndOutput.printLine("Wrong format of input! Name can't be an empty line.");
             } else return name;
-            if (!showMessages) throw new NumberFormatException("Wrong format of music band's name.");
+            if (!consoleReading) throw new NumberFormatException("Wrong format of music band's name.");
         }
     }
 
@@ -64,7 +64,7 @@ public class ObjectReader {
             } catch (NumberFormatException e) {
                 inputAndOutput.printLine("Wrong format of input! It should be a long number.");
             }
-            if (!showMessages) throw new NumberFormatException("Wrong format of participants");
+            if (!consoleReading) throw new NumberFormatException("Wrong format of participants");
         }
     }
 
@@ -77,7 +77,7 @@ public class ObjectReader {
             } catch (NumberFormatException e) {
                 inputAndOutput.printLine("Wrong format of input! It must be a long number more than 0.");
             }
-            if (!showMessages) throw new NumberFormatException("Wrong format of albums count.");
+            if (!consoleReading) throw new NumberFormatException("Wrong format of albums count.");
         }
     }
 
@@ -85,9 +85,9 @@ public class ObjectReader {
         while (true) {
             String description = inputAndOutput.readLine("Input description: ");
             if (description.equals("")) {
-                inputAndOutput.printLine("Wrong format of input! Description can't be a null.");
+                if (!consoleReading) throw new NumberFormatException("Wrong format of description.");
+                else inputAndOutput.printLine("Wrong format of input! Description can't be a null.");
             } else return description;
-            if (!showMessages) throw new NumberFormatException("Wrong format of description.");
         }
     }
 
@@ -96,9 +96,9 @@ public class ObjectReader {
             try {
                 return MusicGenre.valueOf(inputAndOutput.readLine("Input music genre(JAZZ, POST_ROCK, PUNK_ROCK)").toUpperCase());
             } catch (IllegalArgumentException e) {
-                inputAndOutput.printLine("Wrong format of input! Choose a genre from the suggested list!");
+                if (!consoleReading) throw new NumberFormatException("Wrong format of genre.");
+                else inputAndOutput.printLine("Wrong format of input! Choose a genre from the suggested list!");
             }
-            if (!showMessages) throw new NumberFormatException("Wrong format of genre.");
         }
     }
 

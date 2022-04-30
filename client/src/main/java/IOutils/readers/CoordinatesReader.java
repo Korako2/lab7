@@ -24,7 +24,7 @@ public class CoordinatesReader {
             } catch (NumberFormatException e) {
                 inputAndOutput.printLine("Wrong format of input! It should be a float number.");
             }
-            if (!inputAndOutput.isShowMessages()) throw new NumberFormatException("Wrong format of X coordinate.");
+            if (!inputAndOutput.isConsoleReading()) throw new NumberFormatException("Wrong format of X coordinate.");
         }
     }
 
@@ -33,9 +33,9 @@ public class CoordinatesReader {
             try {
                 return Integer.parseInt(inputAndOutput.readLine("Input y coordinate. It must be integer."));
             } catch (NumberFormatException e) {
-                inputAndOutput.printLine("Wrong format of input! It must be integer.");
+                if (!inputAndOutput.isConsoleReading()) throw new NumberFormatException("Wrong format of Y coordinate.");
+                else inputAndOutput.printLine("Wrong format of input! It must be integer.");
             }
-            if (!inputAndOutput.isShowMessages()) throw new NumberFormatException("Wrong format of Y coordinate.");
         }
 
     }
