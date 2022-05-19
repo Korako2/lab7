@@ -1,49 +1,79 @@
 package serverApp;
 
-import lombok.RequiredArgsConstructor;
 import collectionUtil.CollectionManager;
 import commands.commandsUtils.ArgObjectForServer;
 import commands.commandsUtils.CommandResult;
 import messageUtils.Request;
 import messageUtils.Response;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 import static serverApp.App.logger;
 
 
-@RequiredArgsConstructor
-public class Server {
-    private final int port;
+public class Server implements Runnable {
     private final CollectionManager collectionManager;
-    private ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
+    private final ExecutorService reader = Executors.newFixedThreadPool(4);
 
-
-    public void run() throws IOException {
-        boolean status = true;
-        openServerSocket();
-        while (status) {
-            Socket clientSocket = connectToClient();
-            status = processClientRequest(clientSocket);
-        }
-        saveIfExit();
+    public Server(int port, CollectionManager collectionManager) throws IOException {
+        this.collectionManager = collectionManager;
+        this.serverSocket = new ServerSocket(port);
     }
 
-    private void openServerSocket() {
+    public void run() {
         try {
-            serverSocket = new ServerSocket(port);
+            while (true) {
+                Socket socket = serverSocket.accept();
+                reader.execute(() -> handleUser(socket));
+            }
         } catch (IOException e) {
-            logger.log(Level.WARNING, "Failed to open ServerSocket.");
+            logger.log(Level.SEVERE, "Client was disconnected.");
+            saveIfExit();
         }
     }
 
-    private void saveIfExit() throws IOException {
+    private void handleUser(Socket socket) {
+        try {
+            while (true) {
+                Request request = receiveRequest(socket);
+                Response response = createResponse(request);
+                sendResponse(response, socket);
+                if (request.getCommand().getName().equals("EXIT")) {
+                    saveIfExit();
+                    break;
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            logger.log(Level.SEVERE, "Some problems with connection. ");
+        }
+    }
+
+
+    private Request receiveRequest(Socket socket) throws IOException, ClassNotFoundException {
+        ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+        return (Request) objectInputStream.readObject();
+    }
+
+    private Response createResponse(Request request) {
+        ArgObjectForServer argObject = new ArgObjectForServer(collectionManager, request.getArgsOfCommand(), request.getMusicBand());
+        CommandResult commandResult = request.getCommand().execute(argObject);
+        return new Response(commandResult.getResponseCode(), commandResult.getResult());
+    }
+
+    private void sendResponse(Response response, Socket socket) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(response);
+        byteArrayOutputStream.writeTo(socket.getOutputStream());
+    }
+
+    private void saveIfExit() {
         try {
             collectionManager.saveCollection();
             logger.log(Level.INFO, "The collection was saved");
@@ -52,54 +82,9 @@ public class Server {
         } catch (SecurityException e) {
             logger.log(Level.SEVERE, "Write access to the file is denied");
         } catch (IOException e) {
-            e.printStackTrace();
-            logger.log(Level.SEVERE, "Some I/O errors occur: " + e.getMessage());
-        }
-        exit();
-        run();
-    }
-
-    private void exit() {
-        try {
-            if (serverSocket != null) {
-                serverSocket.close();
-            }
-            logger.log(Level.INFO, "The connection with the client closed.");
-
-        } catch (IOException e) {
-            logger.log(Level.INFO, "Error when completing the connection with the client.");
+            logger.log(Level.SEVERE, "Some I/O errors occur: ");
         }
     }
 
-    private Socket connectToClient() throws IOException {
-        Socket clientSocket = serverSocket.accept();
-        logger.log(Level.INFO, "The connection with the client has been successfully established");
-        return clientSocket;
-    }
-
-    private boolean processClientRequest(Socket clientSocket) {
-        Request request;
-        Response response;
-        try {
-            ObjectInputStream clientReader = new ObjectInputStream(clientSocket.getInputStream());
-            ObjectOutputStream clientWriter = new ObjectOutputStream(clientSocket.getOutputStream());
-            do {
-                request = (Request) clientReader.readObject();
-                ArgObjectForServer argObject = new ArgObjectForServer(collectionManager, request.getArgsOfCommand(), request.getMusicBand());
-                CommandResult commandResult = request.getCommand().execute(argObject);
-                response = new Response(commandResult.getResponseCode(), commandResult.getResult());
-                clientWriter.writeObject(response);
-                if (request.getCommand().getName().equals("EXIT")) {
-                    return false;
-                }
-                clientWriter.flush();
-            } while (true);
-        } catch (IOException e) {
-            logger.log(Level.WARNING, "Disconnection from the client.");
-            return false;
-        } catch (ClassNotFoundException e) {
-            logger.log(Level.SEVERE, "An error occurred while reading the received data!");
-            return false;
-        }
-    }
 }
+

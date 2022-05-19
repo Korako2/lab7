@@ -17,7 +17,7 @@ public class IdStorage {
         iDSet = new HashSet<>();
     }
 
-    public boolean addID(MusicBand musicBand) {
+    public boolean addId(MusicBand musicBand) {
         return iDSet.add(musicBand.getId());
     }
 
@@ -27,7 +27,7 @@ public class IdStorage {
      * @return generated ID.
      */
 
-    public long generateID() {
+    public long generateId() {
         long id;
         if (iDSet.isEmpty()) return 1;
         if (Collections.max(iDSet) == Long.MAX_VALUE) {

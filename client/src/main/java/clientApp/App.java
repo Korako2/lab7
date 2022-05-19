@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 public class App {
     public static PrintStream out;
+
     public static void main(String[] arg) {
         out = new PrintStream(System.out);
         AddressValidation addressValidation = new AddressValidation(arg, out);

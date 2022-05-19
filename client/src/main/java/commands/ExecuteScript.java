@@ -9,7 +9,6 @@ import messageUtils.ResponseCode;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -42,18 +41,15 @@ public class ExecuteScript extends Command<ArgObjectForClient> {
             return new CommandResult("There is a loop in scripts! Execute_script wasn't executed, it was skipped.", ResponseCode.ERROR);
         }
         String result = "Script in file " + argObject.getArgs()[1] + " was executed";
-        boolean resultOfRequest;
-        do {
-            try {
-                resultOfRequest = client.requestToServer(inputFromFile);
-            } catch (NoSuchElementException e) {
-                return new CommandResult(e.getMessage() + " (wrong input of command/object in script).", ResponseCode.ERROR);
-            } catch (IllegalArgumentException e) {
-                return new CommandResult(e.getMessage() + " (in script detected some unknown command)", ResponseCode.ERROR);
-            } catch (Exception e) {
-                return new CommandResult("Some exception during script execution: " + e.getMessage(), ResponseCode.ERROR);
-            }
-        } while (resultOfRequest);
+        try {
+            client.requestToServer(inputFromFile);
+        } catch (NoSuchElementException e) {
+            return new CommandResult(e.getMessage() + " (wrong input of command/object in script).", ResponseCode.ERROR);
+        } catch (IllegalArgumentException e) {
+            return new CommandResult(e.getMessage() + " (in script detected some unknown command)", ResponseCode.ERROR);
+        } catch (Exception e) {
+            return new CommandResult("Some exception during script execution: " + e.getMessage(), ResponseCode.ERROR);
+        }
         fileNames.remove(script.getAbsolutePath());
         return new CommandResult(result, ResponseCode.OK);
     }

@@ -19,7 +19,7 @@ public class CollectionManager implements StorageInterface<MusicBand> {
     /**
      * Collection with elements.
      */
-    private HashSet<MusicBand> musicBands;
+    private Collection<MusicBand> musicBands = Collections.synchronizedCollection(new HashSet<>());
     /**
      * Collection for storing the ID of the elements of the main collection.
      */
@@ -57,7 +57,7 @@ public class CollectionManager implements StorageInterface<MusicBand> {
         if (musicBands == null) return false;
         date = new Date();
         for (MusicBand musicBand : musicBands) {
-            if (!idStorage.addID(musicBand)) return false;
+            if (!idStorage.addId(musicBand)) return false;
         }
         return true;
     }
@@ -129,7 +129,7 @@ public class CollectionManager implements StorageInterface<MusicBand> {
     }
 
     public long generateId() {
-        return idStorage.generateID();
+        return idStorage.generateId();
     }
 
     /**

@@ -56,14 +56,16 @@ public class ObjectReader {
 
     public Long readNumberOfParticipants() {
         while (true) {
+            Long numberOfParticipants = null;
             try {
-                Long numberOfParticipants = Long.parseLong(inputAndOutput.readLine("Input numberOfParticipants:"));
-                if (numberOfParticipants <= 0) {
-                    inputAndOutput.printLine("Wrong format of input! Number of participants can't be null and should be more than 0.");
-                } else return numberOfParticipants;
+                numberOfParticipants = Long.parseLong(inputAndOutput.readLine("Input numberOfParticipants:"));
             } catch (NumberFormatException e) {
                 inputAndOutput.printLine("Wrong format of input! It should be a long number.");
             }
+            if (numberOfParticipants == null || numberOfParticipants >= 0) {
+                return numberOfParticipants;
+            }
+            inputAndOutput.printLine("Wrong format of input! Number of participants can't be null and should be more than 0.");
             if (!consoleReading) throw new NumberFormatException("Wrong format of participants");
         }
     }
@@ -73,7 +75,7 @@ public class ObjectReader {
             try {
                 long albumsCount = Long.parseLong(inputAndOutput.readLine("Input albumsCount: "));
                 if (albumsCount > 0) return albumsCount;
-                else inputAndOutput.printLine("Wrong format of input! AlbumsCount must be more than 0.");
+                inputAndOutput.printLine("Wrong format of input! AlbumsCount must be more than 0.");
             } catch (NumberFormatException e) {
                 inputAndOutput.printLine("Wrong format of input! It must be a long number more than 0.");
             }

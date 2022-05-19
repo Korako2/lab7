@@ -19,6 +19,7 @@ public class Proceed {
         answerMap.put("n", false);
         answerMap.put("no", false);
     }
+
     public boolean requestResponse(String question, String defaultAnswer) {
         if (defaultAnswer.equals("yes")) {
             out.print(question + " [Y/n]: ");
@@ -35,7 +36,7 @@ public class Proceed {
             String answer = input.nextLine().toLowerCase(Locale.ROOT);
             if (answerMap.get(answer) != null) {
                 return answerMap.get(answer);
-            } else{
+            } else {
                 out.println("Write yes or no.");
             }
         }

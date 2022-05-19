@@ -59,9 +59,7 @@ public class PersonReader {
             try {
                 String line = inputAndOutput.readLine("Input eye color(RED, WHITE, BROWN):").toUpperCase();
                 if (line.equals("")) return null;
-                else {
-                    return EyeColor.valueOf(line);
-                }
+                return EyeColor.valueOf(line);
             } catch (IllegalArgumentException e) {
                 if (!inputAndOutput.isConsoleReading()) throw new NumberFormatException("Wrong format of eye color.");
                 else inputAndOutput.printLine("Wrong format of input! Choose an eye color from the suggested list!");
@@ -74,14 +72,9 @@ public class PersonReader {
             try {
                 String line = inputAndOutput.readLine("Input height:");
                 if (line.equals("")) return null;
-                else {
-                    Double height = Double.parseDouble(line.replace(",", "."));
-                    if (height > 0) return height;
-                    else {
-                        inputAndOutput.printLine("Height must be more than 0.");
-
-                    }
-                }
+                Double height = Double.parseDouble(line.replace(",", "."));
+                if (height > 0) return height;
+                inputAndOutput.printLine("Height must be more than 0.");
             } catch (NumberFormatException e) {
                 inputAndOutput.printLine("Wrong format of input! Height must be a number!");
             }

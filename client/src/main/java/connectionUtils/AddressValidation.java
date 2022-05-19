@@ -16,9 +16,12 @@ public class AddressValidation {
     private int port;
     private final String[] hostAndPort;
     private final PrintStream out;
+    private final int MIN_PORT = 0;
+    private final int MAX_PORT = 65535;
 
     /**
      * A method for checking the host and port.
+     *
      * @return true if the host and port are entered correctly; otherwise false.
      */
     public boolean checkAddress() {
@@ -29,7 +32,8 @@ public class AddressValidation {
         try {
             port = Integer.parseInt(hostAndPort[1]);
             host = hostAndPort[0];
-            if (port <=0 || port >65535) {
+            if (port >= MIN_PORT && port <= MAX_PORT) return true;
+            else {
                 out.println("Wrong number for port");
                 return false;
             }
@@ -37,7 +41,6 @@ public class AddressValidation {
             out.println("Port -  an integer number than or equal to zero.");
             return false;
         }
-        return true;
     }
 
 }

@@ -48,11 +48,12 @@ public class App {
             logger.log(Level.SEVERE, "Some exception: " + e.getMessage());
             System.exit(-1);
         }
-        Server server = new Server(port, collectionManager);
         try {
-            server.run();
+            Server server = new Server(port, collectionManager);
+            Thread thread = new Thread(server);
+            thread.start();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, e.getMessage());
+            logger.log(Level.SEVERE, "I/O error occurs when opening the socket.");
         }
     }
 }

@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.HashSet;
 
 /**
@@ -34,7 +35,7 @@ public class FileManager {
      * @param musicBands collection.
      * @throws IOException in case of errors in writing to the file.
      */
-    public void writeCollection(String fileName, HashSet<MusicBand> musicBands) throws IOException {
+    public void writeCollection(String fileName, Collection<MusicBand> musicBands) throws IOException {
         FileOutputStream fileOutputStream;
         try {
             fileOutputStream = new FileOutputStream(fileName);

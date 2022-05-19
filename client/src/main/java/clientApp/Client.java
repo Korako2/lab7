@@ -23,19 +23,20 @@ public class Client {
     private SocketChannel socketChannel;
     @Getter
     private ObjectOutputStream writer;
-    @Getter
-    private ObjectInputStream reader;
-    private final int maxCountOfConnection = 10;
+    private final int MAX_CONNECTION_COUNT = 10;
     private int countOfConnections = 0;
 
     public void run() throws IOException, InterruptedException {
 
         boolean statusOfRequest = true;
         boolean statusOfConnection;
-        while (statusOfRequest && countOfConnections <= maxCountOfConnection) {
+        while (statusOfRequest && countOfConnections <= MAX_CONNECTION_COUNT) {
             try {
                 statusOfConnection = connectToServer();
-                if (statusOfConnection) statusOfRequest = requestToServer(userInputManager);
+                if (statusOfConnection) {
+                    requestToServer(userInputManager);
+                    statusOfRequest = false;
+                }
             } catch (IOException | IllegalArgumentException e) {
                 out.println(e.getMessage());
             }
@@ -53,8 +54,6 @@ public class Client {
             socketChannel.configureBlocking(true);
             out.println("The connection is established.");
             out.println("Waiting for a response from the server to a data exchange request.");
-            writer = new ObjectOutputStream(socketChannel.socket().getOutputStream());
-            reader = new ObjectInputStream(socketChannel.socket().getInputStream());
             out.println("Permission to exchange data has been received.");
             countOfConnections = 0;
             return true;
@@ -72,38 +71,50 @@ public class Client {
         if (socketChannel != null) socketChannel.close();
     }
 
-    public boolean requestToServer(UserInputManager userInputManager) {
+    public void requestToServer(UserInputManager userInputManager) throws IOException {
         Request request = null;
-        Response response;
         do {
             try {
                 request = userInputManager.input();
-                if (request == null) return false;
-                if (request.isEmpty()) {
-                    request = null;
-
-                } else {
-                    if (request.getCommand().isServer()) {
-                        writer.writeObject(request);
-                        response = (Response) reader.readObject();
-                        out.println(response.getResponseBody());
-                    } else {
-                        ArgObjectForClient argObject = new ArgObjectForClient(clientCommandsManager, request.getArgsOfCommand(), null);
-                        out.println(request.getCommand().execute(argObject).getResult());
-                    }
-                }
+                if (request == null) break;
+                processRequest(request);
             } catch (IllegalArgumentException e) {
                 out.println(e.getMessage());
             } catch (IOException e) {
                 out.println("The connection to the server is broken.");
-                return false;
+                break;
             } catch (ClassNotFoundException e) {
                 out.println("An error occurred while reading the data.");
-                return false;
+                break;
             }
-        } while (request == null || !request.getNameOfCommand().equals("EXIT"));
-        return false;
-
+        } while (request == null || request.isEmpty() || !request.getNameOfCommand().equals("EXIT"));
     }
 
+    private void processRequest(Request request) throws IOException, ClassNotFoundException {
+        if (!request.isEmpty()) {
+            if (request.getCommand().isServer()) {
+                sendRequest(request);
+                receiveResponse();
+            } else {
+                executeCommandsOnClient(request);
+            }
+        }
+    }
+    private void sendRequest(Request request) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        writer = new ObjectOutputStream(byteArrayOutputStream);
+        writer.writeObject(request);
+        byteArrayOutputStream.writeTo(socketChannel.socket().getOutputStream());
+    }
+
+    private void receiveResponse() throws IOException, ClassNotFoundException {
+        ObjectInputStream objectInputStream = new ObjectInputStream(socketChannel.socket().getInputStream());
+        Response response = (Response) objectInputStream.readObject();
+        out.println(response.getResponseBody());
+    }
+
+    private void executeCommandsOnClient(Request request) {
+        ArgObjectForClient argObject = new ArgObjectForClient(clientCommandsManager, request.getArgsOfCommand(), null);
+        out.println(request.getCommand().execute(argObject).getResult());
+    }
 }
