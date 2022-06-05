@@ -3,6 +3,7 @@ package IOutils.readers;
 import IOutils.InputAndOutput;
 import data.Coordinates;
 import lombok.RequiredArgsConstructor;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class CoordinatesReader {
@@ -15,29 +16,14 @@ public class CoordinatesReader {
     }
 
     public Float readXCoordinate() {
-        while (true) {
-            Float x = null;
-            try {
-                x = Float.parseFloat(inputAndOutput.readLine("Input x coordinate. Max field value: 146.").replace(",", "."));
-            } catch (NumberFormatException e) {
-                inputAndOutput.printLine("Wrong format of input! It should be a float number.");
-            }
-            if (x != null && x <= 146) return x;
-            inputAndOutput.printLine("Wrong format of input! Max field value: 146. ");
-            if (!inputAndOutput.isConsoleReading()) throw new NumberFormatException("Wrong format of X coordinate.");
-        }
+        Function<String, Float> mapper = n -> Float.parseFloat(inputAndOutput.readLine(n).replace(",", "."));
+        Function<Float, Boolean> condition = n -> (n != null && n <= 146);
+        return inputAndOutput.readLineAs("Input float x coordinate. Max field value: 146: ", mapper, condition);
     }
 
     public int readYCoordinate() {
-        while (true) {
-            try {
-                return Integer.parseInt(inputAndOutput.readLine("Input y coordinate. It must be integer."));
-            } catch (NumberFormatException e) {
-                if (!inputAndOutput.isConsoleReading())
-                    throw new NumberFormatException("Wrong format of Y coordinate.");
-                else inputAndOutput.printLine("Wrong format of input! It must be integer.");
-            }
-        }
-
+        Function<String, Integer> mapper = n -> Integer.parseInt(inputAndOutput.readLine(n));
+        Function<Integer, Boolean> condition = n -> (true);
+        return inputAndOutput.readLineAs("Input y coordinate. It must be integer: ", mapper, condition);
     }
 }

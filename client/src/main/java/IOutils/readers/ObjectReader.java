@@ -7,20 +7,17 @@ import collectionUtils.MusicBandBuilder;
 
 import java.time.ZonedDateTime;
 import java.util.Scanner;
+import java.util.function.Function;
 
 /**
  * A class for creating object fields reading from the console or script.
  */
 public class ObjectReader {
-    private final Scanner scanner;
-    private final boolean consoleReading;
-    private CoordinatesReader coordinatesReader;
-    private PersonReader personReader;
-    private InputAndOutput inputAndOutput;
+    private final CoordinatesReader coordinatesReader;
+    private final PersonReader personReader;
+    private final InputAndOutput inputAndOutput;
 
     public ObjectReader(Scanner scanner, boolean consoleReading) {
-        this.scanner = scanner;
-        this.consoleReading = consoleReading;
         this.inputAndOutput = new InputAndOutput(scanner, consoleReading);
         this.coordinatesReader = new CoordinatesReader(inputAndOutput);
         this.personReader = new PersonReader(inputAndOutput);
@@ -45,63 +42,35 @@ public class ObjectReader {
 
 
     public String readNameOfMusicBand() {
-        while (true) {
-            String name = inputAndOutput.readLine("Input name of MusicBand: ");
-            if (name == null || name.equals("")) {
-                inputAndOutput.printLine("Wrong format of input! Name can't be an empty line.");
-            } else return name;
-            if (!consoleReading) throw new NumberFormatException("Wrong format of music band's name.");
-        }
+        Function<String, String> mapper = inputAndOutput::readLine;
+        Function<String, Boolean> condition = n -> (n != null && !n.equals(""));
+        return inputAndOutput.readLineAs("Input name of MusicBand. Name can't be an empty line: ", mapper, condition);
     }
 
     public Long readNumberOfParticipants() {
-        while (true) {
-            Long numberOfParticipants = null;
-            try {
-                numberOfParticipants = Long.parseLong(inputAndOutput.readLine("Input numberOfParticipants:"));
-            } catch (NumberFormatException e) {
-                inputAndOutput.printLine("Wrong format of input! It should be a long number.");
-            }
-            if (numberOfParticipants == null || numberOfParticipants >= 0) {
-                return numberOfParticipants;
-            }
-            inputAndOutput.printLine("Wrong format of input! Number of participants can't be null and should be more than 0.");
-            if (!consoleReading) throw new NumberFormatException("Wrong format of participants");
-        }
+        Function<String, Long> mapper = n -> Long.parseLong(inputAndOutput.readLine(n));
+        Function<Long, Boolean> condition = n -> (n != null && n >= 0);
+        return inputAndOutput.readLineAs("Input numberOfParticipants. " +
+                "Number of participants can't be null and should be more than 0:  ", mapper, condition);
     }
 
     public long readAlbumsCount() {
-        while (true) {
-            try {
-                long albumsCount = Long.parseLong(inputAndOutput.readLine("Input albumsCount: "));
-                if (albumsCount > 0) return albumsCount;
-                inputAndOutput.printLine("Wrong format of input! AlbumsCount must be more than 0.");
-            } catch (NumberFormatException e) {
-                inputAndOutput.printLine("Wrong format of input! It must be a long number more than 0.");
-            }
-            if (!consoleReading) throw new NumberFormatException("Wrong format of albums count.");
-        }
+        Function<String, Long> mapper = n -> Long.parseLong(inputAndOutput.readLine(n));
+        Function<Long, Boolean> condition = n -> (n > 0);
+        return inputAndOutput.readLineAs("Input albumsCount. " +
+                "It must be a long number more than 0: ", mapper, condition);
     }
 
     public String readDescription() {
-        while (true) {
-            String description = inputAndOutput.readLine("Input description: ");
-            if (description.equals("")) {
-                if (!consoleReading) throw new NumberFormatException("Wrong format of description.");
-                else inputAndOutput.printLine("Wrong format of input! Description can't be a null.");
-            } else return description;
-        }
+        Function<String, String> mapper = inputAndOutput::readLine;
+        Function<String, Boolean> condition = n -> (!n.equals(""));
+        return inputAndOutput.readLineAs("Input description. Description can't be a null: ", mapper, condition);
     }
 
     public MusicGenre readGenre() {
-        while (true) {
-            try {
-                return MusicGenre.valueOf(inputAndOutput.readLine("Input music genre(JAZZ, POST_ROCK, PUNK_ROCK)").toUpperCase());
-            } catch (IllegalArgumentException e) {
-                if (!consoleReading) throw new NumberFormatException("Wrong format of genre.");
-                else inputAndOutput.printLine("Wrong format of input! Choose a genre from the suggested list!");
-            }
-        }
+        Function<String, MusicGenre> mapper = n -> MusicGenre.valueOf(inputAndOutput.readLine(n).toUpperCase());
+        Function<MusicGenre, Boolean> condition = n -> (true);
+        return inputAndOutput.readLineAs("Input music genre(JAZZ, POST_ROCK, PUNK_ROCK): ", mapper, condition);
     }
 
 }

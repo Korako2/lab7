@@ -6,6 +6,7 @@ import data.MusicBand;
 import commands.Command;
 import messageUtils.Request;
 
+import java.io.IOException;
 import java.util.*;
 
 import static clientApp.App.out;
@@ -36,7 +37,7 @@ public class UserInputManager {
      *
      * @return true if the program execution can be continued; false if the program execution should be stopped.
      */
-    public Request input() {
+    public Request input() throws IOException {
         printInviteMessage();
         if (!input.hasNext()) return null;
         String[] s = input.nextLine().split(" ");

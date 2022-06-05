@@ -72,10 +72,10 @@ public class Client {
     }
 
     public void requestToServer(UserInputManager userInputManager) throws IOException {
-        Request request = null;
+        Request request;
         do {
+            request = userInputManager.input();
             try {
-                request = userInputManager.input();
                 if (request == null) break;
                 processRequest(request);
             } catch (IllegalArgumentException e) {
@@ -87,7 +87,7 @@ public class Client {
                 out.println("An error occurred while reading the data.");
                 break;
             }
-        } while (request == null || request.isEmpty() || !request.getNameOfCommand().equals("EXIT"));
+        } while (request.isEmpty() || !request.getNameOfCommand().equals("EXIT"));
     }
 
     private void processRequest(Request request) throws IOException, ClassNotFoundException {

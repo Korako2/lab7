@@ -1,8 +1,10 @@
 package IOutils.readers;
 
 import IOutils.InputAndOutput;
-import lombok.RequiredArgsConstructor;
 import data.Location;
+import lombok.RequiredArgsConstructor;
+
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class LocationReader {
@@ -16,38 +18,20 @@ public class LocationReader {
     }
 
     public Float readXCoordinateOfLocation() {
-        while (true) {
-            try {
-                return Float.parseFloat(inputAndOutput.readLine("Input x coordinate of location:").replace(",", "."));
-            } catch (NumberFormatException e) {
-                if (!inputAndOutput.isConsoleReading())
-                    throw new NumberFormatException("Wrong format of X coordinate of location.");
-                else inputAndOutput.printLine("Wrong format of input! It should be a float number.");
-            }
-        }
+        Function<String, Float> mapper = n -> Float.parseFloat(inputAndOutput.readLine(n));
+        Function<Float, Boolean> condition = n -> (true);
+        return inputAndOutput.readLineAs("Input float x coordinate of location: ", mapper, condition);
     }
 
     public int readYCoordinateOfLocation() {
-        while (true) {
-            try {
-                return Integer.parseInt(inputAndOutput.readLine("Input y coordinate of location:"));
-            } catch (NumberFormatException e) {
-                if (!inputAndOutput.isConsoleReading())
-                    throw new NumberFormatException("Wrong format of Y coordinate of location.");
-                else inputAndOutput.printLine("Wrong format of input! It should be a float number.");
-            }
-        }
+        Function<String, Integer> mapper = n -> Integer.parseInt(inputAndOutput.readLine(n));
+        Function<Integer, Boolean> condition = n -> (true);
+        return inputAndOutput.readLineAs("Input float y coordinate of location: ", mapper, condition);
     }
 
     public Long readZCoordinateOfLocation() {
-        while (true) {
-            try {
-                return Long.parseLong(inputAndOutput.readLine("Input z coordinate of location:"));
-            } catch (NumberFormatException e) {
-                if (!inputAndOutput.isConsoleReading())
-                    throw new NumberFormatException("Wrong format of Z coordinate of location.");
-                else inputAndOutput.printLine("Wrong format of input! It should be a Long number.");
-            }
-        }
+        Function<String, Long> mapper = n -> Long.parseLong(inputAndOutput.readLine(n));
+        Function<Long, Boolean> condition = n -> (true);
+        return inputAndOutput.readLineAs("Input long x coordinate of location: ", mapper, condition);
     }
 }

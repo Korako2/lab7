@@ -45,6 +45,8 @@ public class ExecuteScript extends Command<ArgObjectForClient> {
             client.requestToServer(inputFromFile);
         } catch (NoSuchElementException e) {
             return new CommandResult(e.getMessage() + " (wrong input of command/object in script).", ResponseCode.ERROR);
+        }catch (NumberFormatException e) {
+                return new CommandResult(e.getMessage(), ResponseCode.ERROR);
         } catch (IllegalArgumentException e) {
             return new CommandResult(e.getMessage() + " (in script detected some unknown command)", ResponseCode.ERROR);
         } catch (Exception e) {

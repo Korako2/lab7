@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Scanner;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class InputAndOutput {
@@ -20,6 +21,30 @@ public class InputAndOutput {
     public String readLine(String message) {
         if (consoleReading) System.out.println(message);
         return scanner.nextLine();
+    }
+
+    /**
+     * Read line and parse as value
+     * <p>
+     * If mapper throws it will print exception message and retries
+     *
+     * @param message prompt
+     * @param mapper  mapping function
+     * @param <T>     type of parsed value
+     * @return mapped value
+     */
+    public <T> T readLineAs(String message, Function<String, T> mapper, Function<T, Boolean> condition) {
+        while (true) {
+            try {
+                T input = mapper.apply(message);
+                if (!condition.apply(input)) {
+                    printLine("Wrong format of input!");
+                } else return input;
+            } catch (IllegalArgumentException e) {
+                printLine("Wrong format of input!");
+            }
+            if (!consoleReading) throw new NumberFormatException("Wrong format of input in file.");
+        }
     }
 
     /**
