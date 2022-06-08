@@ -23,7 +23,7 @@ public class Client {
     private SocketChannel socketChannel;
     @Getter
     private ObjectOutputStream writer;
-    private final int MAX_CONNECTION_COUNT = 10;
+    private final int MAX_CONNECTION_COUNT = 100;
     private int countOfConnections = 0;
 
     public void run() throws IOException, InterruptedException {
@@ -43,6 +43,7 @@ public class Client {
         }
         disconnect();
         out.println("The client has completed his work.");
+        run();
     }
 
     private boolean connectToServer() throws IOException, InterruptedException {
