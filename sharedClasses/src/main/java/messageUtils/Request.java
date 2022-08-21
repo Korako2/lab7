@@ -3,6 +3,7 @@ package messageUtils;
 import lombok.Getter;
 import commands.Command;
 import data.MusicBand;
+import security.Account;
 
 import java.io.Serializable;
 
@@ -17,8 +18,10 @@ public class Request implements Serializable {
     private String[] argsOfCommand;
     @Getter
     private MusicBand musicBand;
+    @Getter
+    private boolean isRegistered;
 
-    public Request(Command command, String[] argsOfCommand, MusicBand musicBand){
+    public Request(Command command, String[] argsOfCommand, MusicBand musicBand, Account account){
         this.command = command;
         this.argsOfCommand = argsOfCommand;
         this.musicBand = musicBand;

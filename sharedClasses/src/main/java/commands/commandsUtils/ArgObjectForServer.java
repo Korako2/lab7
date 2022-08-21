@@ -10,9 +10,12 @@ import data.StorageInterface;
 public class ArgObjectForServer extends ArgObject {
     @Getter
     private final StorageInterface<MusicBand>  collectionManager;
+    @Getter
+    private String userName;
 
-    public ArgObjectForServer(StorageInterface<MusicBand> collectionManager, String[] args, MusicBand musicBand) {
+    public ArgObjectForServer(StorageInterface<MusicBand> collectionManager, String[] args, MusicBand musicBand, String userName) {
         super(args, musicBand);
         this.collectionManager = collectionManager;
+        this.userName = userName;
     }
 }

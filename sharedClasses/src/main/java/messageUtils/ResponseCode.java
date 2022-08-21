@@ -5,5 +5,7 @@ package messageUtils;
  */
 public enum ResponseCode {
     OK,
-    ERROR
+    ERROR,
+    WRONG_PASSWORD,
+    WRONG_LOGIN
 }

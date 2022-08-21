@@ -1,5 +1,6 @@
 package collectionUtil;
 
+import DataBaseUtils.DataBaseControl;
 import fileUtils.FileManager;
 import data.StorageInterface;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import data.MusicBand;
 import data.MusicGenre;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,7 +21,8 @@ public class CollectionManager implements StorageInterface<MusicBand> {
     /**
      * Collection with elements.
      */
-    private Collection<MusicBand> musicBands = Collections.synchronizedCollection(new HashSet<>());
+    @Getter
+    public Collection<MusicBand> musicBands = Collections.synchronizedCollection(new HashSet<>()); //todo поменять на private
     /**
      * Collection for storing the ID of the elements of the main collection.
      */
@@ -28,38 +31,17 @@ public class CollectionManager implements StorageInterface<MusicBand> {
     private String file;
     private final FileManager fileManager;
     private final IdStorage idStorage;
+    private final DataBaseControl dataBaseControl;
 
-    public CollectionManager() {
+    public CollectionManager(DataBaseControl dataBaseControl) {
 
         fileManager = new FileManager();
         idStorage = new IdStorage();
+        this.dataBaseControl = dataBaseControl;
     }
 
-    /**
-     * A method to populate a collection from a file.
-     *
-     * @param file the name of the file with the collection.
-     * @return true if filling in the collection from the file was successful; otherwise false.
-     */
-
-    public boolean fillCollection(String file) throws IOException, ParseException, NumberFormatException {
-        this.file = file;
-        try {
-            musicBands = fileManager.readCollection(file);
-        } catch (IOException e) {
-            throw new IOException("Incorrect file name.");
-        } catch (ParseException e) {
-            throw new ParseException("Incorrect format of data in file.", e.getErrorOffset());
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("Incorrect data in file.");
-        }
-
-        if (musicBands == null) return false;
-        date = new Date();
-        for (MusicBand musicBand : musicBands) {
-            if (!idStorage.addId(musicBand)) return false;
-        }
-        return true;
+    public void fillCollection(MusicBand musicBand) {
+         musicBands.add(musicBand);//todo :)
     }
 
     /**
@@ -88,8 +70,9 @@ public class CollectionManager implements StorageInterface<MusicBand> {
         return minMusicBand;
     }
 
-    public void add(MusicBand musicBand) {
-        musicBands.add(musicBand);
+    public void add(MusicBand musicBand, String userName) throws SQLException {
+        MusicBand musicBandFromDB = dataBaseControl.addToDataBase(musicBand, userName);
+        musicBands.add(musicBandFromDB);
     }
 
     public void clear() {
@@ -138,7 +121,8 @@ public class CollectionManager implements StorageInterface<MusicBand> {
      * @param id of the object to delete.
      * @return true if the object was successfully deleted; otherwise false.
      */
-    public boolean removeById(long id) {
-        return musicBands.removeIf(musicBand -> musicBand.getId() == id);
+    public boolean removeById(long id, String userName) throws SQLException {
+        musicBands.removeIf(musicBand -> musicBand.getId() == id);
+        return dataBaseControl.removeById(id, userName);
     }
 }

@@ -5,9 +5,9 @@ import lombok.Getter;
 import java.io.Serializable;
 
 public enum Country implements Serializable {
-    GERMANY("Германия"),
-    INDIA("Индия"),
-    VATICAN("Ватикан");
+    GERMANY("GERMANY"),
+    INDIA("INDIA"),
+    VATICAN("VATICAN");
     private static final long serialVersionUID = 1L;
     @Getter
     private final String country;

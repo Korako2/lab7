@@ -10,7 +10,7 @@ import java.util.HashSet;
  * A class for storing object ID.
  */
 public class IdStorage {
-    @Getter
+    @Getter //todo
     private final HashSet<Long> iDSet;
 
     public IdStorage() {
@@ -30,7 +30,7 @@ public class IdStorage {
     public long generateId() {
         long id;
         if (iDSet.isEmpty()) return 1;
-        if (Collections.max(iDSet) == Long.MAX_VALUE) {
+        if (collectionIsOver()) {
             id = 1;
         } else {
             id = Collections.max(iDSet) + 1;
@@ -40,4 +40,5 @@ public class IdStorage {
         }
         return id;
     }
+    private boolean collectionIsOver() {return Collections.max(iDSet) == Long.MAX_VALUE;}
 }

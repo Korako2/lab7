@@ -1,9 +1,11 @@
 package serverApp;
 
+import DataBaseUtils.DataBaseControl;
 import collectionUtil.CollectionManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Map;
 import java.util.logging.Level;
@@ -12,17 +14,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class App {
-    static Logger logger = Logger.getLogger(App.class.getName());
+    public static Logger logger = Logger.getLogger(App.class.getName());
+    private static final int port = 4444;
 
     public static void main(String[] args) {
-        int port = 0;
-        try {
-            port = Integer.parseInt(args[0]);
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            logger.log(Level.SEVERE, "Specify the port when launching the jar file.");
+        if (args.length != 5) {
+            logger.log(Level.SEVERE, "Invalid argument input format: <host>, <port>, <database>, <user>, <password>");
             System.exit(-1);
         }
-        CollectionManager collectionManager = new CollectionManager();
         Map env = System.getenv();
         String fileName = (String) env.get("FILE_NAME");
         if (fileName == null) {
@@ -36,7 +35,7 @@ public class App {
             logger.log(Level.SEVERE, "Incorrect file name or data in file.");
             System.exit(-1);
         }
-        try {
+        /*try {
             if (!collectionManager.fillCollection(fileName)) {
                 logger.log(Level.SEVERE, "Incorrect file name or data in file.");
                 System.exit(-1);
@@ -47,12 +46,21 @@ public class App {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Some exception: " + e.getMessage());
             System.exit(-1);
-        }
+        }*/
         try {
-            Server server = new Server(port, collectionManager);
+            DataBaseControl dataBaseControl = new DataBaseControl(args);
+            CollectionManager collectionManager = new CollectionManager(dataBaseControl);
+            dataBaseControl.getAllFromDB(collectionManager);
+            Server server = new Server(port, collectionManager, dataBaseControl);
+            //System.out.println(collectionManager.getMusicBands());
             Thread thread = new Thread(server);
             thread.start();
-        } catch (IOException e) {
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error connecting to the database.");
+            e.printStackTrace();
+            System.exit(-1);
+        }
+        catch (IOException e) {
             logger.log(Level.SEVERE, "I/O error occurs when opening the socket.");
         }
     }

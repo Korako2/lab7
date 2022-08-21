@@ -4,6 +4,8 @@ import commands.commandsUtils.ArgObjectForServer;
 import commands.commandsUtils.CommandResult;
 import messageUtils.ResponseCode;
 
+import java.sql.SQLException;
+
 /**
  * A class for deleting items from a collection by ID.
  */
@@ -17,10 +19,13 @@ public class RemoveById extends Command<ArgObjectForServer> {
         String result = "Element successfully removed";
         try {
             long id = Long.parseLong(argObject.getArgs()[1]);
-            boolean resultOfRemoval = (argObject.getCollectionManager()).removeById(id);
+            boolean resultOfRemoval = (argObject.getCollectionManager()).removeById(id, argObject.getUserName());
             if (!resultOfRemoval) result = "This id wasn't found";
         } catch (NumberFormatException e) {
             return new CommandResult("Wrong format of id", ResponseCode.ERROR);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new CommandResult("Problem with database access.", ResponseCode.ERROR);
         }
         return new CommandResult(result, ResponseCode.OK);
     }

@@ -5,6 +5,7 @@ import commands.commandsUtils.ClientCommandsManager;
 import data.MusicBand;
 import commands.Command;
 import messageUtils.Request;
+import security.Account;
 
 import java.io.IOException;
 import java.util.*;
@@ -37,27 +38,25 @@ public class UserInputManager {
      *
      * @return true if the program execution can be continued; false if the program execution should be stopped.
      */
-    public Request input() throws IOException {
+    public Request inputCommand(Account account) throws IOException {
         printInviteMessage();
         if (!input.hasNext()) return null;
         String[] s = input.nextLine().split(" ");
-        if (!checkCommand(s[0].toLowerCase(Locale.ROOT))) {
-            return new Request(null);
-        }
+        if (!checkCommand(s[0].toLowerCase(Locale.ROOT))) return new Request(null);
+        return createRequest(s, account);
+    }
+    private Request createRequest(String[] s, Account account) throws IllegalArgumentException {
         Command command = clientcommandsManager.getCommand(s[0].toUpperCase(Locale.ROOT));
-        if (command == null) {
-            throw new IllegalArgumentException("There's no such command");
-        }
+        if (command == null) throw new IllegalArgumentException("There's no such command");
         clientcommandsManager.addToHistory(command.getName());
         if (!checkArgsCount(s, command))
             throw new IllegalArgumentException("Wrong amount of arguments. Please, try again! (You can use command \"help\" for more information.)");
         try {
-            return new Request(command, s, readObjectIfNecessary(command));
+            return new Request(command, s, readObjectIfNecessary(command, account.getUserName())); //todo
         } catch (NoSuchElementException e) {
             return null;
         }
     }
-
     private boolean checkCommand(String command) {
         if (commandWithQuestion.get(command) != null) {
             return proceed.requestResponse(commandWithQuestion.get(command)[0], commandWithQuestion.get(command)[1]);
@@ -82,9 +81,9 @@ public class UserInputManager {
      * @param command the current executable command.
      * @return read object {@link MusicBand} or null if the object is not required.
      */
-    private MusicBand readObjectIfNecessary(Command command) {
+    private MusicBand readObjectIfNecessary(Command command, String userName) {
         if (!command.isNeedObject()) return null;
-        return objectReader.readObject();
+        return objectReader.readObject(userName);
     }
 
     /**
@@ -93,4 +92,5 @@ public class UserInputManager {
     private void printInviteMessage() {
         if (showMessages) out.println("Enter command (if you don't know commands, enter command \"help\"):");
     }
+
 }

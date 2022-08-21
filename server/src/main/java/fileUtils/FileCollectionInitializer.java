@@ -49,7 +49,6 @@ public class FileCollectionInitializer {
         long albumsCount = Long.parseLong(record.get("albumsCount"));
         String description = record.get("description");
         MusicGenre genre = MusicGenre.valueOf(record.get("genre").toUpperCase());
-
         Coordinates coordinates = createCoordinates(record);
         Person person = createPerson(record);
         MusicBandBuilder musicBandBuilder = new MusicBandBuilder();
@@ -80,21 +79,27 @@ public class FileCollectionInitializer {
 
     private Person createPerson(CSVRecord record) {
         String personName = record.get("personName");
-        Double height;
-        if (record.get("height").equals("")) {
-            height = null;
-        } else {
-            height = Double.parseDouble(record.get("height"));
-        }
-        EyeColor eyeColor;
-        if (record.get("eyeColor").equals("")) {
-            eyeColor = null;
-        } else {
-            eyeColor = EyeColor.valueOf(record.get("eyeColor").toUpperCase());
-        }
+        Double height = initializingHeight(record);
+        EyeColor eyeColor = initializingEyeColor(record);
         HairColor hairColor = HairColor.valueOf(record.get("hairColor").toUpperCase());
         Country nationality = Country.valueOf(record.get("nationality").toUpperCase());
         Location location = createLocation(record);
         return new Person(personName, height, eyeColor, hairColor, nationality, location);
+    }
+
+    private Double initializingHeight(CSVRecord record) {
+        if (record.get("height").equals("")) {
+            return null;
+        } else {
+            return Double.parseDouble(record.get("height"));
+        }
+    }
+
+    private EyeColor initializingEyeColor(CSVRecord record) {
+        if (record.get("eyeColor").equals("")) {
+            return null;
+        } else {
+            return EyeColor.valueOf(record.get("eyeColor").toUpperCase());
+        }
     }
 }

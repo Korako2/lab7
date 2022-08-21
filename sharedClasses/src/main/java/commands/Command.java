@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 
 /**
  * An abstract class of commands.

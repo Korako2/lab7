@@ -15,7 +15,8 @@ public class Response implements Serializable {
     private final ResponseCode responseCode;
     @Getter
     private final String responseBody;
+
     public String toString() {
-        return "Response: " + responseCode + ", " + responseBody;
+        return "Response: " + responseBody;
     }
 }

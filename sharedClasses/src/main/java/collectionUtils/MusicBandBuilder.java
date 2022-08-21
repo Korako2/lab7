@@ -21,6 +21,7 @@ public class MusicBandBuilder {
     private String description;
     private MusicGenre genre;
     private Person frontMan;
+    private String userName;
 
     public MusicBandBuilder setId(long id) {
         this.id = id;
@@ -66,9 +67,13 @@ public class MusicBandBuilder {
         this.frontMan = frontMan;
         return this;
     }
+    public MusicBandBuilder setUserName(String userName) {
+        this.userName = userName;
+        return this;
+    }
 
     public MusicBand build() {
         return new MusicBand(id, name, coordinates, creationDate, numberOfParticipants,
-                albumsCount, description, genre, frontMan);
+                albumsCount, description, genre, frontMan, userName);
     }
 }

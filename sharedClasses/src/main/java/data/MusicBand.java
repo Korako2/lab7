@@ -32,6 +32,8 @@ public class MusicBand implements Comparable<MusicBand>, Serializable {
     private final MusicGenre genre;
     @Getter
     private final Person frontMan;
+    @Getter
+    private final String userName;
 
     public String toString() {
         return String.format("ID: %s, name: %s, coordinates: %s, creation date: %s,number of participants: %s " +

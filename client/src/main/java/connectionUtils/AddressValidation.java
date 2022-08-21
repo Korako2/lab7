@@ -32,7 +32,7 @@ public class AddressValidation {
         try {
             port = Integer.parseInt(hostAndPort[1]);
             host = hostAndPort[0];
-            if (port >= MIN_PORT && port <= MAX_PORT) return true;
+            if (isValidPort()) return true;
             else {
                 out.println("Wrong number for port");
                 return false;
@@ -42,5 +42,8 @@ public class AddressValidation {
             return false;
         }
     }
+
+    private boolean isValidPort() {return port >= MIN_PORT && port <= MAX_PORT;}
+
 
 }

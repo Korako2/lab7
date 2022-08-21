@@ -1,9 +1,6 @@
 package IOutils;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 import static clientApp.App.out;
 
@@ -20,7 +17,21 @@ public class Proceed {
         answerMap.put("no", false);
     }
 
-    public boolean requestResponse(String question, String defaultAnswer) {
+    public boolean requestResponse(String question, String defaultAnswer) throws IllegalArgumentException {
+        checkDefaultAnswer(question, defaultAnswer);
+        while (true) {
+            String answer = null;
+            try {
+                answer = input.nextLine().toLowerCase(Locale.ROOT);
+            } catch (NoSuchElementException e) {
+                System.exit(-1);
+            }
+            if (answerMap.get(answer) != null) return answerMap.get(answer);
+            out.println("Write yes or no.");
+        }
+    }
+
+    private void checkDefaultAnswer(String question, String defaultAnswer) {
         if (defaultAnswer.equals("yes")) {
             out.print(question + " [Y/n]: ");
             answerMap.put("", true);
@@ -30,14 +41,6 @@ public class Proceed {
                 answerMap.put("", false);
             } else {
                 throw new IllegalArgumentException();
-            }
-        }
-        while (true) {
-            String answer = input.nextLine().toLowerCase(Locale.ROOT);
-            if (answerMap.get(answer) != null) {
-                return answerMap.get(answer);
-            } else {
-                out.println("Write yes or no.");
             }
         }
     }

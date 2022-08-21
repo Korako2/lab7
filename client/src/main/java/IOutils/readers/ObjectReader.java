@@ -28,7 +28,7 @@ public class ObjectReader {
      *
      * @return a collection element of the type {@link MusicBand}.
      */
-    public MusicBand readObject() {
+    public MusicBand readObject(String userName) {
         MusicBandBuilder musicBandBuilder = new MusicBandBuilder();
         return musicBandBuilder.setName(readNameOfMusicBand())
                 .setAlbumsCount(readAlbumsCount())

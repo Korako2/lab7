@@ -1,5 +1,6 @@
 package clientApp;
 
+import IOutils.AuthorizationManager;
 import IOutils.UserInputManager;
 import commands.commandsUtils.ArgObjectForClient;
 import commands.commandsUtils.ClientCommandsManager;
@@ -7,6 +8,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import messageUtils.Request;
 import messageUtils.Response;
+import messageUtils.ResponseCode;
+import security.Account;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -20,30 +23,37 @@ public class Client {
     private final int port;
     private final UserInputManager userInputManager;
     private final ClientCommandsManager clientCommandsManager;
+
+    private final AuthorizationManager authorizationManager;
     private SocketChannel socketChannel;
     @Getter
     private ObjectOutputStream writer;
     private final int MAX_CONNECTION_COUNT = 100;
     private int countOfConnections = 0;
 
+    private Account account;
+    private boolean isWrongPassword = false;
+
     public void run() throws IOException, InterruptedException {
 
         boolean statusOfRequest = true;
         boolean statusOfConnection;
+        boolean statusOfAuthorization = false;
         while (statusOfRequest && countOfConnections <= MAX_CONNECTION_COUNT) {
             try {
                 statusOfConnection = connectToServer();
-                if (statusOfConnection) {
-                    requestToServer(userInputManager);
-                    statusOfRequest = false;
+                while (!statusOfAuthorization) {
+                    statusOfAuthorization = authorization();
                 }
-            } catch (IOException | IllegalArgumentException e) {
+                if (statusOfConnection) {
+                    statusOfRequest = requestToServer(userInputManager);
+                }
+            } catch (IOException | IllegalArgumentException | ClassNotFoundException e) {
                 out.println(e.getMessage());
             }
         }
         disconnect();
         out.println("The client has completed his work.");
-        run();
     }
 
     private boolean connectToServer() throws IOException, InterruptedException {
@@ -72,11 +82,11 @@ public class Client {
         if (socketChannel != null) socketChannel.close();
     }
 
-    public void requestToServer(UserInputManager userInputManager) throws IOException {
-        Request request;
+    public boolean requestToServer(UserInputManager userInputManager) throws IOException {
+        Request request = null;
         do {
-            request = userInputManager.input();
             try {
+                request = userInputManager.inputCommand(account);
                 if (request == null) break;
                 processRequest(request);
             } catch (IllegalArgumentException e) {
@@ -88,9 +98,13 @@ public class Client {
                 out.println("An error occurred while reading the data.");
                 break;
             }
-        } while (request.isEmpty() || !request.getNameOfCommand().equals("EXIT"));
+        } while (requestHasNext(request));
+        return request == null || !request.getNameOfCommand().equals("EXIT");
     }
 
+    private boolean requestHasNext(Request request) {
+        return request == null || !request.isEmpty() && !request.getNameOfCommand().equals("EXIT");
+    }
     private void processRequest(Request request) throws IOException, ClassNotFoundException {
         if (!request.isEmpty()) {
             if (request.getCommand().isServer()) {
@@ -108,14 +122,25 @@ public class Client {
         byteArrayOutputStream.writeTo(socketChannel.socket().getOutputStream());
     }
 
-    private void receiveResponse() throws IOException, ClassNotFoundException {
+    private Response receiveResponse() throws IOException, ClassNotFoundException {
         ObjectInputStream objectInputStream = new ObjectInputStream(socketChannel.socket().getInputStream());
         Response response = (Response) objectInputStream.readObject();
         out.println(response.getResponseBody());
+        return response;
     }
 
     private void executeCommandsOnClient(Request request) {
         ArgObjectForClient argObject = new ArgObjectForClient(clientCommandsManager, request.getArgsOfCommand(), null);
         out.println(request.getCommand().execute(argObject).getResult());
+    }
+
+    private boolean authorization() throws IOException, ClassNotFoundException {
+        account = authorizationManager.getAuthorizationData(isWrongPassword);
+        Request request = new Request(null, null, null, account);
+        sendRequest(request);
+        Response response = receiveResponse();
+        if (response.getResponseCode() == ResponseCode.WRONG_PASSWORD) isWrongPassword = true;
+        if (response.getResponseCode() == ResponseCode.OK) return true;
+        return false;
     }
 }

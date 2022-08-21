@@ -1,5 +1,7 @@
 package clientApp;
 
+import IOutils.AuthorizationManager;
+import IOutils.Proceed;
 import IOutils.UserInputManager;
 import commands.*;
 import commands.commandsUtils.ClientCommandsManager;
@@ -7,6 +9,7 @@ import connectionUtils.AddressValidation;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 public class App {
@@ -22,7 +25,14 @@ public class App {
         ClientCommandsManager clientCommandsManager = new ClientCommandsManager();
         Scanner scanner = new Scanner(System.in);
         UserInputManager inputFromConsole = new UserInputManager(clientCommandsManager, scanner, true);
-        Client client = new Client(addressValidation.getHost(), addressValidation.getPort(), inputFromConsole, clientCommandsManager);
+        AuthorizationManager authorizationManager = null;
+        try {
+            authorizationManager = new AuthorizationManager(scanner);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        Client client = new Client(addressValidation.getHost(), addressValidation.getPort(), inputFromConsole, clientCommandsManager,
+                authorizationManager);
 
         clientCommandsManager.addCommand(new Help());
         clientCommandsManager.addCommand(new Info());

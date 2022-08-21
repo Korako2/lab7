@@ -2,6 +2,7 @@ package commands;
 
 import IOutils.UserInputManager;
 import clientApp.Client;
+import commands.commandsUtils.ArgObject;
 import commands.commandsUtils.ArgObjectForClient;
 import commands.commandsUtils.CommandResult;
 import messageUtils.ResponseCode;
@@ -30,9 +31,7 @@ public class ExecuteScript extends Command<ArgObjectForClient> {
     public CommandResult execute(ArgObjectForClient argObject) {
         UserInputManager inputFromFile;
         try {
-            FileReader fileReader = new FileReader(argObject.getArgs()[1]);
-            inputFromFile = new UserInputManager(argObject.getClientCommandManager(), new Scanner(fileReader),
-                    false);
+            inputFromFile = readingFromFile(argObject);
         } catch (FileNotFoundException e) {
             return new CommandResult("Wrong file", ResponseCode.ERROR);
         }
@@ -40,21 +39,34 @@ public class ExecuteScript extends Command<ArgObjectForClient> {
         if (!fileNames.add(script.getAbsolutePath())) {
             return new CommandResult("There is a loop in scripts! Execute_script wasn't executed, it was skipped.", ResponseCode.ERROR);
         }
+        if (sendTheResult(argObject, inputFromFile) != null)
+            return sendTheResult(argObject, inputFromFile);
+        fileNames.remove(script.getAbsolutePath());
         String result = "Script in file " + argObject.getArgs()[1] + " was executed";
+        return new CommandResult(result, ResponseCode.OK);
+    }
+
+    private UserInputManager readingFromFile(ArgObjectForClient argObject) throws FileNotFoundException {
+        FileReader fileReader = new FileReader(argObject.getArgs()[1]);
+        return new UserInputManager(argObject.getClientCommandManager(), new Scanner(fileReader),
+                false);
+    }
+
+    private CommandResult sendTheResult(ArgObjectForClient argObject, UserInputManager inputFromFile) {
         try {
             client.requestToServer(inputFromFile);
+            return null;
         } catch (NoSuchElementException e) {
             return new CommandResult(e.getMessage() + " (wrong input of command/object in script).", ResponseCode.ERROR);
-        }catch (NumberFormatException e) {
-                return new CommandResult(e.getMessage(), ResponseCode.ERROR);
+        } catch (NumberFormatException e) {
+            return new CommandResult(e.getMessage(), ResponseCode.ERROR);
         } catch (IllegalArgumentException e) {
             return new CommandResult(e.getMessage() + " (in script detected some unknown command)", ResponseCode.ERROR);
         } catch (Exception e) {
             return new CommandResult("Some exception during script execution: " + e.getMessage(), ResponseCode.ERROR);
         }
-        fileNames.remove(script.getAbsolutePath());
-        return new CommandResult(result, ResponseCode.OK);
     }
+
 }
 
 

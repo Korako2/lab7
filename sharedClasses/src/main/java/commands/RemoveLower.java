@@ -4,6 +4,7 @@ import commands.commandsUtils.ArgObjectForServer;
 import commands.commandsUtils.CommandResult;
 import messageUtils.ResponseCode;
 
+import java.sql.SQLException;
 import java.util.Set;
 
 /**
@@ -19,7 +20,11 @@ public class RemoveLower extends Command<ArgObjectForServer> {
         String result = "All lower objects were deleted";
         Set<Long> id = argObject.getCollectionManager().getIdByLower(argObject.getMusicBand());
         for (Long i : id) {
-            argObject.getCollectionManager().removeById(i);
+            try {
+                argObject.getCollectionManager().removeById(i, argObject.getUserName());
+            } catch (SQLException e) {
+                return new CommandResult("Problem with database access.", ResponseCode.ERROR);
+            }
         }
         return new CommandResult(result, ResponseCode.OK);
     }

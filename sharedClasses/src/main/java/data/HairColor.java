@@ -5,11 +5,11 @@ import lombok.Getter;
 import java.io.Serializable;
 
 public enum HairColor implements Serializable {
-    RED("красный"),
-    BLACK("черный"),
-    BLUE("голубой"),
-    ORANGE("оранжевый"),
-    WHITE("белый");
+    RED("RED"),
+    BLACK("BLACK"),
+    BLUE("BLUE"),
+    ORANGE("ORANGE"),
+    WHITE("WHITE");
 
     private static final long serialVersionUID = 1L;
     @Getter

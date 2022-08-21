@@ -1,6 +1,7 @@
 package data;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Set;
@@ -11,10 +12,10 @@ import java.util.Set;
  * @param <T> type of collection items.
  */
 public interface StorageInterface<T> {
-    boolean fillCollection(String file) throws IOException, ParseException, NumberFormatException;
+    void fillCollection(MusicBand musicBand) throws IOException, ParseException, NumberFormatException;
     void saveCollection() throws IOException;
     MusicBand getMinObject();
-    void add(T t);
+    void add(T t, String userName) throws SQLException;
     void clear();
     String show();
     List<MusicBand> FilterLessThanNumberOfParticipants(Long numberOfParticipants);
@@ -23,7 +24,7 @@ public interface StorageInterface<T> {
     Set<MusicBand> getMusicBandsOfDescription(String description);
     String getInfo();
     long generateId();
-    boolean removeById(long id);
+    boolean removeById(long id, String userName) throws SQLException;
 
 }
 

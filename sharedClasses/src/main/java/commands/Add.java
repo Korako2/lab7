@@ -6,6 +6,8 @@ import messageUtils.ResponseCode;
 import data.MusicBand;
 import data.StorageInterface;
 
+import java.sql.SQLException;
+
 /**
  * A class for adding a new item to the collection.
  */
@@ -17,7 +19,13 @@ public class Add extends Command<ArgObjectForServer> {
     public CommandResult execute(ArgObjectForServer argObject) {
         StorageInterface<MusicBand> collectionManager = argObject.getCollectionManager();
         argObject.getMusicBand().setId(collectionManager.generateId());
-        collectionManager.add(argObject.getMusicBand());
+        try {
+            collectionManager.add(argObject.getMusicBand(), argObject.getUserName());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(123);
+            return new CommandResult("Problem with database access.", ResponseCode.ERROR);
+        }
         return new CommandResult("Music band was added.", ResponseCode.OK);
     }
 }
