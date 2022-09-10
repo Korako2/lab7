@@ -1,4 +1,4 @@
-package DataBaseUtils;
+package dataBaseUtils;
 
 import collectionUtils.MusicBandBuilder;
 import data.*;
@@ -27,7 +27,8 @@ public class ObjectFromDataBaseReader {
                 .setAlbumsCount(resultSet.getLong("albums_count"))
                 .setDescription(resultSet.getString("description"))
                 .setGenre(MusicGenre.valueOf(resultSet.getString("genre")))
-                .setFrontMan(readPerson()).build();
+                .setFrontMan(readPerson())
+                .setUserName(resultSet.getString("owner")).build();
     }
     private Coordinates readCoordinates() throws SQLException {
         return new Coordinates(resultSet.getFloat("x"), resultSet.getInt("y"));

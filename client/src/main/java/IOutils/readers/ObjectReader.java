@@ -37,9 +37,9 @@ public class ObjectReader {
                 .setDescription(readDescription())
                 .setGenre(readGenre())
                 .setFrontMan(personReader.readPerson())
-                .setNumberOfParticipants(readNumberOfParticipants()).build();
+                .setNumberOfParticipants(readNumberOfParticipants())
+                .setUserName(userName).build();
     }
-
 
     public String readNameOfMusicBand() {
         Function<String, String> mapper = inputAndOutput::readLine;

@@ -4,6 +4,7 @@ import commands.commandsUtils.ArgObjectForServer;
 import commands.commandsUtils.CommandResult;
 import messageUtils.ResponseCode;
 
+import java.rmi.AccessException;
 import java.sql.SQLException;
 
 /**
@@ -11,7 +12,8 @@ import java.sql.SQLException;
  */
 public class UpdateId extends Command<ArgObjectForServer> {
     public UpdateId() {
-        super(true, 1, "UPDATE", "update the value for the collection element whose id is equal to the given one", true);
+        super(true, 1, "UPDATE",
+                "update the value for the collection element whose id is equal to the given one", true);
     }
 
     @Override
@@ -19,14 +21,12 @@ public class UpdateId extends Command<ArgObjectForServer> {
         String result = "Element successfully updated";
         try {
             long id = Long.parseLong(argObject.getArgs()[1]);
-            boolean resultOfRemoval = argObject.getCollectionManager().removeById(id, argObject.getUserName());
+            boolean resultOfRemoval = argObject.getCollectionManager().update(id, argObject.getMusicBand(), argObject.getUserName());
             if (!resultOfRemoval) result = "This id wasn't found";
-            argObject.getMusicBand().setId(id);
-            argObject.getCollectionManager().add(argObject.getMusicBand(), argObject.getUserName());
-        } catch (NumberFormatException e) {
-            return new CommandResult("Wrong format of id", ResponseCode.ERROR);
         } catch (SQLException e) {
             return new CommandResult("Problem with database access", ResponseCode.ERROR);
+        } catch (AccessException e) {
+            return new CommandResult(e.getMessage(), ResponseCode.ERROR);
         }
         return new CommandResult(result, ResponseCode.OK);
     }

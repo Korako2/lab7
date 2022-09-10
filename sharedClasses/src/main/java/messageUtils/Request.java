@@ -15,19 +15,17 @@ public class Request implements Serializable {
     @Getter
     private final Command command;
     @Getter
-    private String[] argsOfCommand;
+    private final String[] argsOfCommand;
     @Getter
-    private MusicBand musicBand;
+    private final MusicBand musicBand;
     @Getter
-    private boolean isRegistered;
+    private final Account account;
 
     public Request(Command command, String[] argsOfCommand, MusicBand musicBand, Account account){
         this.command = command;
         this.argsOfCommand = argsOfCommand;
         this.musicBand = musicBand;
-    }
-    public Request(Command command) {
-        this.command = command;
+        this.account = account;
     }
     public boolean isEmpty() {
         return command == null;

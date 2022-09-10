@@ -14,7 +14,5 @@ public class Account implements Serializable {
     private final String password;
     @Getter
     private final boolean isRegistered;
-
-    // todo AccessLevel
 }
 

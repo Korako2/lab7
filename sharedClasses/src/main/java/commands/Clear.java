@@ -4,6 +4,8 @@ import commands.commandsUtils.ArgObjectForServer;
 import commands.commandsUtils.CommandResult;
 import messageUtils.ResponseCode;
 
+import java.sql.SQLException;
+
 /**
  * A class for cleaning the collection.
  */
@@ -14,7 +16,14 @@ public class Clear extends Command<ArgObjectForServer> {
     }
 
     public CommandResult execute(ArgObjectForServer argObject) {
-        argObject.getCollectionManager().clear();
-        return new CommandResult("Collection is empty now!", ResponseCode.OK);
+        String result = "All the items you had access to have been deleted";
+        ResponseCode responseCode = ResponseCode.OK;
+        try {
+            argObject.getCollectionManager().clear(argObject.getUserName());
+        } catch (SQLException e) {
+            result = "Database access problem";
+            responseCode = ResponseCode.ERROR;
+        }
+        return new CommandResult(result, responseCode);
     }
 }

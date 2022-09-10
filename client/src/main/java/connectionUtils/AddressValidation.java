@@ -16,8 +16,6 @@ public class AddressValidation {
     private int port;
     private final String[] hostAndPort;
     private final PrintStream out;
-    private final int MIN_PORT = 0;
-    private final int MAX_PORT = 65535;
 
     /**
      * A method for checking the host and port.
@@ -43,7 +41,10 @@ public class AddressValidation {
         }
     }
 
-    private boolean isValidPort() {return port >= MIN_PORT && port <= MAX_PORT;}
+    private boolean isValidPort() {
+        int MIN_PORT = 0;
+        int MAX_PORT = 65535;
+        return port >= MIN_PORT && port <= MAX_PORT;}
 
 
 }

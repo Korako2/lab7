@@ -1,4 +1,4 @@
-package DataBaseUtils;
+package dataBaseUtils;
 
 import collectionUtil.CollectionManager;
 import commands.commandsUtils.CommandResult;
@@ -27,7 +27,7 @@ public class DataBaseControl {
     public DataBaseControl(String[] args) {
         String host = args[0];
         String port = args[1];
-        String nameOfTheDataBase =  args[2];
+        String nameOfTheDataBase = args[2];
         URL = "jdbc:postgresql://" + host + ":" + port + "/" + nameOfTheDataBase;
         USER = args[3];
         PASS = args[4];
@@ -36,7 +36,8 @@ public class DataBaseControl {
     private void setConnection() throws SQLException {
         connection = DriverManager.getConnection(URL, USER, PASS);
     }
-    public void getAllFromDB(CollectionManager collectionManager) throws SQLException{
+
+    public void getAllFromDB(CollectionManager collectionManager) throws SQLException {
         setConnection();
         logger.log(Level.INFO, "The connection to the database is established.");
         createSequence();
@@ -70,7 +71,7 @@ public class DataBaseControl {
         statement = connection.createStatement();
         String request = "CREATE TABLE IF NOT EXISTS music_band (\n" +
                 "id BIGINT PRIMARY KEY CHECK(id > 0) DEFAULT nextval('id_generation'), \n" +
-                "band_name VARCHAR(255) NOT NULL, \n" + //todo
+                "band_name VARCHAR(255) NOT NULL, \n" +
                 "x REAL NOT NULL CHECK(x <=146), \n" +
                 "y INTEGER, \n" +
                 "creation_date VARCHAR(255) NOT NULL, \n" +
@@ -96,22 +97,7 @@ public class DataBaseControl {
                 "creation_date, number_of_participants, albums_count, description, genre, person_name, height, eye_color," +
                 "hair_color, nationality, person_x, person_y, person_z, owner)" +
                 " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setString(1, musicBand.getName());
-        preparedStatement.setFloat(2, musicBand.getCoordinates().getX());
-        preparedStatement.setInt(3, musicBand.getCoordinates().getY());
-        preparedStatement.setString(4, musicBand.getStringDate());
-        preparedStatement.setLong(5, musicBand.getNumberOfParticipants());
-        preparedStatement.setLong(6, musicBand.getAlbumsCount());
-        preparedStatement.setString(7, musicBand.getDescription());
-        preparedStatement.setString(8, musicBand.getGenre().getMusic());
-        preparedStatement.setString(9, musicBand.getFrontMan().getName());
-        preparedStatement.setDouble(10, musicBand.getFrontMan().getHeight());
-        preparedStatement.setString(11, musicBand.getFrontMan().getEyeColor().getColor());
-        preparedStatement.setString(12, musicBand.getFrontMan().getHairColor().getColor());
-        preparedStatement.setString(13, musicBand.getFrontMan().getNationality().getCountry());
-        preparedStatement.setFloat(14, musicBand.getFrontMan().getLocation().getX());
-        preparedStatement.setInt(15, musicBand.getFrontMan().getLocation().getY());
-        preparedStatement.setLong(16, musicBand.getFrontMan().getLocation().getZ()); //todo проверки на Null
+        updateRecord(preparedStatement, musicBand);
         preparedStatement.setString(17, userName);
         int count = preparedStatement.executeUpdate();
         if (count > 0) {
@@ -123,33 +109,35 @@ public class DataBaseControl {
         preparedStatement.close();
         return musicBand;
     }
+
     public boolean removeById(long id, String userName) throws SQLException {
         boolean flag = false;
-        PreparedStatement statement = connection.prepareStatement("DELETE FROM music_band WHERE id = ? AND owner = ?");
-        statement.setLong(1, id);
-        statement.setString(2, userName);
-        int count = statement.executeUpdate();
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM music_band WHERE id = ? AND owner = ?");
+        preparedStatement.setLong(1, id);
+        preparedStatement.setString(2, userName);
+        int count = preparedStatement.executeUpdate();
         if (count > 0) flag = true;
+        preparedStatement.close();
         return flag;
     }
 
     @SneakyThrows
-    public CommandResult addUser(Account account) throws SQLException {
+    public CommandResult addUser(Account account) {
         String result = "New user added";
         ResponseCode responseCode = ResponseCode.OK;
-        if (checkUser(account).getResponseCode() == ResponseCode.WRONG_PASSWORD) {
+        if (checkUser(account).getResponseCode() == ResponseCode.WRONG_PASSWORD)
             return new CommandResult("Such a user already exists", ResponseCode.WRONG_LOGIN);
-        }
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users VALUES (?,?,?);");
         preparedStatement.setString(1, account.getUserName());
         String salt = generateSalt();
         preparedStatement.setString(2, hash(account.getPassword(), salt));
         preparedStatement.setString(3, salt);
-        int count = preparedStatement.executeUpdate(); //todo Если логины совпадают то ошибка
+        int count = preparedStatement.executeUpdate();
         if (count <= 0) {
             result = "The new user has not been added, try to come up with a different login";
             responseCode = ResponseCode.WRONG_LOGIN;
         }
+        preparedStatement.close();
         return new CommandResult(result, responseCode);
     }
 
@@ -169,8 +157,8 @@ public class DataBaseControl {
         BigInteger bi = new BigInteger(1, bytes);
         return bi.toString(10);
     }
-    @SneakyThrows //todo
-    public CommandResult checkUser(Account account) {
+
+    public CommandResult checkUser(Account account) throws SQLException, NoSuchAlgorithmException {
         String result = "Wrong login";
         ResponseCode responseCode = ResponseCode.WRONG_LOGIN;
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT  password, salt FROM users WHERE login = ?");
@@ -180,13 +168,56 @@ public class DataBaseControl {
             if (resultSet.getString(1).equals(hash(account.getPassword(), resultSet.getString(2)))) {
                 result = "Authorization is successful";
                 responseCode = ResponseCode.OK;
-            }
-            else {
+            } else {
                 result = "Invalid password";
                 responseCode = ResponseCode.WRONG_PASSWORD;
             }
         }
+        preparedStatement.close();
         return new CommandResult(result, responseCode);
     }
 
+    public boolean clear(String userName) throws SQLException {
+        boolean result = false;
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM music_band WHERE owner = ?");
+        preparedStatement.setString(1, userName);
+        int count = preparedStatement.executeUpdate();
+        if (count > 0) result = true;
+        preparedStatement.close();
+        return result;
+    }
+
+    public boolean update(long id, MusicBand musicBand) throws SQLException {
+        boolean flag = false;
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE music_band SET band_name = ?, x = ?," +
+                "y = ?, creation_date = ?, number_of_participants = ?, albums_count = ?, description = ?," +
+                "genre = ?, person_name = ?, height = ?, eye_color = ?, hair_color = ?, nationality = ?, person_x = ?," +
+                "person_y = ?, person_z = ? WHERE id = ? AND owner = ?");
+        updateRecord(preparedStatement, musicBand);
+        preparedStatement.setLong(17, id);
+        preparedStatement.setString(18, musicBand.getUserName());
+        int count = preparedStatement.executeUpdate();
+        if (count > 0) flag = true;
+        preparedStatement.close();
+        return flag;
+    }
+
+    private void updateRecord(PreparedStatement preparedStatement, MusicBand musicBand) throws SQLException {
+        preparedStatement.setString(1, musicBand.getName());
+        preparedStatement.setFloat(2, musicBand.getCoordinates().getX());
+        preparedStatement.setInt(3, musicBand.getCoordinates().getY());
+        preparedStatement.setString(4, musicBand.getStringDate());
+        preparedStatement.setLong(5, musicBand.getNumberOfParticipants());
+        preparedStatement.setLong(6, musicBand.getAlbumsCount());
+        preparedStatement.setString(7, musicBand.getDescription());
+        preparedStatement.setString(8, musicBand.getGenre().getMusic());
+        preparedStatement.setString(9, musicBand.getFrontMan().getName());
+        preparedStatement.setDouble(10, musicBand.getFrontMan().getHeight());
+        preparedStatement.setString(11, musicBand.getFrontMan().getEyeColor().getColor());
+        preparedStatement.setString(12, musicBand.getFrontMan().getHairColor().getColor());
+        preparedStatement.setString(13, musicBand.getFrontMan().getNationality().getCountry());
+        preparedStatement.setFloat(14, musicBand.getFrontMan().getLocation().getX());
+        preparedStatement.setInt(15, musicBand.getFrontMan().getLocation().getY());
+        preparedStatement.setLong(16, musicBand.getFrontMan().getLocation().getZ());
+    }
 }

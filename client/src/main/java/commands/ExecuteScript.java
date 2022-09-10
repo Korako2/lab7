@@ -2,7 +2,7 @@ package commands;
 
 import IOutils.UserInputManager;
 import clientApp.Client;
-import commands.commandsUtils.ArgObject;
+
 import commands.commandsUtils.ArgObjectForClient;
 import commands.commandsUtils.CommandResult;
 import messageUtils.ResponseCode;
@@ -39,8 +39,7 @@ public class ExecuteScript extends Command<ArgObjectForClient> {
         if (!fileNames.add(script.getAbsolutePath())) {
             return new CommandResult("There is a loop in scripts! Execute_script wasn't executed, it was skipped.", ResponseCode.ERROR);
         }
-        if (sendTheResult(argObject, inputFromFile) != null)
-            return sendTheResult(argObject, inputFromFile);
+        if (sendTheResult(inputFromFile) != null) return sendTheResult(inputFromFile);
         fileNames.remove(script.getAbsolutePath());
         String result = "Script in file " + argObject.getArgs()[1] + " was executed";
         return new CommandResult(result, ResponseCode.OK);
@@ -48,11 +47,10 @@ public class ExecuteScript extends Command<ArgObjectForClient> {
 
     private UserInputManager readingFromFile(ArgObjectForClient argObject) throws FileNotFoundException {
         FileReader fileReader = new FileReader(argObject.getArgs()[1]);
-        return new UserInputManager(argObject.getClientCommandManager(), new Scanner(fileReader),
-                false);
+        return new UserInputManager(argObject.getClientCommandManager(), new Scanner(fileReader), false);
     }
 
-    private CommandResult sendTheResult(ArgObjectForClient argObject, UserInputManager inputFromFile) {
+    private CommandResult sendTheResult(UserInputManager inputFromFile) {
         try {
             client.requestToServer(inputFromFile);
             return null;

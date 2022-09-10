@@ -7,22 +7,26 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.NoSuchElementException;
-import java.util.Random;
 import java.util.Scanner;
 
 import static clientApp.App.out;
 
 public class AuthorizationManager {
-    private Proceed proceed;
-    private Scanner scanner;
+    private final Proceed proceed;
+    private final Scanner scanner;
     private final String pepper;
     private MessageDigest messageDigest;
 
-    public AuthorizationManager(Scanner scanner) throws NoSuchAlgorithmException {
+    public AuthorizationManager(Scanner scanner) {
         this.scanner = scanner;
         proceed = new Proceed(scanner);
         pepper = "Rsfn2141F";
-        messageDigest = MessageDigest.getInstance("SHA-512");
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-512");
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("The necessary encryption algorithm was not found.");
+            System.exit(-1);
+        }
     }
 
     public Account getAuthorizationData(boolean isWrongPassword) {
@@ -43,10 +47,15 @@ public class AuthorizationManager {
         String password;
         while (true) {
             out.println("Enter password: ");
-            password = scanner.nextLine();
-            if (password.length() < 6 || password.length() > 30)
-                out.println("The length of the password must be between 6 and 30 characters");
-            else break;
+            try {
+                password = scanner.nextLine();
+                if (password.length() < 6 || password.length() > 30)
+                    out.println("The length of the password must be between 6 and 30 characters");
+                else break;
+            } catch (NoSuchElementException e) {
+                System.exit(-1);
+            }
+
         }
         String encodedPassword = hash(password);
         return new Account(login, encodedPassword, isRegistered);

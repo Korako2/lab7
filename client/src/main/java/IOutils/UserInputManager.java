@@ -40,9 +40,9 @@ public class UserInputManager {
      */
     public Request inputCommand(Account account) throws IOException {
         printInviteMessage();
-        if (!input.hasNext()) return null;
+        if (!input.hasNext()) System.exit(-1);
         String[] s = input.nextLine().split(" ");
-        if (!checkCommand(s[0].toLowerCase(Locale.ROOT))) return new Request(null);
+        if (!checkCommand(s[0].toLowerCase(Locale.ROOT))) return null;
         return createRequest(s, account);
     }
     private Request createRequest(String[] s, Account account) throws IllegalArgumentException {
@@ -52,7 +52,7 @@ public class UserInputManager {
         if (!checkArgsCount(s, command))
             throw new IllegalArgumentException("Wrong amount of arguments. Please, try again! (You can use command \"help\" for more information.)");
         try {
-            return new Request(command, s, readObjectIfNecessary(command, account.getUserName())); //todo
+            return new Request(command, s, readObjectIfNecessary(command, account.getUserName()), account);
         } catch (NoSuchElementException e) {
             return null;
         }

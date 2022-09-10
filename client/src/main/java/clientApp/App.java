@@ -1,7 +1,6 @@
 package clientApp;
 
 import IOutils.AuthorizationManager;
-import IOutils.Proceed;
 import IOutils.UserInputManager;
 import commands.*;
 import commands.commandsUtils.ClientCommandsManager;
@@ -9,7 +8,6 @@ import connectionUtils.AddressValidation;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 public class App {
@@ -25,12 +23,7 @@ public class App {
         ClientCommandsManager clientCommandsManager = new ClientCommandsManager();
         Scanner scanner = new Scanner(System.in);
         UserInputManager inputFromConsole = new UserInputManager(clientCommandsManager, scanner, true);
-        AuthorizationManager authorizationManager = null;
-        try {
-            authorizationManager = new AuthorizationManager(scanner);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+        AuthorizationManager authorizationManager = new AuthorizationManager(scanner);
         Client client = new Client(addressValidation.getHost(), addressValidation.getPort(), inputFromConsole, clientCommandsManager,
                 authorizationManager);
 
@@ -52,10 +45,8 @@ public class App {
 
         try {
             client.run();
-        } catch (IOException e) {
-            out.println(e.getMessage());
-        } catch (InterruptedException e) {
-            out.println("Error occur during connecting: " + e.getMessage());
+        } catch (InterruptedException | ClassNotFoundException | IOException e) {
+            out.println("Error occur during connecting.");
         }
     }
 }

@@ -18,12 +18,9 @@ public class Add extends Command<ArgObjectForServer> {
 
     public CommandResult execute(ArgObjectForServer argObject) {
         StorageInterface<MusicBand> collectionManager = argObject.getCollectionManager();
-        argObject.getMusicBand().setId(collectionManager.generateId());
         try {
             collectionManager.add(argObject.getMusicBand(), argObject.getUserName());
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println(123);
             return new CommandResult("Problem with database access.", ResponseCode.ERROR);
         }
         return new CommandResult("Music band was added.", ResponseCode.OK);

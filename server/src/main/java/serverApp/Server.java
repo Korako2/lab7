@@ -1,9 +1,10 @@
 package serverApp;
 
-import DataBaseUtils.DataBaseControl;
+import dataBaseUtils.DataBaseControl;
 import collectionUtil.CollectionManager;
-import commands.commandsUtils.ArgObjectForServer;
 import commands.commandsUtils.CommandResult;
+import handlers.RequestHandler;
+import handlers.ResponseHandler;
 import messageUtils.Request;
 import messageUtils.Response;
 import messageUtils.ResponseCode;
@@ -11,9 +12,11 @@ import messageUtils.ResponseCode;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Level;
 
 import static serverApp.App.logger;
@@ -23,7 +26,8 @@ public class Server implements Runnable {
     private final CollectionManager collectionManager;
     private final ServerSocket serverSocket;
     private final DataBaseControl dataBaseControl;
-    private final ExecutorService reader = Executors.newFixedThreadPool(4);
+    private final Executor reader = Executors.newCachedThreadPool();
+    private final ForkJoinPool forkJoinPool = ForkJoinPool.commonPool();
 
     public Server(int port, CollectionManager collectionManager, DataBaseControl dataBaseControl) throws IOException {
         this.collectionManager = collectionManager;
@@ -39,61 +43,32 @@ public class Server implements Runnable {
                     try {
                         handleUser(socket);
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        logger.log(Level.SEVERE, "Problems with database access.");
                     }
                 });
             }
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Client was disconnected.");
-            //saveIfExit();
         }
     }
 
     private void handleUser(Socket socket) throws SQLException {
         try {
-            CommandResult commandResult = null;
+            CommandResult commandResult;
             Request request;
             do {
-                request = receiveRequest(socket);
-                if (request.getCommand() == null) {
-                    Response response;
-                    if (request.getAccount().isRegistered()) {
-                        commandResult = dataBaseControl.checkUser(request.getAccount());
-                    } else {
-                        commandResult = dataBaseControl.addUser(request.getAccount());
-                    }
-                    response = new Response(commandResult.getResponseCode(), commandResult.getResult());
-                    sendResponse(response, socket);
-                }
+                request = forkJoinPool.invoke(new RequestHandler(socket));
+                commandResult = checkAuthorization(request, socket);
             } while (commandResult.getResponseCode() != ResponseCode.OK);
-            while (true) {
-                //dataBaseControl.addToDataBase(request.getMusicBand(), request.getAccount().getUserName()); //todo
-                Request commandRequest = receiveRequest(socket);
-                Response response = createResponse(commandRequest);
-                sendResponse(response, socket);
-                if (commandRequest.getCommand().getName().equals("EXIT")) {
-                    break;
-                }
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            //logger.log(Level.SEVERE, "Some problems with connection. ");
+            processRequest(socket);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Some problems with connection. ");
+        } catch (NoSuchAlgorithmException e) {
+            logger.log(Level.SEVERE, "Some problems with access to DataBase.");
+        } catch (RuntimeException e) {
+            logger.log(Level.INFO, e.getMessage());
         }
     }
-
-
-    private Request receiveRequest(Socket socket) throws IOException, ClassNotFoundException {
-        ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-        return (Request) objectInputStream.readObject();
-    }
-
-    private Response createResponse(Request request) {
-        ArgObjectForServer argObject = new ArgObjectForServer(collectionManager, request.getArgsOfCommand(),
-                request.getMusicBand(), request.getAccount().getUserName());
-        CommandResult commandResult = null;
-        commandResult = request.getCommand().execute(argObject);
-        return new Response(commandResult.getResponseCode(), commandResult.getResult());
-    }
-
 
     private void sendResponse(Response response, Socket socket) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -102,18 +77,44 @@ public class Server implements Runnable {
         byteArrayOutputStream.writeTo(socket.getOutputStream());
     }
 
-    /*private void saveIfExit() {
-        try {
-            collectionManager.saveCollection();
-            logger.log(Level.INFO, "The collection was saved");
-        } catch (FileNotFoundException e) {
-            logger.log(Level.SEVERE, "This file wasn't found");
-        } catch (SecurityException e) {
-            logger.log(Level.SEVERE, "Write access to the file is denied");
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Some I/O errors occur: ");
+    private void processRequest (Socket socket) throws IOException {
+        while (true) {
+            Request commandRequest = forkJoinPool.invoke(new RequestHandler(socket));
+            Response response = forkJoinPool.invoke(new ResponseHandler(collectionManager, commandRequest));
+            sendResponse(response, socket);
+            if (commandRequest.getCommand().getName().equals("EXIT")) {
+                break;
+            }
         }
-    }*/
+    }
 
+    private boolean isIdenticalLogins (Request request) throws SQLException, NoSuchAlgorithmException {
+        return dataBaseControl.checkUser(request.getAccount()).getResponseCode() == ResponseCode.OK ||
+                dataBaseControl.checkUser(request.getAccount()).getResponseCode() == ResponseCode.WRONG_PASSWORD;
+    }
+
+    private CommandResult checkAuthorization (Request request, Socket socket)
+            throws SQLException, NoSuchAlgorithmException, IOException {
+        if (request.getCommand() == null) return checkRegistration(request, socket);
+        return null;
+    }
+
+    private CommandResult checkRegistration(Request request, Socket socket)
+            throws SQLException, NoSuchAlgorithmException, IOException {
+        Response response;
+        CommandResult commandResult;
+        if (request.getAccount().isRegistered()) {
+            commandResult = dataBaseControl.checkUser(request.getAccount());
+        } else commandResult = checkLogin(request);
+        response = new Response(commandResult.getResponseCode(), commandResult.getResult());
+        sendResponse(response, socket);
+        return commandResult;
+    }
+
+    private CommandResult checkLogin(Request request) throws SQLException, NoSuchAlgorithmException {
+        CommandResult commandResult;
+        if (isIdenticalLogins(request)) commandResult = new CommandResult("This login is already occupied.", ResponseCode.WRONG_LOGIN);
+        else commandResult = dataBaseControl.addUser(request.getAccount());
+        return commandResult;
+    }
 }
-

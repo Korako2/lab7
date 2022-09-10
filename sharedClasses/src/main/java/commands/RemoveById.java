@@ -4,6 +4,7 @@ import commands.commandsUtils.ArgObjectForServer;
 import commands.commandsUtils.CommandResult;
 import messageUtils.ResponseCode;
 
+import java.rmi.AccessException;
 import java.sql.SQLException;
 
 /**
@@ -24,8 +25,9 @@ public class RemoveById extends Command<ArgObjectForServer> {
         } catch (NumberFormatException e) {
             return new CommandResult("Wrong format of id", ResponseCode.ERROR);
         } catch (SQLException e) {
-            e.printStackTrace();
             return new CommandResult("Problem with database access.", ResponseCode.ERROR);
+        } catch (AccessException e) {
+            return new CommandResult(e.getMessage(), ResponseCode.ERROR);
         }
         return new CommandResult(result, ResponseCode.OK);
     }

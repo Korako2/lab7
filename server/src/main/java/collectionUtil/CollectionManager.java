@@ -1,17 +1,16 @@
 package collectionUtil;
 
-import DataBaseUtils.DataBaseControl;
-import fileUtils.FileManager;
+import dataBaseUtils.DataBaseControl;
 import data.StorageInterface;
 import lombok.Getter;
 import data.MusicBand;
 import data.MusicGenre;
 
-import java.io.IOException;
+import java.rmi.AccessException;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A class for storing a collection.
@@ -22,35 +21,15 @@ public class CollectionManager implements StorageInterface<MusicBand> {
      * Collection with elements.
      */
     @Getter
-    public Collection<MusicBand> musicBands = Collections.synchronizedCollection(new HashSet<>()); //todo поменять на private
-    /**
-     * Collection for storing the ID of the elements of the main collection.
-     */
-    @Getter
-    private Date date;
-    private String file;
-    private final FileManager fileManager;
-    private final IdStorage idStorage;
+    private final Collection<MusicBand> musicBands = Collections.synchronizedCollection(new HashSet<>());
     private final DataBaseControl dataBaseControl;
 
     public CollectionManager(DataBaseControl dataBaseControl) {
-
-        fileManager = new FileManager();
-        idStorage = new IdStorage();
         this.dataBaseControl = dataBaseControl;
     }
 
     public void fillCollection(MusicBand musicBand) {
-         musicBands.add(musicBand);//todo :)
-    }
-
-    /**
-     * Method for saving the collection to a file.
-     *
-     * @throws IOException if an error occurs when writing to a file.
-     */
-    public void saveCollection() throws IOException {
-        fileManager.writeCollection(file, musicBands);
+         musicBands.add(musicBand);
     }
 
     /**
@@ -70,13 +49,15 @@ public class CollectionManager implements StorageInterface<MusicBand> {
         return minMusicBand;
     }
 
-    public void add(MusicBand musicBand, String userName) throws SQLException {
+    public synchronized void add(MusicBand musicBand, String userName) throws SQLException {
         MusicBand musicBandFromDB = dataBaseControl.addToDataBase(musicBand, userName);
         musicBands.add(musicBandFromDB);
     }
 
-    public void clear() {
-        musicBands.clear();
+    public synchronized void clear(String userName) throws SQLException {
+        if (dataBaseControl.clear(userName)) {
+            musicBands.removeIf(p -> p.getUserName().equals(userName));
+        }
     }
 
     public String show() {
@@ -98,8 +79,9 @@ public class CollectionManager implements StorageInterface<MusicBand> {
         return musicBands.stream().map(MusicBand::getGenre).collect(Collectors.toSet());
     }
 
-    public Set<Long> getIdByLower(MusicBand musicBand) {
-        return musicBands.stream().filter(p -> musicBand.compareTo(p) > 0).map(MusicBand::getId).collect(Collectors.toSet());
+    public Set<Long> getIdByLower(MusicBand musicBand, String userName) {
+        return musicBands.stream().filter(p -> musicBand.compareTo(p) > 0)
+                .map(MusicBand::getId).collect(Collectors.toSet());
     }
 
     public Set<MusicBand> getMusicBandsOfDescription(String description) {
@@ -107,12 +89,7 @@ public class CollectionManager implements StorageInterface<MusicBand> {
     }
 
     public String getInfo() {
-        return "Collection type : " + musicBands.getClass().getName() + ", date of creation: "
-                + getDate() + ", number of objects: " + musicBands.size();
-    }
-
-    public long generateId() {
-        return idStorage.generateId();
+        return "Collection type : " + musicBands.getClass().getName() + ", number of objects: " + musicBands.size();
     }
 
     /**
@@ -121,8 +98,23 @@ public class CollectionManager implements StorageInterface<MusicBand> {
      * @param id of the object to delete.
      * @return true if the object was successfully deleted; otherwise false.
      */
-    public boolean removeById(long id, String userName) throws SQLException {
-        musicBands.removeIf(musicBand -> musicBand.getId() == id);
-        return dataBaseControl.removeById(id, userName);
+    public synchronized boolean removeById(long id, String userName) throws SQLException, AccessException {
+        if (dataBaseControl.removeById(id, userName)) {
+            return musicBands.removeIf(musicBand -> musicBand.getId() == id);
+        }
+        Stream<MusicBand> musicBand = musicBands.stream().filter(p -> p.getId() == id);
+        if (musicBand.findAny().isPresent()) throw new AccessException("You do not have the rights to delete this element.");
+        else return false;
+    }
+    public synchronized boolean update(long id, MusicBand musicBand, String userName) throws SQLException, AccessException {
+        if (dataBaseControl.update(id, musicBand)) {
+            musicBands.removeIf(p -> p.getId() == id);
+            musicBand.setId(id);
+            musicBands.add(musicBand);
+            return true;
+        }
+        Stream<MusicBand> musicBandStream = musicBands.stream().filter(p ->  p.getId() == id);
+        if (musicBandStream.findAny().isPresent()) throw new AccessException("You do not have the rights to delete this element.");
+        else return false;
     }
 }
